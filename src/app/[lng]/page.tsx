@@ -1,6 +1,7 @@
 import { languages, Language } from '@/i18n/settings';
 import HeroSection from '@/components/HeroSection';
 import ToolsGrid from '@/components/ToolsGrid';
+import ComparisonTable from '@/components/ComparisonTable';
 
 export default async function HomePage({
   params,
@@ -14,6 +15,7 @@ export default async function HomePage({
     <div className="relative">
       <HeroSection lng={lng} />
       <ToolsGrid lng={lng} />
+      <ComparisonTable lng={lng} />
     </div>
   );
 }

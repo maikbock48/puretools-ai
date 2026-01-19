@@ -1,8 +1,8 @@
 # PureTools AI - Development Roadmap
 
 > **Last Updated:** 2026-01-19
-> **Current Phase:** Phase 1 - Foundation
-> **Overall Progress:** 51%
+> **Current Phase:** Phase 2.5 - Foundation
+> **Overall Progress:** 45%
 
 ---
 
@@ -21,11 +21,12 @@ PureTools AI ist eine minimalistische, hochperformante Web-App mit Fokus auf:
 ```
 Phase 1: Foundation      [██████████████████░░]  92%
 Phase 2: Local Tools     [████████████████████] 100%
+Phase 2.5: Fair-Play Funnel & UX[███░░░░░░░░░░░░░░░░░]  17%
 Phase 3: AI Tools        [░░░░░░░░░░░░░░░░░░░░]   0%
 Phase 4: User System     [░░░░░░░░░░░░░░░░░░░░]   0%
 Phase 5: Polish & Launch [░░░░░░░░░░░░░░░░░░░░]   0%
 ─────────────────────────────────────────────────────
-Total Progress             [██████████░░░░░░░░░░]  51%
+Total Progress             [█████████░░░░░░░░░░░]  45%
 ```
 
 ---
@@ -73,6 +74,25 @@ Total Progress             [██████████░░░░░░░�
 - [x] JSON Formatter
 - [x] Code Beautifier
 - [x] CSV to Excel
+
+---
+
+## Phase 2.5: Fair-Play Funnel & UX
+
+> **Status:** In Progress
+> **Progress:** 17%
+
+### Completed
+
+- [x] Image Compressor Pro Upgrade
+
+### Pending
+
+- [ ] Transparency Tags Component [HIGH]
+- [ ] Hero Section Update (Fair Messaging) [HIGH]
+- [ ] Efficiency Score Component [MEDIUM]
+- [ ] Anti-Abo Comparison Table [MEDIUM]
+- [ ] AI Cost Preview Component [HIGH]
 
 ---
 
@@ -127,8 +147,11 @@ Total Progress             [██████████░░░░░░░�
 
 ## Next Priority Tasks
 
-1. **AI Document Translator** - Phase 3: AI Tools
-2. **AI Transcriber** - Phase 3: AI Tools
+1. **Transparency Tags Component** - Phase 2.5: Fair-Play Funnel & UX
+2. **Hero Section Update (Fair Messaging)** - Phase 2.5: Fair-Play Funnel & UX
+3. **AI Cost Preview Component** - Phase 2.5: Fair-Play Funnel & UX
+4. **AI Document Translator** - Phase 3: AI Tools
+5. **AI Transcriber** - Phase 3: AI Tools
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "lastUpdated": "2026-01-19",
-  "currentPhase": 1,
-  "overallProgress": 51,
+  "currentPhase": 3,
+  "overallProgress": 57,
   "phases": [
     {
       "number": 1,
@@ -147,6 +147,49 @@
           "phase": 2,
           "priority": "low",
           "complexity": "medium"
+        }
+      ]
+    },
+    {
+      "number": 2.5,
+      "name": "Fair-Play Funnel & UX",
+      "progress": 100,
+      "tasks": [
+        {
+          "name": "Image Compressor Pro Upgrade",
+          "status": "done",
+          "phase": 2.5,
+          "priority": "high"
+        },
+        {
+          "name": "Transparency Tags Component",
+          "status": "done",
+          "phase": 2.5,
+          "priority": "high"
+        },
+        {
+          "name": "Hero Section Update (Fair Messaging)",
+          "status": "done",
+          "phase": 2.5,
+          "priority": "high"
+        },
+        {
+          "name": "Efficiency Score Component",
+          "status": "done",
+          "phase": 2.5,
+          "priority": "medium"
+        },
+        {
+          "name": "Anti-Abo Comparison Table",
+          "status": "done",
+          "phase": 2.5,
+          "priority": "medium"
+        },
+        {
+          "name": "AI Cost Preview Component",
+          "status": "done",
+          "phase": 2.5,
+          "priority": "high"
         }
       ]
     },
