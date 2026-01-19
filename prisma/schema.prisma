@@ -1,0 +1,125 @@
+// PureTools AI - Database Schema
+// Using SQLite for development, can be changed to PostgreSQL for production
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth.js Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // User credits
+  credits       Int       @default(0)
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  transactions  Transaction[]
+  usageLogs     UsageLog[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Credit System Models
+// TransactionType: PURCHASE | USAGE | BONUS | REFUND
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // PURCHASE, USAGE, BONUS, REFUND
+  amount      Int      // Positive for purchases, negative for usage
+  description String
+  metadata    String?  // JSON string for additional data
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([type])
+}
+
+model UsageLog {
+  id          String   @id @default(cuid())
+  userId      String
+  toolType    String   // 'translate', 'transcribe', 'summarize'
+  credits     Int      // Credits used
+  inputSize   Int?     // Words or seconds
+  outputSize  Int?     // Result size
+  metadata    String?  // JSON string for additional data
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([toolType])
+}
+
+// Stripe Customer mapping
+model StripeCustomer {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  stripeCustomerId String   @unique
+  createdAt        DateTime @default(now())
+
+  @@index([stripeCustomerId])
+}
+
+// Credit Packages for purchase
+model CreditPackage {
+  id          String   @id @default(cuid())
+  name        String
+  credits     Int
+  price       Int      // In cents (e.g., 499 = $4.99)
+  currency    String   @default("eur")
+  stripePriceId String? @unique
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
