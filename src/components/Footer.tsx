@@ -29,7 +29,7 @@ export default function Footer({ lng }: FooterProps) {
           </div>
 
           {/* Links */}
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-6">
             <Link
               href={`/${lng}/privacy`}
               className="text-sm text-zinc-400 hover:text-white transition-colors"
@@ -41,6 +41,12 @@ export default function Footer({ lng }: FooterProps) {
               className="text-sm text-zinc-400 hover:text-white transition-colors"
             >
               {t('footer.links.terms')}
+            </Link>
+            <Link
+              href={`/${lng}/impressum`}
+              className="text-sm text-zinc-400 hover:text-white transition-colors"
+            >
+              {t('footer.links.impressum')}
             </Link>
             <Link
               href={`/${lng}/contact`}

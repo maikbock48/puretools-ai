@@ -1,12 +1,12 @@
 {
   "lastUpdated": "2026-01-19",
   "currentPhase": 1,
-  "overallProgress": 29,
+  "overallProgress": 51,
   "phases": [
     {
       "number": 1,
       "name": "Foundation",
-      "progress": 69,
+      "progress": 92,
       "tasks": [
         {
           "name": "Project Setup (Next.js, TypeScript, Tailwind)",
@@ -55,17 +55,22 @@
         },
         {
           "name": "Privacy Policy",
-          "status": "pending",
+          "status": "done",
           "phase": 1
         },
         {
           "name": "Terms of Service",
-          "status": "pending",
+          "status": "done",
           "phase": 1
         },
         {
           "name": "Contact Page",
-          "status": "pending",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "Impressum (Legal Notice)",
+          "status": "done",
           "phase": 1
         },
         {
@@ -78,7 +83,7 @@
     {
       "number": 2,
       "name": "Local Tools",
-      "progress": 33,
+      "progress": 100,
       "tasks": [
         {
           "name": "Image Compressor",
@@ -103,42 +108,42 @@
         },
         {
           "name": "Privacy OCR",
-          "status": "pending",
+          "status": "done",
           "phase": 2,
           "priority": "medium",
           "complexity": "high"
         },
         {
           "name": "Audio Cutter",
-          "status": "pending",
+          "status": "done",
           "phase": 2,
           "priority": "medium",
           "complexity": "medium"
         },
         {
           "name": "Background Remover",
-          "status": "pending",
+          "status": "done",
           "phase": 2,
           "priority": "medium",
           "complexity": "high"
         },
         {
           "name": "JSON Formatter",
-          "status": "pending",
+          "status": "done",
           "phase": 2,
           "priority": "low",
           "complexity": "low"
         },
         {
           "name": "Code Beautifier",
-          "status": "pending",
+          "status": "done",
           "phase": 2,
           "priority": "low",
           "complexity": "low"
         },
         {
           "name": "CSV to Excel",
-          "status": "pending",
+          "status": "done",
           "phase": 2,
           "priority": "low",
           "complexity": "medium"
