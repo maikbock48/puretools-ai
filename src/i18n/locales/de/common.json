@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "PureTools AI - Datenschutz-orientierte Online-Tools",
+    "description": "Kostenlose Online-Tools, die 100% in Ihrem Browser laufen. Keine Daten verlassen Ihr Gerät. QR-Codes, Bildkomprimierung, PDF-Tools und KI-Funktionen."
+  },
+  "nav": {
+    "home": "Startseite",
+    "tools": "Tools",
+    "pricing": "Preise",
+    "about": "Über uns"
+  },
+  "hero": {
+    "title": "Datenschutz-orientierte Tools",
+    "titleHighlight": "Die Einfach Funktionieren",
+    "subtitle": "Leistungsstarke Online-Tools, die lokal in Ihrem Browser laufen. Ihre Daten verlassen nie Ihr Gerät.",
+    "cta": "Tools Entdecken",
+    "ctaSecondary": "Mehr Erfahren"
+  },
+  "categories": {
+    "local": "Lokale Tools",
+    "localDescription": "100% browserbasiert. Keine Uploads nötig.",
+    "ai": "KI-Power",
+    "aiDescription": "Erweiterte KI-Funktionen aus der Cloud."
+  },
+  "tools": {
+    "qrGenerator": {
+      "title": "QR Studio",
+      "description": "Erstellen Sie individuelle QR-Codes mit Logo-Overlays und eigenen Farben.",
+      "metaTitle": "Kostenloser QR-Code Generator - Eigene Farben & Logo | PureTools AI",
+      "metaDescription": "Erstellen Sie schöne QR-Codes mit eigenen Farben und Logo-Overlays. 100% kostenlos, läuft lokal in Ihrem Browser."
+    },
+    "imageCompressor": {
+      "title": "Bildkompressor",
+      "description": "Komprimieren Sie Bilder in großen Mengen bei gleichbleibender Qualität. JPG, PNG, WebP.",
+      "metaTitle": "Kostenloser Bildkompressor - JPG/PNG/WebP | PureTools AI",
+      "metaDescription": "Komprimieren Sie mehrere Bilder gleichzeitig ohne Qualitätsverlust. Unterstützt JPG, PNG, WebP. 100% lokale Verarbeitung."
+    },
+    "heicConverter": {
+      "title": "HEIC zu JPG",
+      "description": "Konvertieren Sie iOS HEIC-Fotos in das universelle JPG-Format.",
+      "metaTitle": "Kostenloser HEIC zu JPG Konverter - iOS Fotos | PureTools AI",
+      "metaDescription": "Konvertieren Sie HEIC-Bilder vom iPhone sofort in JPG. 100% lokal, keine Uploads erforderlich."
+    },
+    "pdfToolkit": {
+      "title": "PDF Toolkit",
+      "description": "Führen Sie PDF-Dateien zusammen oder teilen Sie sie direkt im Browser.",
+      "metaTitle": "Kostenloses PDF Zusammenführen & Teilen | PureTools AI",
+      "metaDescription": "Führen Sie mehrere PDFs zusammen oder teilen Sie große Dokumente. Funktioniert offline, keine Datei-Uploads."
+    },
+    "ocr": {
+      "title": "Privacy OCR",
+      "description": "Extrahieren Sie Text aus Bildern, ohne sie hochzuladen.",
+      "metaTitle": "Kostenlose OCR - Text aus Bildern extrahieren | PureTools AI",
+      "metaDescription": "Extrahieren Sie Text aus Bildern mit 100% lokaler OCR. Ihre Bilder verlassen nie Ihr Gerät."
+    },
+    "audioCutter": {
+      "title": "Audio Cutter",
+      "description": "Schneiden Sie MP3-Dateien direkt im Browser.",
+      "metaTitle": "Kostenloser MP3 Cutter - Audio online schneiden | PureTools AI",
+      "metaDescription": "Schneiden und trimmen Sie MP3-Audiodateien lokal. Keine Uploads, sofortige Verarbeitung."
+    },
+    "backgroundRemover": {
+      "title": "Hintergrund Entferner",
+      "description": "Entfernen Sie Bildhintergründe mit lokaler KI-Segmentierung.",
+      "metaTitle": "Kostenloser Hintergrund Entferner - KI-gestützt | PureTools AI",
+      "metaDescription": "Entfernen Sie Bildhintergründe sofort mit lokaler KI. Perfekt für Sticker und Produktfotos."
+    },
+    "jsonFormatter": {
+      "title": "JSON Formatter",
+      "description": "Formatieren und validieren Sie JSON-Daten mit Syntax-Hervorhebung.",
+      "metaTitle": "Kostenloser JSON Formatter & Validator | PureTools AI",
+      "metaDescription": "Formatieren, validieren und verschönern Sie JSON-Daten mit Syntax-Hervorhebung. 100% lokale Verarbeitung."
+    },
+    "aiTranslator": {
+      "title": "KI-Dokumentenübersetzer",
+      "description": "Übersetzen Sie komplette PDFs (bis zu 500 Seiten) mit Gemini KI.",
+      "metaTitle": "KI PDF-Übersetzer - Komplette Dokumente übersetzen | PureTools AI",
+      "metaDescription": "Übersetzen Sie komplette PDF-Dokumente mit bis zu 500 Seiten mit fortschrittlicher KI. Behält die Formatierung bei."
+    },
+    "aiTranscriber": {
+      "title": "KI-Transkription",
+      "description": "Konvertieren Sie Audio/Video in Text mit KI-Zusammenfassungen.",
+      "metaTitle": "KI Audio-Transkription - Sprache zu Text | PureTools AI",
+      "metaDescription": "Transkribieren Sie Audio- und Videodateien in Text mit KI-gestützten Zusammenfassungen mittels OpenAI Whisper."
+    }
+  },
+  "badges": {
+    "privacy": "100% Privat",
+    "local": "Läuft Lokal",
+    "free": "Kostenlos",
+    "ai": "KI-gestützt",
+    "credits": "Credits"
+  },
+  "common": {
+    "privacyNote": "100% Sicher. Die Verarbeitung erfolgt lokal in Ihrem Browser.",
+    "download": "Herunterladen",
+    "upload": "Hochladen",
+    "generate": "Generieren",
+    "processing": "Verarbeitung...",
+    "clear": "Löschen",
+    "copy": "Kopieren",
+    "copied": "Kopiert!",
+    "error": "Ein Fehler ist aufgetreten",
+    "tryAgain": "Erneut versuchen"
+  },
+  "qr": {
+    "inputLabel": "URL oder Text eingeben",
+    "inputPlaceholder": "https://beispiel.de oder beliebiger Text",
+    "colorLabel": "QR-Code Farbe",
+    "bgColorLabel": "Hintergrundfarbe",
+    "logoLabel": "Logo (optional)",
+    "logoUpload": "Logo hochladen",
+    "logoRemove": "Logo entfernen",
+    "preview": "Vorschau",
+    "downloadPng": "PNG herunterladen",
+    "downloadSvg": "SVG herunterladen"
+  },
+  "footer": {
+    "tagline": "Datenschutz-orientierte Tools für alle.",
+    "copyright": "Alle Rechte vorbehalten.",
+    "links": {
+      "privacy": "Datenschutz",
+      "terms": "Nutzungsbedingungen",
+      "contact": "Kontakt"
+    }
+  }
+}

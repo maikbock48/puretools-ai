@@ -1,0 +1,268 @@
+{
+  "lastUpdated": "2026-01-19",
+  "currentPhase": 1,
+  "overallProgress": 29,
+  "phases": [
+    {
+      "number": 1,
+      "name": "Foundation",
+      "progress": 69,
+      "tasks": [
+        {
+          "name": "Project Setup (Next.js, TypeScript, Tailwind)",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "i18n Configuration (DE/EN)",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "Core Layout (Navbar, Footer, Theme)",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "Dashboard/Homepage",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "SEO Module",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "QR Generator Tool",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "AI Service Layer",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "Pricing Page",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "About Page",
+          "status": "done",
+          "phase": 1
+        },
+        {
+          "name": "Privacy Policy",
+          "status": "pending",
+          "phase": 1
+        },
+        {
+          "name": "Terms of Service",
+          "status": "pending",
+          "phase": 1
+        },
+        {
+          "name": "Contact Page",
+          "status": "pending",
+          "phase": 1
+        },
+        {
+          "name": "Testing Setup",
+          "status": "pending",
+          "phase": 1
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Local Tools",
+      "progress": 33,
+      "tasks": [
+        {
+          "name": "Image Compressor",
+          "status": "done",
+          "phase": 2,
+          "priority": "high",
+          "complexity": "medium"
+        },
+        {
+          "name": "HEIC to JPG Converter",
+          "status": "done",
+          "phase": 2,
+          "priority": "high",
+          "complexity": "low"
+        },
+        {
+          "name": "PDF Toolkit (Merge/Split)",
+          "status": "done",
+          "phase": 2,
+          "priority": "high",
+          "complexity": "medium"
+        },
+        {
+          "name": "Privacy OCR",
+          "status": "pending",
+          "phase": 2,
+          "priority": "medium",
+          "complexity": "high"
+        },
+        {
+          "name": "Audio Cutter",
+          "status": "pending",
+          "phase": 2,
+          "priority": "medium",
+          "complexity": "medium"
+        },
+        {
+          "name": "Background Remover",
+          "status": "pending",
+          "phase": 2,
+          "priority": "medium",
+          "complexity": "high"
+        },
+        {
+          "name": "JSON Formatter",
+          "status": "pending",
+          "phase": 2,
+          "priority": "low",
+          "complexity": "low"
+        },
+        {
+          "name": "Code Beautifier",
+          "status": "pending",
+          "phase": 2,
+          "priority": "low",
+          "complexity": "low"
+        },
+        {
+          "name": "CSV to Excel",
+          "status": "pending",
+          "phase": 2,
+          "priority": "low",
+          "complexity": "medium"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "name": "AI Tools",
+      "progress": 0,
+      "tasks": [
+        {
+          "name": "AI Document Translator",
+          "status": "pending",
+          "phase": 3,
+          "priority": "high"
+        },
+        {
+          "name": "AI Transcriber",
+          "status": "pending",
+          "phase": 3,
+          "priority": "high"
+        },
+        {
+          "name": "AI Summarizer",
+          "status": "pending",
+          "phase": 3,
+          "priority": "medium"
+        },
+        {
+          "name": "API Routes Setup",
+          "status": "pending",
+          "phase": 3
+        },
+        {
+          "name": "File Upload Handling",
+          "status": "pending",
+          "phase": 3
+        },
+        {
+          "name": "Progress Indicators",
+          "status": "pending",
+          "phase": 3
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "name": "User System",
+      "progress": 0,
+      "tasks": [
+        {
+          "name": "NextAuth.js Integration",
+          "status": "pending",
+          "phase": 4
+        },
+        {
+          "name": "OAuth Providers (Google, GitHub)",
+          "status": "pending",
+          "phase": 4
+        },
+        {
+          "name": "Credit System",
+          "status": "pending",
+          "phase": 4
+        },
+        {
+          "name": "Stripe Integration",
+          "status": "pending",
+          "phase": 4
+        },
+        {
+          "name": "User Dashboard",
+          "status": "pending",
+          "phase": 4
+        },
+        {
+          "name": "Subscription Management",
+          "status": "pending",
+          "phase": 4
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "name": "Polish & Launch",
+      "progress": 0,
+      "tasks": [
+        {
+          "name": "Performance Optimization",
+          "status": "pending",
+          "phase": 5
+        },
+        {
+          "name": "PWA Setup",
+          "status": "pending",
+          "phase": 5
+        },
+        {
+          "name": "SEO Finalization",
+          "status": "pending",
+          "phase": 5
+        },
+        {
+          "name": "Analytics Integration",
+          "status": "pending",
+          "phase": 5
+        },
+        {
+          "name": "Security Audit",
+          "status": "pending",
+          "phase": 5
+        },
+        {
+          "name": "Accessibility Audit",
+          "status": "pending",
+          "phase": 5
+        },
+        {
+          "name": "Production Deployment",
+          "status": "pending",
+          "phase": 5
+        }
+      ]
+    }
+  ]
+}

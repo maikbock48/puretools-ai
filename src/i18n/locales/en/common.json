@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "title": "PureTools AI - Privacy-First Online Tools",
+    "description": "Free online tools that run 100% in your browser. No data leaves your device. QR codes, image compression, PDF tools, and AI-powered features."
+  },
+  "nav": {
+    "home": "Home",
+    "tools": "Tools",
+    "pricing": "Pricing",
+    "about": "About"
+  },
+  "hero": {
+    "title": "Privacy-First Tools",
+    "titleHighlight": "That Just Work",
+    "subtitle": "Powerful online tools that run locally in your browser. Your data never leaves your device.",
+    "cta": "Explore Tools",
+    "ctaSecondary": "Learn More"
+  },
+  "categories": {
+    "local": "Local Tools",
+    "localDescription": "100% browser-based. No uploads needed.",
+    "ai": "AI Power",
+    "aiDescription": "Advanced AI features powered by the cloud."
+  },
+  "tools": {
+    "qrGenerator": {
+      "title": "QR Studio",
+      "description": "Create custom QR codes with logo overlays and custom colors.",
+      "metaTitle": "Free QR Code Generator - Custom Colors & Logo | PureTools AI",
+      "metaDescription": "Create beautiful QR codes with custom colors and logo overlays. 100% free, runs locally in your browser. No data uploaded."
+    },
+    "imageCompressor": {
+      "title": "Image Compressor",
+      "description": "Bulk compress images while maintaining quality. JPG, PNG, WebP.",
+      "metaTitle": "Free Image Compressor - Bulk JPG/PNG/WebP | PureTools AI",
+      "metaDescription": "Compress multiple images at once without quality loss. Supports JPG, PNG, WebP. 100% local processing."
+    },
+    "heicConverter": {
+      "title": "HEIC to JPG",
+      "description": "Convert iOS HEIC photos to universal JPG format.",
+      "metaTitle": "Free HEIC to JPG Converter - iOS Photos | PureTools AI",
+      "metaDescription": "Convert HEIC images from iPhone to JPG instantly. 100% local, no uploads required."
+    },
+    "pdfToolkit": {
+      "title": "PDF Toolkit",
+      "description": "Merge and split PDF files directly in your browser.",
+      "metaTitle": "Free PDF Merge & Split Tool | PureTools AI",
+      "metaDescription": "Merge multiple PDFs or split large documents. Works offline, no file uploads."
+    },
+    "ocr": {
+      "title": "Privacy OCR",
+      "description": "Extract text from images without uploading them.",
+      "metaTitle": "Free OCR - Extract Text from Images | PureTools AI",
+      "metaDescription": "Extract text from images with 100% local OCR. Your images never leave your device."
+    },
+    "audioCutter": {
+      "title": "Audio Cutter",
+      "description": "Trim MP3 files directly in your browser.",
+      "metaTitle": "Free MP3 Cutter - Trim Audio Online | PureTools AI",
+      "metaDescription": "Cut and trim MP3 audio files locally. No uploads, instant processing."
+    },
+    "backgroundRemover": {
+      "title": "Background Remover",
+      "description": "Remove image backgrounds using local AI segmentation.",
+      "metaTitle": "Free Background Remover - AI Powered | PureTools AI",
+      "metaDescription": "Remove image backgrounds instantly using local AI. Perfect for stickers and product photos."
+    },
+    "jsonFormatter": {
+      "title": "JSON Formatter",
+      "description": "Format and validate JSON data with syntax highlighting.",
+      "metaTitle": "Free JSON Formatter & Validator | PureTools AI",
+      "metaDescription": "Format, validate, and beautify JSON data with syntax highlighting. 100% local processing."
+    },
+    "aiTranslator": {
+      "title": "AI Document Translator",
+      "description": "Translate entire PDFs (up to 500 pages) using Gemini AI.",
+      "metaTitle": "AI PDF Translator - Translate Entire Documents | PureTools AI",
+      "metaDescription": "Translate complete PDF documents up to 500 pages using advanced AI. Preserves formatting."
+    },
+    "aiTranscriber": {
+      "title": "AI Transcriber",
+      "description": "Convert audio/video to text with AI summaries.",
+      "metaTitle": "AI Audio Transcription - Speech to Text | PureTools AI",
+      "metaDescription": "Transcribe audio and video files to text with AI-powered summaries using OpenAI Whisper."
+    }
+  },
+  "badges": {
+    "privacy": "100% Private",
+    "local": "Runs Locally",
+    "free": "Free",
+    "ai": "AI Powered",
+    "credits": "Credits"
+  },
+  "common": {
+    "privacyNote": "100% Secure. Processing happens locally in your browser.",
+    "download": "Download",
+    "upload": "Upload",
+    "generate": "Generate",
+    "processing": "Processing...",
+    "clear": "Clear",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "error": "An error occurred",
+    "tryAgain": "Try Again"
+  },
+  "qr": {
+    "inputLabel": "Enter URL or Text",
+    "inputPlaceholder": "https://example.com or any text",
+    "colorLabel": "QR Code Color",
+    "bgColorLabel": "Background Color",
+    "logoLabel": "Logo (optional)",
+    "logoUpload": "Upload Logo",
+    "logoRemove": "Remove Logo",
+    "preview": "Preview",
+    "downloadPng": "Download PNG",
+    "downloadSvg": "Download SVG"
+  },
+  "footer": {
+    "tagline": "Privacy-first tools for everyone.",
+    "copyright": "All rights reserved.",
+    "links": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "contact": "Contact"
+    }
+  }
+}
