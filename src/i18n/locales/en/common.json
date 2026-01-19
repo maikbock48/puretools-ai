@@ -82,6 +82,12 @@
       "description": "Convert audio/video to text with AI summaries.",
       "metaTitle": "AI Audio Transcription - Speech to Text | PureTools AI",
       "metaDescription": "Transcribe audio and video files to text with AI-powered summaries using OpenAI Whisper."
+    },
+    "aiSummarizer": {
+      "title": "AI Summarizer",
+      "description": "Condense long texts into concise summaries with AI.",
+      "metaTitle": "AI Text Summarizer - Condense Documents | PureTools AI",
+      "metaDescription": "Summarize long texts and documents instantly with AI. Choose bullet points, paragraphs, or executive style."
     }
   },
   "badges": {

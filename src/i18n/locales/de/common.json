@@ -82,6 +82,12 @@
       "description": "Konvertieren Sie Audio/Video in Text mit KI-Zusammenfassungen.",
       "metaTitle": "KI Audio-Transkription - Sprache zu Text | PureTools AI",
       "metaDescription": "Transkribieren Sie Audio- und Videodateien in Text mit KI-gestützten Zusammenfassungen mittels OpenAI Whisper."
+    },
+    "aiSummarizer": {
+      "title": "KI-Zusammenfassung",
+      "description": "Verdichten Sie lange Texte zu prägnanten Zusammenfassungen mit KI.",
+      "metaTitle": "KI Textzusammenfassung - Dokumente verdichten | PureTools AI",
+      "metaDescription": "Fassen Sie lange Texte und Dokumente sofort mit KI zusammen. Wählen Sie Stichpunkte, Absätze oder Executive-Stil."
     }
   },
   "badges": {

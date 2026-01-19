@@ -37,6 +37,7 @@ const localTools = [
 const aiTools = [
   { key: 'aiTranslator', icon: Languages, path: 'ai-translator' },
   { key: 'aiTranscriber', icon: FileAudio, path: 'ai-transcriber' },
+  { key: 'aiSummarizer', icon: FileText, path: 'ai-summarizer' },
 ] as const;
 
 const containerVariants = {
