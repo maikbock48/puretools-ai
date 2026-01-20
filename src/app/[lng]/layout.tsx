@@ -5,6 +5,10 @@ import { languages, Language } from '@/i18n/settings';
 import { getTranslation } from '@/i18n/server';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { ThemeProvider } from '@/components/theme-provider';
+import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData';
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
+import PWAInstaller from '@/components/PWAInstaller';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -70,20 +74,39 @@ export default async function RootLayout({
   const lng = languages.includes(rawLng as Language) ? (rawLng as Language) : 'en';
 
   return (
-    <html lang={lng} className="dark">
-      <body className={`${inter.variable} font-sans antialiased bg-zinc-950 text-zinc-50`}>
-        <div className="relative min-h-screen flex flex-col">
-          {/* Background gradient */}
-          <div className="pointer-events-none fixed inset-0 overflow-hidden">
-            <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-indigo-500/10 blur-3xl" />
-            <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-emerald-500/10 blur-3xl" />
-          </div>
+    <html lang={lng} suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#6366f1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="PureTools" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <WebsiteStructuredData />
+        <OrganizationStructuredData />
+      </head>
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="relative min-h-screen flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50">
+            {/* Background gradient - subtle in light, visible in dark */}
+            <div className="pointer-events-none fixed inset-0 overflow-hidden">
+              <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-indigo-100/50 dark:bg-indigo-500/10 blur-3xl" />
+              <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-emerald-100/50 dark:bg-emerald-500/10 blur-3xl" />
+            </div>
 
-          {/* Content */}
-          <Navbar lng={lng} />
-          <main className="relative flex-1 pt-16">{children}</main>
-          <Footer lng={lng} />
-        </div>
+            {/* Content */}
+            <Navbar lng={lng} />
+            <main className="relative flex-1 pt-16">{children}</main>
+            <Footer lng={lng} />
+            <PWAInstaller />
+            <ServiceWorkerRegistration />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

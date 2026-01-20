@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { calculateCredits } from '@/lib/ai-config';
+import { auth } from '@/lib/auth';
+import { hasEnoughCredits, useCredits } from '@/lib/credits';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+// Lazy initialization to avoid build-time errors
+function getGeminiAI() {
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+}
 
 type SummaryLength = 'short' | 'medium' | 'long';
 type SummaryStyle = 'bullet' | 'paragraph' | 'executive';
@@ -70,8 +75,25 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // TODO: Check user credits here when auth is implemented
+    // Check user authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Authentication required. Please sign in to use AI features.' },
+        { status: 401 }
+      );
+    }
 
+    // Check if user has enough credits
+    const hasCredits = await hasEnoughCredits(session.user.id, totalCredits);
+    if (!hasCredits) {
+      return NextResponse.json(
+        { error: 'Insufficient credits. Please purchase more credits to continue.' },
+        { status: 402 }
+      );
+    }
+
+    const genAI = getGeminiAI();
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const config = SUMMARY_CONFIGS[length] || SUMMARY_CONFIGS.medium;
@@ -118,7 +140,20 @@ Summary:`;
     const summary = result.response.text();
     const summaryWordCount = summary.trim().split(/\s+/).length;
 
-    // TODO: Deduct credits from user when auth is implemented
+    // Deduct credits from user
+    const creditResult = await useCredits({
+      userId: session.user.id,
+      amount: totalCredits,
+      toolType: 'summarize',
+      description: `Summarization: ${wordCount} → ${summaryWordCount} words (${length}, ${style})`,
+      inputSize: wordCount,
+      outputSize: summaryWordCount,
+      metadata: { length, style, language },
+    });
+
+    if (!creditResult.success) {
+      console.error('Credit deduction failed:', creditResult.error);
+    }
 
     return NextResponse.json({
       summary,
@@ -126,6 +161,7 @@ Summary:`;
       summaryWordCount,
       compressionRatio: Math.round((1 - summaryWordCount / wordCount) * 100),
       creditsUsed: totalCredits,
+      newBalance: creditResult.newBalance,
       style,
       length,
     });

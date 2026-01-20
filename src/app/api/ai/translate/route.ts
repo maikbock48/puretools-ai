@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { SUPPORTED_LANGUAGES, calculateCredits } from '@/lib/ai-config';
+import { auth } from '@/lib/auth';
+import { hasEnoughCredits, useCredits } from '@/lib/credits';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+// Lazy initialization to avoid build-time errors
+function getGeminiAI() {
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,9 +61,25 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // TODO: Check user credits here when auth is implemented
-    // For now, proceed with translation
+    // Check user authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Authentication required. Please sign in to use AI features.' },
+        { status: 401 }
+      );
+    }
 
+    // Check if user has enough credits
+    const hasCredits = await hasEnoughCredits(session.user.id, totalCredits);
+    if (!hasCredits) {
+      return NextResponse.json(
+        { error: 'Insufficient credits. Please purchase more credits to continue.' },
+        { status: 402 }
+      );
+    }
+
+    const genAI = getGeminiAI();
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const sourceLanguage = sourceLang
@@ -84,12 +105,27 @@ Translation:`;
     const result = await model.generateContent(prompt);
     const translation = result.response.text();
 
-    // TODO: Deduct credits from user when auth is implemented
+    // Deduct credits from user
+    const creditResult = await useCredits({
+      userId: session.user.id,
+      amount: totalCredits,
+      toolType: 'translate',
+      description: `Translation: ${wordCount} words (${sourceLang || 'auto'} → ${targetLang})`,
+      inputSize: wordCount,
+      outputSize: translation.split(/\s+/).length,
+      metadata: { sourceLang: sourceLang || 'auto', targetLang },
+    });
+
+    if (!creditResult.success) {
+      // Translation succeeded but credit deduction failed - log error but return result
+      console.error('Credit deduction failed:', creditResult.error);
+    }
 
     return NextResponse.json({
       translation,
       wordCount,
       creditsUsed: totalCredits,
+      newBalance: creditResult.newBalance,
       sourceLang: sourceLang || 'auto',
       targetLang,
     });
