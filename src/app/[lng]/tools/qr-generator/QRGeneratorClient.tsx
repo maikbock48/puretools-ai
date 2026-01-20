@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
+import SocialShare from '@/components/SocialShare';
 
 interface QRGeneratorClientProps {
   lng: Language;
@@ -87,9 +88,16 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
             {t('tools.qrGenerator.title')}
           </h1>
           <p className="text-zinc-400">{t('tools.qrGenerator.description')}</p>
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400">
-            <Shield className="h-4 w-4" />
-            {t('common.privacyNote')}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400">
+              <Shield className="h-4 w-4" />
+              {t('common.privacyNote')}
+            </div>
+            <SocialShare
+              url={typeof window !== 'undefined' ? window.location.href : `https://puretools.ai/${lng}/tools/qr-generator`}
+              title={t('tools.qrGenerator.title')}
+              description={t('tools.qrGenerator.description')}
+            />
           </div>
         </motion.div>
 

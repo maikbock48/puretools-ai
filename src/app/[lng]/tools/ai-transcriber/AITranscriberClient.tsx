@@ -20,6 +20,7 @@ import {
 import { Language } from '@/i18n/settings';
 import TransparencyTag from '@/components/TransparencyTag';
 import AICostPreview from '@/components/AICostPreview';
+import SocialShare from '@/components/SocialShare';
 
 interface AITranscriberClientProps {
   lng: Language;
@@ -305,7 +306,14 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
             <p className="text-zinc-400">{t.subtitle}</p>
           </div>
         </div>
-        <TransparencyTag type="ai" lng={lng} />
+        <div className="flex items-center gap-3">
+          <TransparencyTag type="ai" lng={lng} />
+          <SocialShare
+            url={typeof window !== 'undefined' ? window.location.href : `https://puretools.ai/${lng}/tools/ai-transcriber`}
+            title={t.title}
+            description={t.subtitle}
+          />
+        </div>
       </div>
 
       {/* File Upload */}

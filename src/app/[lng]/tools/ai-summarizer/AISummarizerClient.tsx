@@ -19,6 +19,7 @@ import {
 import { Language } from '@/i18n/settings';
 import TransparencyTag from '@/components/TransparencyTag';
 import AICostPreview from '@/components/AICostPreview';
+import SocialShare from '@/components/SocialShare';
 
 interface AISummarizerClientProps {
   lng: Language;
@@ -225,7 +226,14 @@ export default function AISummarizerClient({ lng }: AISummarizerClientProps) {
             <p className="text-zinc-400">{t.subtitle}</p>
           </div>
         </div>
-        <TransparencyTag type="ai" lng={lng} />
+        <div className="flex items-center gap-3">
+          <TransparencyTag type="ai" lng={lng} />
+          <SocialShare
+            url={typeof window !== 'undefined' ? window.location.href : `https://puretools.ai/${lng}/tools/ai-summarizer`}
+            title={t.title}
+            description={t.subtitle}
+          />
+        </div>
       </div>
 
       {/* Options */}

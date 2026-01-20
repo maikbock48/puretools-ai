@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData';
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
 import PWAInstaller from '@/components/PWAInstaller';
+import ReferralBanner from '@/components/ReferralBanner';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -104,6 +105,7 @@ export default async function RootLayout({
             <main className="relative flex-1 pt-16">{children}</main>
             <Footer lng={lng} />
             <PWAInstaller />
+            <ReferralBanner lng={lng} />
             <ServiceWorkerRegistration />
           </div>
         </ThemeProvider>
