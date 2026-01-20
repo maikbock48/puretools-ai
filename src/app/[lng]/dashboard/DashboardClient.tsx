@@ -81,6 +81,7 @@ const content = {
       overview: 'Overview',
       tools: 'Tools',
       analytics: 'Analytics',
+      profile: 'Profile',
     },
     toolCategories: {
       image: 'Image Tools',
@@ -102,6 +103,24 @@ const content = {
     mostUsedTool: 'Most Used',
     noData: 'No data yet',
     creditsUnit: 'credits',
+    profileTitle: 'Profile Settings',
+    profileSubtitle: 'Manage your account and preferences',
+    personalInfo: 'Personal Information',
+    name: 'Name',
+    email: 'Email',
+    memberSince: 'Member Since',
+    accountType: 'Account Type',
+    freeAccount: 'Free Account',
+    preferences: 'Preferences',
+    language: 'Language',
+    theme: 'Theme',
+    notifications: 'Email Notifications',
+    notificationsDesc: 'Receive updates about new features and promotions',
+    dangerZone: 'Danger Zone',
+    deleteAccount: 'Delete Account',
+    deleteAccountDesc: 'Permanently delete your account and all data',
+    saveChanges: 'Save Changes',
+    saved: 'Saved',
   },
   de: {
     greeting: 'Willkommen zurück',
@@ -136,6 +155,7 @@ const content = {
       overview: 'Übersicht',
       tools: 'Tools',
       analytics: 'Statistiken',
+      profile: 'Profil',
     },
     toolCategories: {
       image: 'Bild-Tools',
@@ -157,6 +177,24 @@ const content = {
     mostUsedTool: 'Meistgenutzt',
     noData: 'Noch keine Daten',
     creditsUnit: 'Credits',
+    profileTitle: 'Profil-Einstellungen',
+    profileSubtitle: 'Verwalte dein Konto und deine Einstellungen',
+    personalInfo: 'Persönliche Informationen',
+    name: 'Name',
+    email: 'E-Mail',
+    memberSince: 'Mitglied seit',
+    accountType: 'Kontotyp',
+    freeAccount: 'Kostenloses Konto',
+    preferences: 'Einstellungen',
+    language: 'Sprache',
+    theme: 'Design',
+    notifications: 'E-Mail-Benachrichtigungen',
+    notificationsDesc: 'Updates über neue Features und Aktionen erhalten',
+    dangerZone: 'Gefahrenzone',
+    deleteAccount: 'Konto löschen',
+    deleteAccountDesc: 'Konto und alle Daten dauerhaft löschen',
+    saveChanges: 'Änderungen speichern',
+    saved: 'Gespeichert',
   },
 };
 
@@ -254,7 +292,7 @@ const toolIcons: Record<string, typeof Languages> = {
   summarize: FileText,
 };
 
-type TabKey = 'overview' | 'tools' | 'analytics';
+type TabKey = 'overview' | 'tools' | 'analytics' | 'profile';
 
 export default function DashboardClient({ lng, user }: DashboardClientProps) {
   const t = content[lng];
@@ -300,6 +338,7 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
     { key: 'overview' as const, label: t.nav.overview, icon: LayoutDashboard },
     { key: 'tools' as const, label: t.nav.tools, icon: Wrench },
     { key: 'analytics' as const, label: t.nav.analytics, icon: BarChart3 },
+    { key: 'profile' as const, label: t.nav.profile, icon: User },
   ];
 
   // Group tools by category
@@ -890,6 +929,112 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
                   {isLoading ? t.loading : t.noData}
                 </div>
               )}
+            </motion.div>
+          </div>
+        )}
+
+        {activeTab === 'profile' && (
+          <div className="space-y-8">
+            <div>
+              <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">{t.profileTitle}</h1>
+              <p className="text-zinc-500 dark:text-zinc-400">{t.profileSubtitle}</p>
+            </div>
+
+            {/* Personal Information */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
+            >
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-6">{t.personalInfo}</h2>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-500">{t.name}</label>
+                  <div className="flex items-center gap-3">
+                    {user.image ? (
+                      <img
+                        src={user.image}
+                        alt={user.name || 'User'}
+                        className="h-12 w-12 rounded-full border-2 border-indigo-500"
+                      />
+                    ) : (
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-500/20">
+                        <User className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                      </div>
+                    )}
+                    <span className="text-lg font-medium text-zinc-900 dark:text-white">
+                      {user.name || 'Unknown'}
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-500">{t.email}</label>
+                  <p className="text-zinc-900 dark:text-white">{user.email || 'Not provided'}</p>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-500">{t.accountType}</label>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100 dark:bg-indigo-500/20 px-3 py-1 text-sm font-medium text-indigo-700 dark:text-indigo-400">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    {t.freeAccount}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-500">{t.credits}</label>
+                  <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{user.credits}</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Preferences */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
+            >
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-6">{t.preferences}</h2>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-3 border-b border-zinc-100 dark:border-zinc-800">
+                  <div>
+                    <p className="font-medium text-zinc-900 dark:text-white">{t.language}</p>
+                    <p className="text-sm text-zinc-500">{lng === 'de' ? 'Deutsch' : 'English'}</p>
+                  </div>
+                  <Link
+                    href={lng === 'de' ? '/en/dashboard' : '/de/dashboard'}
+                    className="rounded-lg bg-zinc-100 dark:bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+                  >
+                    {lng === 'de' ? 'Switch to English' : 'Auf Deutsch wechseln'}
+                  </Link>
+                </div>
+                <div className="flex items-center justify-between py-3">
+                  <div>
+                    <p className="font-medium text-zinc-900 dark:text-white">{t.notifications}</p>
+                    <p className="text-sm text-zinc-500">{t.notificationsDesc}</p>
+                  </div>
+                  <button className="relative h-6 w-11 rounded-full bg-zinc-200 dark:bg-zinc-700 transition-colors">
+                    <span className="absolute left-1 top-1 h-4 w-4 rounded-full bg-white shadow transition-transform" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Danger Zone */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="rounded-2xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/5 p-6"
+            >
+              <h2 className="text-lg font-semibold text-red-700 dark:text-red-400 mb-4">{t.dangerZone}</h2>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-zinc-900 dark:text-white">{t.deleteAccount}</p>
+                  <p className="text-sm text-zinc-500">{t.deleteAccountDesc}</p>
+                </div>
+                <button className="rounded-lg border border-red-300 dark:border-red-500/50 bg-white dark:bg-transparent px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                  {t.deleteAccount}
+                </button>
+              </div>
             </motion.div>
           </div>
         )}

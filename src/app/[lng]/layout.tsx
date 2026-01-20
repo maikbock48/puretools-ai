@@ -11,6 +11,9 @@ import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
 import PWAInstaller from '@/components/PWAInstaller';
 import ReferralBanner from '@/components/ReferralBanner';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -114,6 +117,9 @@ export default async function RootLayout({
             </div>
           </ThemeProvider>
         </AuthProvider>
+        <Analytics />
+        <SpeedInsights />
+        <GoogleAnalytics />
       </body>
     </html>
   );
