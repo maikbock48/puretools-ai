@@ -71,33 +71,33 @@ export default function HeroSection({ lng }: HeroSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-400"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-400"
           >
             <Shield className="h-4 w-4" />
             <span>{t.badge}</span>
           </motion.div>
 
-          {/* Heading - Fair Messaging */}
+          {/* Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl"
+            className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-5xl lg:text-6xl"
           >
             {t.title}{' '}
-            <span className="bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-indigo-600 to-emerald-600 dark:from-indigo-400 dark:to-emerald-400 bg-clip-text text-transparent">
               {t.titleHighlight}
             </span>
             <br className="hidden sm:block" />
-            <span className="text-zinc-400">{t.titleEnd}</span>
+            <span className="text-zinc-500 dark:text-zinc-400">{t.titleEnd}</span>
           </motion.h1>
 
-          {/* Subtitle - Transparency */}
+          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 text-lg leading-8 text-zinc-300 max-w-2xl mx-auto"
+            className="mt-6 text-lg leading-8 text-zinc-600 dark:text-zinc-300 max-w-2xl mx-auto"
           >
             {t.subtitle}
           </motion.p>
@@ -120,9 +120,9 @@ export default function HeroSection({ lng }: HeroSectionProps) {
             {t.trust.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/50 px-4 py-2 text-sm text-zinc-400"
+                className="flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 shadow-sm"
               >
-                <item.icon className="h-4 w-4 text-emerald-400" />
+                <item.icon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 <span>{item.text}</span>
               </div>
             ))}
@@ -137,42 +137,42 @@ export default function HeroSection({ lng }: HeroSectionProps) {
           >
             <a
               href="#tools"
-              className="group inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:bg-indigo-400 hover:shadow-indigo-500/40"
+              className="group inline-flex items-center gap-2 rounded-xl bg-indigo-600 dark:bg-indigo-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:bg-indigo-500 dark:hover:bg-indigo-400 hover:shadow-indigo-500/40"
             >
               {t.cta}
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </a>
             <a
               href={`/${lng}/pricing`}
-              className="inline-flex items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900 px-8 py-4 text-base font-semibold text-white transition-all hover:border-zinc-600 hover:bg-zinc-800"
+              className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-8 py-4 text-base font-semibold text-zinc-900 dark:text-white transition-all hover:border-zinc-400 dark:hover:border-zinc-600 hover:bg-zinc-50 dark:hover:bg-zinc-800"
             >
-              <Zap className="h-5 w-5 text-emerald-400" />
+              <Zap className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               {t.ctaSecondary}
             </a>
           </motion.div>
         </div>
 
-        {/* Stats - Anti-Abo Messaging */}
+        {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mx-auto mt-16 grid max-w-3xl grid-cols-2 sm:grid-cols-4 gap-6"
         >
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-            <div className="text-3xl font-bold text-emerald-400">10+</div>
+          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 text-center shadow-sm">
+            <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">10+</div>
             <div className="mt-1 text-sm text-zinc-500">{t.stats.tools}</div>
           </div>
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-            <div className="text-3xl font-bold text-emerald-400">100%</div>
+          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 text-center shadow-sm">
+            <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">100%</div>
             <div className="mt-1 text-sm text-zinc-500">{t.stats.local}</div>
           </div>
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-            <div className="text-3xl font-bold text-white">0</div>
+          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 text-center shadow-sm">
+            <div className="text-3xl font-bold text-zinc-900 dark:text-white">0</div>
             <div className="mt-1 text-sm text-zinc-500">{t.stats.ads}</div>
           </div>
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-            <div className="text-3xl font-bold text-white">0</div>
+          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 text-center shadow-sm">
+            <div className="text-3xl font-bold text-zinc-900 dark:text-white">0</div>
             <div className="mt-1 text-sm text-zinc-500">{t.stats.subscriptions}</div>
           </div>
         </motion.div>

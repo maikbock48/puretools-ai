@@ -77,11 +77,11 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
         >
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-lg bg-emerald-500/10">
-              <Shield className="h-5 w-5 text-emerald-400" />
+              <Shield className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white">{t('categories.local')}</h2>
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{t('categories.local')}</h2>
           </div>
-          <p className="text-zinc-400 ml-12 mb-8">{t('categories.localDescription')}</p>
+          <p className="text-zinc-600 dark:text-zinc-400 ml-12 mb-8">{t('categories.localDescription')}</p>
 
           <motion.div
             variants={containerVariants}
@@ -114,11 +114,11 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
         >
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-lg bg-indigo-500/10">
-              <Sparkles className="h-5 w-5 text-indigo-400" />
+              <Sparkles className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white">{t('categories.ai')}</h2>
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{t('categories.ai')}</h2>
           </div>
-          <p className="text-zinc-400 ml-12 mb-8">{t('categories.aiDescription')}</p>
+          <p className="text-zinc-600 dark:text-zinc-400 ml-12 mb-8">{t('categories.aiDescription')}</p>
 
           <motion.div
             variants={containerVariants}
@@ -150,8 +150,8 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-16 text-center"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/50 px-4 py-2 text-sm text-zinc-400">
-            <Shield className="h-4 w-4 text-emerald-400" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 shadow-sm">
+            <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
             {t('common.privacyNote')}
           </div>
         </motion.div>
