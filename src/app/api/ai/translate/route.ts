@@ -3,6 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { SUPPORTED_LANGUAGES, calculateCredits } from '@/lib/ai-config';
 import { auth } from '@/lib/auth';
 import { hasEnoughCredits, useCredits } from '@/lib/credits';
+import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 
 // Lazy initialization to avoid build-time errors
 function getGeminiAI() {
@@ -11,6 +12,15 @@ function getGeminiAI() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check rate limit
+    const { allowed, remaining, resetIn } = checkRateLimit(request, RATE_LIMITS.ai);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.', retryAfter: Math.ceil(resetIn / 1000) },
+        { status: 429, headers: { 'Retry-After': Math.ceil(resetIn / 1000).toString() } }
+      );
+    }
+
     // Check API key
     if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json(
