@@ -19,6 +19,7 @@ import { Language } from '@/i18n/settings';
 import TransparencyTag from '@/components/TransparencyTag';
 import AICostPreview from '@/components/AICostPreview';
 import SocialShare from '@/components/SocialShare';
+import AIProgressIndicator from '@/components/AIProgressIndicator';
 
 interface AITranslatorClientProps {
   lng: Language;
@@ -450,6 +451,17 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
               ×
             </button>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Progress Indicator */}
+      <AnimatePresence>
+        {isTranslating && (
+          <AIProgressIndicator
+            lng={lng}
+            type="translator"
+            isProcessing={isTranslating}
+          />
         )}
       </AnimatePresence>
 

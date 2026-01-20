@@ -20,6 +20,7 @@ import { Language } from '@/i18n/settings';
 import TransparencyTag from '@/components/TransparencyTag';
 import AICostPreview from '@/components/AICostPreview';
 import SocialShare from '@/components/SocialShare';
+import AIProgressIndicator from '@/components/AIProgressIndicator';
 
 interface AISummarizerClientProps {
   lng: Language;
@@ -454,6 +455,17 @@ export default function AISummarizerClient({ lng }: AISummarizerClientProps) {
               ×
             </button>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Progress Indicator */}
+      <AnimatePresence>
+        {isSummarizing && (
+          <AIProgressIndicator
+            lng={lng}
+            type="summarizer"
+            isProcessing={isSummarizing}
+          />
         )}
       </AnimatePresence>
 

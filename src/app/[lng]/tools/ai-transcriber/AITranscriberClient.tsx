@@ -21,6 +21,7 @@ import { Language } from '@/i18n/settings';
 import TransparencyTag from '@/components/TransparencyTag';
 import AICostPreview from '@/components/AICostPreview';
 import SocialShare from '@/components/SocialShare';
+import AIProgressIndicator from '@/components/AIProgressIndicator';
 
 interface AITranscriberClientProps {
   lng: Language;
@@ -475,6 +476,17 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
               ×
             </button>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Progress Indicator */}
+      <AnimatePresence>
+        {isTranscribing && (
+          <AIProgressIndicator
+            lng={lng}
+            type="transcriber"
+            isProcessing={isTranscribing}
+          />
         )}
       </AnimatePresence>
 
