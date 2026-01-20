@@ -371,17 +371,17 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <div className="mb-4 inline-flex rounded-2xl bg-emerald-500/10 p-4">
-            <ImageDown className="h-10 w-10 text-emerald-400" />
+          <div className="mb-4 inline-flex rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 p-4">
+            <ImageDown className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">{t.title}</h1>
-          <p className="mx-auto max-w-2xl text-zinc-400">{t.subtitle}</p>
+          <h1 className="mb-3 text-3xl font-bold text-zinc-800 dark:text-white sm:text-4xl">{t.title}</h1>
+          <p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">{t.subtitle}</p>
 
           {/* Transparency Badge - Fair Play Funnel */}
           <div className="mt-6 inline-flex flex-col items-center">
             <button
               onClick={() => setShowTransparency(!showTransparency)}
-              className="group flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400 transition-all hover:bg-emerald-500/20"
+              className="group flex items-center gap-2 rounded-full border border-emerald-300 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-2 text-sm text-emerald-700 dark:text-emerald-400 transition-all hover:bg-emerald-100 dark:hover:bg-emerald-500/20"
             >
               <Shield className="h-4 w-4" />
               {t.transparency.badge}
@@ -394,10 +394,10 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
                   initial={{ opacity: 0, y: -10, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: 'auto' }}
                   exit={{ opacity: 0, y: -10, height: 0 }}
-                  className="mt-3 max-w-md rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-left"
+                  className="mt-3 max-w-md rounded-xl border border-emerald-200 dark:border-emerald-500/20 bg-emerald-50 dark:bg-emerald-500/5 p-4 text-left"
                 >
-                  <p className="mb-2 text-sm font-medium text-emerald-400">{t.transparency.whyFree}</p>
-                  <p className="text-sm text-zinc-400">{t.transparency.explanation}</p>
+                  <p className="mb-2 text-sm font-medium text-emerald-700 dark:text-emerald-400">{t.transparency.whyFree}</p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">{t.transparency.explanation}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -412,10 +412,10 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
           className="mb-6"
         >
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-sm font-medium text-zinc-300">{t.presets.title}</h3>
+            <h3 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.presets.title}</h3>
             <button
               onClick={() => handlePresetChange('custom')}
-              className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300"
+              className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
             >
               <Sliders className="h-3 w-3" />
               {t.presets.custom.name}
@@ -438,8 +438,8 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
                   onClick={() => handlePresetChange(key)}
                   className={`flex flex-col items-center gap-1 rounded-xl border p-3 transition-all ${
                     preset === key
-                      ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
-                      : 'border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700'
+                      ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                      : 'border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 text-zinc-600 dark:text-zinc-400 hover:border-indigo-300 dark:hover:border-zinc-700'
                   }`}
                 >
                   {icons[key]}
@@ -455,11 +455,11 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.15 }}
-          className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4"
+          className="mb-6 rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4"
         >
           <div className="flex items-center justify-between mb-3">
-            <label className="text-sm font-medium text-zinc-300">{t.settings.quality}</label>
-            <span className="text-2xl font-bold text-emerald-400">{Math.round(settings.quality * 100)}%</span>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.settings.quality}</label>
+            <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{Math.round(settings.quality * 100)}%</span>
           </div>
           <input
             type="range"
@@ -473,7 +473,7 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
             }}
             className="w-full h-3 rounded-full appearance-none cursor-pointer"
             style={{
-              background: `linear-gradient(to right, #10b981 0%, #10b981 ${settings.quality * 100}%, #3f3f46 ${settings.quality * 100}%, #3f3f46 100%)`,
+              background: `linear-gradient(to right, #10b981 0%, #10b981 ${settings.quality * 100}%, #e4e4e7 ${settings.quality * 100}%, #e4e4e7 100%)`,
             }}
           />
           <div className="flex justify-between mt-2 text-xs text-zinc-500">
@@ -491,10 +491,10 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
               exit={{ opacity: 0, height: 0 }}
               className="mb-6 overflow-hidden"
             >
-              <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+              <div className="rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4">
                 <div className="mb-4 flex items-center gap-2">
-                  <Settings className="h-4 w-4 text-zinc-500" />
-                  <h3 className="text-sm font-medium text-zinc-300">{t.settings.title}</h3>
+                  <Settings className="h-4 w-4 text-indigo-500 dark:text-zinc-500" />
+                  <h3 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.settings.title}</h3>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div>
@@ -506,16 +506,16 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
                       step="0.1"
                       value={settings.maxSizeMB}
                       onChange={(e) => setSettings({ ...settings, maxSizeMB: parseFloat(e.target.value) })}
-                      className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white"
+                      className="w-full rounded-lg border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-white"
                     />
-                    <p className="mt-1 text-xs text-zinc-600">{t.settings.maxSizeHint}</p>
+                    <p className="mt-1 text-xs text-zinc-500">{t.settings.maxSizeHint}</p>
                   </div>
                   <div>
                     <label className="mb-1 block text-xs text-zinc-500">{t.settings.resolution}</label>
                     <select
                       value={Object.entries(resolutionPresets).find(([, v]) => v === settings.maxWidthOrHeight)?.[0] || 'fullhd'}
                       onChange={(e) => setSettings({ ...settings, maxWidthOrHeight: resolutionPresets[e.target.value as keyof typeof resolutionPresets] })}
-                      className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white"
+                      className="w-full rounded-lg border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-white"
                     >
                       {Object.entries(t.settings.resolutionPresets).map(([key, label]) => (
                         <option key={key} value={key}>{label}</option>
@@ -527,7 +527,7 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
                     <select
                       value={settings.fileType}
                       onChange={(e) => setSettings({ ...settings, fileType: e.target.value as CompressionSettings['fileType'] })}
-                      className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white"
+                      className="w-full rounded-lg border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-white"
                     >
                       <option value="original">Original</option>
                       <option value="jpeg">JPEG</option>
@@ -549,12 +549,12 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           onClick={() => fileInputRef.current?.click()}
-          className="mb-8 cursor-pointer rounded-2xl border-2 border-dashed border-zinc-700 bg-zinc-900/50 p-12 text-center transition-all hover:border-emerald-500/50 hover:bg-zinc-900"
+          className="mb-8 cursor-pointer rounded-2xl border-2 border-dashed border-indigo-300 dark:border-zinc-700 bg-gradient-to-br from-indigo-50/80 to-purple-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 p-12 text-center transition-all hover:border-indigo-400 dark:hover:border-emerald-500/50 hover:from-indigo-100/80 hover:to-purple-100/50 dark:hover:bg-zinc-900"
         >
-          <Upload className="mx-auto mb-4 h-12 w-12 text-zinc-500" />
-          <p className="mb-2 text-lg font-medium text-white">{t.dropzone.title}</p>
-          <p className="text-sm text-zinc-500">{t.dropzone.subtitle}</p>
-          <p className="mt-2 text-xs text-zinc-600">{t.dropzone.bulk}</p>
+          <Upload className="mx-auto mb-4 h-12 w-12 text-indigo-400 dark:text-zinc-500" />
+          <p className="mb-2 text-lg font-medium text-zinc-800 dark:text-white">{t.dropzone.title}</p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-500">{t.dropzone.subtitle}</p>
+          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-600">{t.dropzone.bulk}</p>
           <input
             ref={fileInputRef}
             type="file"
@@ -569,26 +569,26 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
         {images.length > 0 && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
             {/* Stats Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
               <div className="flex items-center gap-6">
                 <div>
                   <div className="text-xs text-zinc-500">{t.stats.images}</div>
-                  <div className="text-lg font-semibold text-white">{images.length}</div>
+                  <div className="text-lg font-semibold text-zinc-800 dark:text-white">{images.length}</div>
                 </div>
                 <div>
                   <div className="text-xs text-zinc-500">{t.stats.original}</div>
-                  <div className="text-lg font-semibold text-white">{formatBytes(totalOriginalSize)}</div>
+                  <div className="text-lg font-semibold text-zinc-800 dark:text-white">{formatBytes(totalOriginalSize)}</div>
                 </div>
                 {totalCompressedSize > 0 && (
                   <>
-                    <ArrowRight className="h-5 w-5 text-zinc-600" />
+                    <ArrowRight className="h-5 w-5 text-zinc-400 dark:text-zinc-600" />
                     <div>
                       <div className="text-xs text-zinc-500">{t.stats.compressed}</div>
-                      <div className="text-lg font-semibold text-emerald-400">{formatBytes(totalCompressedSize)}</div>
+                      <div className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">{formatBytes(totalCompressedSize)}</div>
                     </div>
-                    <div className="rounded-lg bg-emerald-500/20 px-3 py-1">
+                    <div className="rounded-lg bg-emerald-100 dark:bg-emerald-500/20 px-3 py-1">
                       <div className="text-xs text-zinc-500">{t.stats.saved}</div>
-                      <div className="text-lg font-bold text-emerald-400">-{totalSavingsPercent}%</div>
+                      <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">-{totalSavingsPercent}%</div>
                     </div>
                   </>
                 )}
@@ -596,7 +596,7 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
               <div className="flex gap-2">
                 <button
                   onClick={clearAll}
-                  className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-700"
+                  className="flex items-center gap-2 rounded-lg border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-indigo-50 dark:hover:bg-zinc-700"
                 >
                   <Trash2 className="h-4 w-4" />
                   {t.stats.clearAll}
@@ -618,34 +618,34 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="rounded-xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 to-transparent p-4"
+                className="rounded-xl border border-emerald-300 dark:border-emerald-500/30 bg-gradient-to-r from-emerald-50 dark:from-emerald-500/10 to-transparent p-4"
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <Zap className="h-5 w-5 text-emerald-400" />
-                  <h3 className="font-medium text-white">{t.efficiency.title}</h3>
+                  <Zap className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  <h3 className="font-medium text-zinc-800 dark:text-white">{t.efficiency.title}</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-zinc-500" />
                     <div>
                       <div className="text-xs text-zinc-500">{t.efficiency.processed}</div>
-                      <div className="text-sm font-medium text-white">{(totalCompressionTime / 1000).toFixed(2)}s</div>
+                      <div className="text-sm font-medium text-zinc-800 dark:text-white">{(totalCompressionTime / 1000).toFixed(2)}s</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <ImageDown className="h-4 w-4 text-zinc-500" />
                     <div>
                       <div className="text-xs text-zinc-500">{t.efficiency.savings}</div>
-                      <div className="text-sm font-medium text-emerald-400">{formatBytes(totalOriginalSize - totalCompressedSize)}</div>
+                      <div className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{formatBytes(totalOriginalSize - totalCompressedSize)}</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="h-4 w-4 text-zinc-500" />
-                    <div className="text-sm text-emerald-400">{t.efficiency.privacy}</div>
+                    <div className="text-sm text-emerald-600 dark:text-emerald-400">{t.efficiency.privacy}</div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-zinc-500" />
-                    <div className="text-sm text-emerald-400">{t.efficiency.serverCost}</div>
+                    <div className="text-sm text-emerald-600 dark:text-emerald-400">{t.efficiency.serverCost}</div>
                   </div>
                 </div>
               </motion.div>
@@ -661,7 +661,7 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    className="relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900"
+                    className="relative overflow-hidden rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
                   >
                     <div className="relative aspect-video">
                       <img
@@ -681,23 +681,23 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
                       )}
                       <button
                         onClick={() => removeImage(image.id)}
-                        className="absolute left-2 top-2 rounded-full bg-zinc-900/80 p-1 text-zinc-400 hover:bg-zinc-800 hover:text-white"
+                        className="absolute left-2 top-2 rounded-full bg-white/80 dark:bg-zinc-900/80 p-1 text-zinc-600 dark:text-zinc-400 hover:bg-white dark:hover:bg-zinc-800 hover:text-zinc-800 dark:hover:text-white"
                       >
                         <X className="h-4 w-4" />
                       </button>
                     </div>
                     <div className="p-4">
                       <div className="mb-2 flex items-center gap-2">
-                        <FileImage className="h-4 w-4 text-zinc-500" />
-                        <span className="truncate text-sm text-white">{image.file.name}</span>
+                        <FileImage className="h-4 w-4 text-indigo-500 dark:text-zinc-500" />
+                        <span className="truncate text-sm text-zinc-800 dark:text-white">{image.file.name}</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-zinc-500">{formatBytes(image.originalSize)}</span>
                         {image.compressedSize && (
                           <>
-                            <ArrowRight className="h-4 w-4 text-zinc-600" />
-                            <span className="text-emerald-400">{formatBytes(image.compressedSize)}</span>
-                            <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-400">
+                            <ArrowRight className="h-4 w-4 text-zinc-400 dark:text-zinc-600" />
+                            <span className="text-emerald-600 dark:text-emerald-400">{formatBytes(image.compressedSize)}</span>
+                            <span className="rounded bg-emerald-100 dark:bg-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
                               -{calculateSavings(image.originalSize, image.compressedSize)}%
                             </span>
                           </>
@@ -706,14 +706,14 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
                       {image.status === 'done' && (
                         <button
                           onClick={() => downloadImage(image)}
-                          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-800 py-2 text-sm text-white hover:bg-zinc-700"
+                          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-100 dark:bg-zinc-800 py-2 text-sm text-indigo-700 dark:text-white hover:bg-indigo-200 dark:hover:bg-zinc-700"
                         >
                           <Download className="h-4 w-4" />
                           {t.actions.download}
                         </button>
                       )}
                       {image.status === 'error' && (
-                        <div className="mt-2 text-sm text-red-400">{image.error}</div>
+                        <div className="mt-2 text-sm text-red-500 dark:text-red-400">{image.error}</div>
                       )}
                     </div>
                   </motion.div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, Shield, Zap, CreditCard, Sparkles } from 'lucide-react';
+import { ArrowRight, Shield, CreditCard, Sparkles } from 'lucide-react';
 import { Language } from '@/i18n/settings';
 
 interface HeroSectionProps {
@@ -58,10 +58,10 @@ export default function HeroSection({ lng }: HeroSectionProps) {
 
   return (
     <section className="relative overflow-hidden py-20 sm:py-28">
-      {/* Background gradient */}
+      {/* Background gradient - Light mode: subtle indigo, Dark mode: original */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/5 via-transparent to-transparent" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-indigo-500/10 rounded-full blur-3xl opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/80 via-white to-white dark:from-indigo-500/5 dark:via-transparent dark:to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-indigo-200/30 dark:bg-indigo-500/10 rounded-full blur-3xl opacity-60 dark:opacity-20" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -71,7 +71,7 @@ export default function HeroSection({ lng }: HeroSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-400"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-300 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-400"
           >
             <Shield className="h-4 w-4" />
             <span>{t.badge}</span>
@@ -82,14 +82,14 @@ export default function HeroSection({ lng }: HeroSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-5xl lg:text-6xl"
+            className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-white sm:text-5xl lg:text-6xl"
           >
             {t.title}{' '}
             <span className="bg-gradient-to-r from-indigo-600 to-emerald-600 dark:from-indigo-400 dark:to-emerald-400 bg-clip-text text-transparent">
               {t.titleHighlight}
             </span>
             <br className="hidden sm:block" />
-            <span className="text-zinc-500 dark:text-zinc-400">{t.titleEnd}</span>
+            <span className="text-zinc-400 dark:text-zinc-400">{t.titleEnd}</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -105,7 +105,7 @@ export default function HeroSection({ lng }: HeroSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.25 }}
-            className="mt-2 text-base text-zinc-500"
+            className="mt-2 text-base text-zinc-500 dark:text-zinc-500"
           >
             {t.subtitleAlt}
           </motion.p>
@@ -120,7 +120,7 @@ export default function HeroSection({ lng }: HeroSectionProps) {
             {t.trust.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 shadow-sm"
+                className="flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/50 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-400 shadow-sm backdrop-blur-sm"
               >
                 <item.icon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 <span>{item.text}</span>
@@ -128,26 +128,19 @@ export default function HeroSection({ lng }: HeroSectionProps) {
             ))}
           </motion.div>
 
-          {/* CTA Buttons */}
+          {/* CTA Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="mt-10 flex items-center justify-center"
           >
             <a
               href="#tools"
-              className="group inline-flex items-center gap-2 rounded-xl bg-indigo-600 dark:bg-indigo-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:bg-indigo-500 dark:hover:bg-indigo-400 hover:shadow-indigo-500/40"
+              className="group inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:bg-indigo-700 hover:shadow-indigo-500/40"
             >
               {t.cta}
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </a>
-            <a
-              href={`/${lng}/pricing`}
-              className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-8 py-4 text-base font-semibold text-zinc-900 dark:text-white transition-all hover:border-zinc-400 dark:hover:border-zinc-600 hover:bg-zinc-50 dark:hover:bg-zinc-800"
-            >
-              <Zap className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              {t.ctaSecondary}
             </a>
           </motion.div>
         </div>
@@ -159,21 +152,21 @@ export default function HeroSection({ lng }: HeroSectionProps) {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mx-auto mt-16 grid max-w-3xl grid-cols-2 sm:grid-cols-4 gap-6"
         >
-          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 text-center shadow-sm">
+          <div className="rounded-2xl border border-emerald-200/60 dark:border-zinc-800 bg-gradient-to-br from-white/90 to-emerald-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 p-6 text-center shadow-sm backdrop-blur-sm">
             <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">10+</div>
-            <div className="mt-1 text-sm text-zinc-500">{t.stats.tools}</div>
+            <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-500">{t.stats.tools}</div>
           </div>
-          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 text-center shadow-sm">
+          <div className="rounded-2xl border border-emerald-200/60 dark:border-zinc-800 bg-gradient-to-br from-white/90 to-emerald-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 p-6 text-center shadow-sm backdrop-blur-sm">
             <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">100%</div>
-            <div className="mt-1 text-sm text-zinc-500">{t.stats.local}</div>
+            <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-500">{t.stats.local}</div>
           </div>
-          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 text-center shadow-sm">
-            <div className="text-3xl font-bold text-zinc-900 dark:text-white">0</div>
-            <div className="mt-1 text-sm text-zinc-500">{t.stats.ads}</div>
+          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-gradient-to-br from-white/90 to-zinc-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 p-6 text-center shadow-sm backdrop-blur-sm">
+            <div className="text-3xl font-bold text-zinc-800 dark:text-white">0</div>
+            <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-500">{t.stats.ads}</div>
           </div>
-          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 text-center shadow-sm">
-            <div className="text-3xl font-bold text-zinc-900 dark:text-white">0</div>
-            <div className="mt-1 text-sm text-zinc-500">{t.stats.subscriptions}</div>
+          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-gradient-to-br from-white/90 to-zinc-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 p-6 text-center shadow-sm backdrop-blur-sm">
+            <div className="text-3xl font-bold text-zinc-800 dark:text-white">0</div>
+            <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-500">{t.stats.subscriptions}</div>
           </div>
         </motion.div>
       </div>

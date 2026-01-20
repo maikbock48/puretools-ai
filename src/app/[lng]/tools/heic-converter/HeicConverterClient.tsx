@@ -204,19 +204,19 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12 text-center"
         >
-          <div className="mb-4 inline-flex rounded-xl bg-emerald-500/10 p-3">
-            <Image className="h-8 w-8 text-emerald-400" />
+          <div className="mb-4 inline-flex rounded-xl bg-emerald-100 dark:bg-emerald-500/10 p-3">
+            <Image className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">
+          <h1 className="mb-3 text-3xl font-bold text-zinc-800 dark:text-white sm:text-4xl">
             {t('tools.heicConverter.title')}
           </h1>
-          <p className="text-zinc-400">{t('tools.heicConverter.description')}</p>
+          <p className="text-zinc-600 dark:text-zinc-400">{t('tools.heicConverter.description')}</p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-2 text-sm text-emerald-700 dark:text-emerald-400">
               <Shield className="h-4 w-4" />
               {t('common.privacyNote')}
             </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-zinc-400">
+            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200 dark:border-zinc-700 bg-indigo-50 dark:bg-zinc-800 px-4 py-2 text-sm text-indigo-700 dark:text-zinc-400">
               <Smartphone className="h-4 w-4" />
               {lng === 'de' ? 'Perfekt für iPhone Fotos' : 'Perfect for iPhone Photos'}
             </div>
@@ -227,13 +227,13 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mb-8 flex flex-wrap items-center justify-center gap-6 rounded-xl border border-zinc-800 bg-zinc-900 p-4"
+          className="mb-8 flex flex-wrap items-center justify-center gap-6 rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4"
         >
           <div className="flex items-center gap-3">
-            <label className="text-sm font-medium text-zinc-300">
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               {lng === 'de' ? 'Ausgabeformat:' : 'Output Format:'}
             </label>
-            <div className="flex gap-1 rounded-lg bg-zinc-800 p-1">
+            <div className="flex gap-1 rounded-lg bg-indigo-50 dark:bg-zinc-800 p-1">
               {(['jpeg', 'png', 'webp'] as OutputFormat[]).map((format) => (
                 <button
                   key={format}
@@ -241,7 +241,7 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
                   className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
                     outputFormat === format
                       ? 'bg-emerald-500 text-white'
-                      : 'text-zinc-400 hover:text-white'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-white'
                   }`}
                 >
                   {format.toUpperCase()}
@@ -252,7 +252,7 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
 
           {outputFormat !== 'png' && (
             <div className="flex items-center gap-3">
-              <label className="text-sm font-medium text-zinc-300">
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                 {lng === 'de' ? 'Qualität:' : 'Quality:'} {Math.round(quality * 100)}%
               </label>
               <input
@@ -276,10 +276,10 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onClick={() => fileInputRef.current?.click()}
-          className="mb-8 cursor-pointer rounded-2xl border-2 border-dashed border-zinc-700 bg-zinc-900/50 p-12 text-center transition-colors hover:border-emerald-500/50"
+          className="mb-8 cursor-pointer rounded-2xl border-2 border-dashed border-indigo-300 dark:border-zinc-700 bg-gradient-to-br from-indigo-50/80 to-purple-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 p-12 text-center transition-colors hover:border-indigo-400 dark:hover:border-emerald-500/50"
         >
-          <Upload className="mx-auto mb-4 h-12 w-12 text-zinc-500" />
-          <p className="mb-2 text-lg font-medium text-white">
+          <Upload className="mx-auto mb-4 h-12 w-12 text-indigo-400 dark:text-zinc-500" />
+          <p className="mb-2 text-lg font-medium text-zinc-800 dark:text-white">
             {lng === 'de' ? 'HEIC/HEIF Dateien hier ablegen' : 'Drop HEIC/HEIF files here'}
           </p>
           <p className="text-sm text-zinc-500">
@@ -305,14 +305,14 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
             className="space-y-4"
           >
             {/* Actions Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-              <div className="text-sm text-zinc-400">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
+              <div className="text-sm text-zinc-600 dark:text-zinc-400">
                 {files.length} {lng === 'de' ? 'Datei(en)' : 'file(s)'} | {completedCount} {lng === 'de' ? 'konvertiert' : 'converted'}
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={clearAll}
-                  className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-zinc-700"
+                  className="flex items-center gap-2 rounded-lg border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 transition-colors hover:bg-indigo-50 dark:hover:bg-zinc-700"
                 >
                   <Trash2 className="h-4 w-4" />
                   {lng === 'de' ? 'Alle löschen' : 'Clear All'}
@@ -339,10 +339,10 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="flex items-center gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4"
+                    className="flex items-center gap-4 rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4"
                   >
                     {/* Preview */}
-                    <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-800">
+                    <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-indigo-50 dark:bg-zinc-800">
                       {file.convertedPreview ? (
                         <img
                           src={file.convertedPreview}
@@ -351,7 +351,7 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <FileImage className="h-6 w-6 text-zinc-600" />
+                          <FileImage className="h-6 w-6 text-indigo-400 dark:text-zinc-600" />
                         </div>
                       )}
                       {file.status === 'converting' && (
@@ -364,9 +364,9 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
                     {/* Info */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="truncate text-sm font-medium text-white">{file.file.name}</span>
+                        <span className="truncate text-sm font-medium text-zinc-800 dark:text-white">{file.file.name}</span>
                         {file.status === 'done' && (
-                          <Check className="h-4 w-4 flex-shrink-0 text-emerald-400" />
+                          <Check className="h-4 w-4 flex-shrink-0 text-emerald-500 dark:text-emerald-400" />
                         )}
                       </div>
                       <div className="mt-1 flex items-center gap-2 text-sm text-zinc-500">
@@ -374,12 +374,12 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
                         {file.convertedSize && (
                           <>
                             <ArrowRight className="h-3 w-3" />
-                            <span className="text-emerald-400">{formatBytes(file.convertedSize)}</span>
+                            <span className="text-emerald-600 dark:text-emerald-400">{formatBytes(file.convertedSize)}</span>
                           </>
                         )}
                       </div>
                       {file.status === 'error' && (
-                        <div className="mt-1 text-sm text-red-400">{file.error}</div>
+                        <div className="mt-1 text-sm text-red-500 dark:text-red-400">{file.error}</div>
                       )}
                     </div>
 
@@ -388,7 +388,7 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
                       {file.status === 'done' && (
                         <button
                           onClick={() => downloadFile(file)}
-                          className="flex items-center gap-1 rounded-lg bg-zinc-800 px-3 py-1.5 text-sm text-white transition-colors hover:bg-zinc-700"
+                          className="flex items-center gap-1 rounded-lg bg-indigo-100 dark:bg-zinc-800 px-3 py-1.5 text-sm text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-700"
                         >
                           <Download className="h-4 w-4" />
                           {t('common.download')}
@@ -396,7 +396,7 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
                       )}
                       <button
                         onClick={() => removeFile(file.id)}
-                        className="rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-white"
+                        className="rounded-lg p-1.5 text-zinc-400 dark:text-zinc-500 transition-colors hover:bg-indigo-50 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-white"
                       >
                         <X className="h-4 w-4" />
                       </button>

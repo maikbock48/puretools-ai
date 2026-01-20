@@ -261,11 +261,11 @@ export default function CsvToExcelClient({ lng }: CsvToExcelClientProps) {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <div className="mb-4 inline-flex rounded-2xl bg-teal-500/10 p-4">
-            <Table className="h-10 w-10 text-teal-400" />
+          <div className="mb-4 inline-flex rounded-2xl bg-teal-100 dark:bg-teal-500/10 p-4">
+            <Table className="h-10 w-10 text-teal-600 dark:text-teal-400" />
           </div>
-          <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">{t.title}</h1>
-          <p className="mx-auto max-w-2xl text-zinc-400">{t.subtitle}</p>
+          <h1 className="mb-3 text-3xl font-bold text-zinc-800 dark:text-white sm:text-4xl">{t.title}</h1>
+          <p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">{t.subtitle}</p>
         </motion.div>
 
         <div className="grid gap-8 lg:grid-cols-2">
@@ -284,12 +284,12 @@ export default function CsvToExcelClient({ lng }: CsvToExcelClientProps) {
               onDragLeave={() => setIsDragging(false)}
               className={`flex h-32 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-all ${
                 isDragging
-                  ? 'border-teal-500 bg-teal-500/10'
-                  : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-600'
+                  ? 'border-teal-500 bg-teal-50 dark:bg-teal-500/10'
+                  : 'border-indigo-300 dark:border-zinc-700 bg-gradient-to-br from-indigo-50/80 to-purple-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 hover:border-indigo-400 dark:hover:border-zinc-600'
               }`}
             >
-              <Upload className={`mb-2 h-8 w-8 ${isDragging ? 'text-teal-400' : 'text-zinc-500'}`} />
-              <p className="text-sm text-zinc-300">{t.dropzone}</p>
+              <Upload className={`mb-2 h-8 w-8 ${isDragging ? 'text-teal-500 dark:text-teal-400' : 'text-indigo-400 dark:text-zinc-500'}`} />
+              <p className="text-sm text-zinc-700 dark:text-zinc-300">{t.dropzone}</p>
               <p className="text-xs text-zinc-500">{t.supported}</p>
               <input
                 ref={fileInputRef}
@@ -302,23 +302,23 @@ export default function CsvToExcelClient({ lng }: CsvToExcelClientProps) {
 
             {/* Or Paste */}
             <div>
-              <label className="mb-2 block text-sm text-zinc-400">{t.pasteHint}</label>
+              <label className="mb-2 block text-sm text-zinc-600 dark:text-zinc-400">{t.pasteHint}</label>
               <textarea
                 value={csvData}
                 onChange={(e) => handlePaste(e.target.value)}
                 placeholder={t.pasteArea}
-                className="h-32 w-full rounded-xl border border-zinc-700 bg-zinc-900 p-3 font-mono text-sm text-white placeholder-zinc-500 focus:border-teal-500 focus:outline-none"
+                className="h-32 w-full rounded-xl border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-3 font-mono text-sm text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-teal-500 focus:outline-none"
               />
             </div>
 
             {/* Settings */}
-            <div className="flex flex-wrap items-center gap-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+            <div className="flex flex-wrap items-center gap-4 rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-zinc-500">{t.delimiter}:</span>
                 <select
                   value={delimiter}
                   onChange={(e) => handleDelimiterChange(e.target.value as Delimiter)}
-                  className="rounded-lg bg-zinc-800 px-3 py-1 text-sm text-white"
+                  className="rounded-lg bg-indigo-50 dark:bg-zinc-800 px-3 py-1 text-sm text-zinc-800 dark:text-white"
                 >
                   <option value=",">{t.delimiters.comma}</option>
                   <option value=";">{t.delimiters.semicolon}</option>
@@ -326,12 +326,12 @@ export default function CsvToExcelClient({ lng }: CsvToExcelClientProps) {
                   <option value="|">{t.delimiters.pipe}</option>
                 </select>
               </div>
-              <label className="flex items-center gap-2 text-xs text-zinc-400">
+              <label className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
                 <input
                   type="checkbox"
                   checked={hasHeader}
                   onChange={(e) => setHasHeader(e.target.checked)}
-                  className="rounded border-zinc-600 bg-zinc-800"
+                  className="rounded border-indigo-300 dark:border-zinc-600 bg-white dark:bg-zinc-800"
                 />
                 {t.firstRowHeader}
               </label>
@@ -339,14 +339,14 @@ export default function CsvToExcelClient({ lng }: CsvToExcelClientProps) {
 
             {/* Status */}
             {error && (
-              <div className="flex items-center gap-2 rounded-lg bg-red-500/10 p-3 text-sm text-red-400">
+              <div className="flex items-center gap-2 rounded-lg bg-red-50 dark:bg-red-500/10 p-3 text-sm text-red-600 dark:text-red-400">
                 <AlertCircle className="h-4 w-4" />
                 {error}
               </div>
             )}
 
             {parsedData.length > 0 && (
-              <div className="flex items-center gap-2 rounded-lg bg-emerald-500/10 p-3 text-sm text-emerald-400">
+              <div className="flex items-center gap-2 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 p-3 text-sm text-emerald-600 dark:text-emerald-400">
                 <CheckCircle className="h-4 w-4" />
                 {parsedData.length} {t.rows}, {parsedData[0]?.length || 0} {t.columns}
               </div>
@@ -365,14 +365,14 @@ export default function CsvToExcelClient({ lng }: CsvToExcelClientProps) {
               <button
                 onClick={downloadCSV}
                 disabled={!csvData}
-                className="flex items-center gap-2 rounded-xl bg-zinc-700 px-6 py-3 font-medium text-white transition-colors hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-6 py-3 font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Download className="h-4 w-4" />
                 {t.downloadCsv}
               </button>
               <button
                 onClick={clearAll}
-                className="flex items-center gap-2 rounded-xl bg-zinc-800 px-4 py-3 font-medium text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white"
+                className="flex items-center gap-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 px-4 py-3 font-medium text-zinc-600 dark:text-zinc-400 transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-800 dark:hover:text-white"
               >
                 <X className="h-4 w-4" />
                 {t.clear}
@@ -386,17 +386,17 @@ export default function CsvToExcelClient({ lng }: CsvToExcelClientProps) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h3 className="mb-3 text-sm font-medium text-zinc-300">{t.preview}</h3>
-            <div className="h-96 overflow-auto rounded-xl border border-zinc-800 bg-zinc-950">
+            <h3 className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.preview}</h3>
+            <div className="h-96 overflow-auto rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
               {parsedData.length > 0 ? (
                 <table className="w-full text-sm">
                   {hasHeader && (
-                    <thead className="sticky top-0 bg-zinc-900">
+                    <thead className="sticky top-0 bg-indigo-50 dark:bg-zinc-900">
                       <tr>
                         {parsedData[0]?.map((cell, i) => (
                           <th
                             key={i}
-                            className="border-b border-zinc-800 px-3 py-2 text-left font-medium text-teal-400"
+                            className="border-b border-indigo-100 dark:border-zinc-800 px-3 py-2 text-left font-medium text-teal-600 dark:text-teal-400"
                           >
                             {cell || `Col ${i + 1}`}
                           </th>
@@ -406,11 +406,11 @@ export default function CsvToExcelClient({ lng }: CsvToExcelClientProps) {
                   )}
                   <tbody>
                     {(hasHeader ? parsedData.slice(1) : parsedData).slice(0, 100).map((row, rowIndex) => (
-                      <tr key={rowIndex} className="border-b border-zinc-800/50 hover:bg-zinc-900/50">
+                      <tr key={rowIndex} className="border-b border-indigo-50 dark:border-zinc-800/50 hover:bg-indigo-50/50 dark:hover:bg-zinc-900/50">
                         {row.map((cell, cellIndex) => (
                           <td
                             key={cellIndex}
-                            className="px-3 py-2 text-zinc-300"
+                            className="px-3 py-2 text-zinc-700 dark:text-zinc-300"
                           >
                             {cell}
                           </td>
@@ -440,15 +440,15 @@ export default function CsvToExcelClient({ lng }: CsvToExcelClientProps) {
           transition={{ delay: 0.3 }}
           className="mt-16"
         >
-          <h2 className="mb-6 text-center text-xl font-semibold text-white">{t.features.title}</h2>
+          <h2 className="mb-6 text-center text-xl font-semibold text-zinc-800 dark:text-white">{t.features.title}</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {t.features.items.map((feature, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4"
+                className="rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4"
               >
-                <FileSpreadsheet className="mb-2 h-5 w-5 text-teal-400" />
-                <h3 className="mb-1 font-medium text-white">{feature.title}</h3>
+                <FileSpreadsheet className="mb-2 h-5 w-5 text-teal-500 dark:text-teal-400" />
+                <h3 className="mb-1 font-medium text-zinc-800 dark:text-white">{feature.title}</h3>
                 <p className="text-sm text-zinc-500">{feature.desc}</p>
               </div>
             ))}

@@ -210,11 +210,11 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <div className="mb-4 inline-flex rounded-2xl bg-cyan-500/10 p-4">
-            <ScanText className="h-10 w-10 text-cyan-400" />
+          <div className="mb-4 inline-flex rounded-2xl bg-cyan-100 dark:bg-cyan-500/10 p-4">
+            <ScanText className="h-10 w-10 text-cyan-600 dark:text-cyan-400" />
           </div>
-          <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">{t.title}</h1>
-          <p className="mx-auto max-w-2xl text-zinc-400">{t.subtitle}</p>
+          <h1 className="mb-3 text-3xl font-bold text-zinc-800 dark:text-white sm:text-4xl">{t.title}</h1>
+          <p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">{t.subtitle}</p>
         </motion.div>
 
         {/* Language Selector */}
@@ -224,13 +224,13 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
           transition={{ delay: 0.1 }}
           className="mb-6 flex justify-center"
         >
-          <div className="flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-2">
-            <Globe className="h-4 w-4 text-zinc-500" />
-            <span className="text-sm text-zinc-400">{t.language}:</span>
+          <div className="flex items-center gap-3 rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-2">
+            <Globe className="h-4 w-4 text-indigo-500 dark:text-zinc-500" />
+            <span className="text-sm text-zinc-600 dark:text-zinc-400">{t.language}:</span>
             <select
               value={ocrLanguage}
               onChange={(e) => setOcrLanguage(e.target.value as OcrLanguage)}
-              className="rounded-lg bg-zinc-800 px-3 py-1 text-sm text-white"
+              className="rounded-lg bg-indigo-50 dark:bg-zinc-800 px-3 py-1 text-sm text-zinc-800 dark:text-white"
             >
               {Object.entries(t.languages).map(([code, name]) => (
                 <option key={code} value={code}>
@@ -257,11 +257,11 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
                 className={`flex h-80 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-all ${
                   isDragging
                     ? 'border-cyan-500 bg-cyan-500/10'
-                    : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-600'
+                    : 'border-indigo-300 dark:border-zinc-700 bg-gradient-to-br from-indigo-50/80 to-purple-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 hover:border-indigo-400 dark:hover:border-zinc-600'
                 }`}
               >
-                <Upload className={`mb-4 h-12 w-12 ${isDragging ? 'text-cyan-400' : 'text-zinc-500'}`} />
-                <p className="mb-2 text-zinc-300">{t.dropzone}</p>
+                <Upload className={`mb-4 h-12 w-12 ${isDragging ? 'text-cyan-400' : 'text-indigo-400 dark:text-zinc-500'}`} />
+                <p className="mb-2 text-zinc-700 dark:text-zinc-300">{t.dropzone}</p>
                 <p className="text-sm text-zinc-500">{t.supported}</p>
                 <input
                   ref={fileInputRef}
@@ -272,10 +272,10 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
                 />
               </div>
             ) : (
-              <div className="relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4">
+              <div className="relative rounded-2xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4">
                 <button
                   onClick={clearAll}
-                  className="absolute right-2 top-2 z-10 rounded-lg bg-zinc-800 p-1 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                  className="absolute right-2 top-2 z-10 rounded-lg bg-indigo-100 dark:bg-zinc-800 p-1 text-indigo-600 dark:text-zinc-400 hover:bg-indigo-200 dark:hover:bg-zinc-700 hover:text-indigo-700 dark:hover:text-white"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -305,7 +305,7 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
                   </span>
                   <span className="text-zinc-500">{progress}%</span>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
+                <div className="h-2 overflow-hidden rounded-full bg-indigo-100 dark:bg-zinc-800">
                   <div
                     className="h-full bg-cyan-500 transition-all"
                     style={{ width: `${progress}%` }}
@@ -322,12 +322,12 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
             transition={{ delay: 0.3 }}
           >
             <div className="mb-3 flex items-center justify-between">
-              <label className="text-sm font-medium text-zinc-300">{t.resultLabel}</label>
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.resultLabel}</label>
               {extractedText && (
                 <div className="flex items-center gap-2">
                   <button
                     onClick={copyToClipboard}
-                    className="flex items-center gap-1 rounded-lg bg-zinc-800 px-3 py-1 text-xs text-zinc-300 hover:bg-zinc-700"
+                    className="flex items-center gap-1 rounded-lg bg-indigo-100 dark:bg-zinc-800 px-3 py-1 text-xs text-indigo-700 dark:text-zinc-300 hover:bg-indigo-200 dark:hover:bg-zinc-700"
                   >
                     {copied ? (
                       <>
@@ -343,7 +343,7 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
                   </button>
                   <button
                     onClick={downloadText}
-                    className="flex items-center gap-1 rounded-lg bg-zinc-800 px-3 py-1 text-xs text-zinc-300 hover:bg-zinc-700"
+                    className="flex items-center gap-1 rounded-lg bg-indigo-100 dark:bg-zinc-800 px-3 py-1 text-xs text-indigo-700 dark:text-zinc-300 hover:bg-indigo-200 dark:hover:bg-zinc-700"
                   >
                     <Download className="h-3 w-3" />
                     {t.download}
@@ -354,7 +354,7 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
             <textarea
               value={extractedText || (image && !isProcessing ? t.noText : '')}
               readOnly
-              className="h-80 w-full rounded-xl border border-zinc-700 bg-zinc-950 p-4 text-sm text-white placeholder-zinc-600 focus:outline-none"
+              className="h-80 w-full rounded-xl border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-950 p-4 text-sm text-zinc-800 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-600 focus:outline-none"
               placeholder={isProcessing ? '' : ''}
             />
           </motion.div>
@@ -367,15 +367,15 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
           transition={{ delay: 0.4 }}
           className="mt-16"
         >
-          <h2 className="mb-6 text-center text-xl font-semibold text-white">{t.features.title}</h2>
+          <h2 className="mb-6 text-center text-xl font-semibold text-zinc-800 dark:text-white">{t.features.title}</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {t.features.items.map((feature, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4"
+                className="rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4"
               >
-                <ImageIcon className="mb-2 h-5 w-5 text-cyan-400" />
-                <h3 className="mb-1 font-medium text-white">{feature.title}</h3>
+                <ImageIcon className="mb-2 h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+                <h3 className="mb-1 font-medium text-zinc-800 dark:text-white">{feature.title}</h3>
                 <p className="text-sm text-zinc-500">{feature.desc}</p>
               </div>
             ))}

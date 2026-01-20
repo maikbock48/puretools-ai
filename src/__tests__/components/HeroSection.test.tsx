@@ -29,10 +29,9 @@ describe('HeroSection', () => {
       expect(screen.getByText('AI: Pay-per-use only')).toBeInTheDocument();
     });
 
-    it('renders CTA buttons', () => {
+    it('renders CTA button', () => {
       render(<HeroSection lng="en" />);
       expect(screen.getByText('Explore Tools')).toBeInTheDocument();
-      expect(screen.getByText('See Pricing')).toBeInTheDocument();
     });
 
     it('renders stats section', () => {
@@ -77,30 +76,23 @@ describe('HeroSection', () => {
       expect(screen.getByText('KI: Nur Pay-per-Use')).toBeInTheDocument();
     });
 
-    it('renders German CTA buttons', () => {
+    it('renders German CTA button', () => {
       render(<HeroSection lng="de" />);
       expect(screen.getByText('Tools entdecken')).toBeInTheDocument();
-      expect(screen.getByText('Preise ansehen')).toBeInTheDocument();
     });
   });
 
   describe('Links', () => {
-    it('has correct tools link', () => {
+    it('has correct tools link for English', () => {
       render(<HeroSection lng="en" />);
       const toolsLink = screen.getByText('Explore Tools').closest('a');
       expect(toolsLink).toHaveAttribute('href', '#tools');
     });
 
-    it('has correct pricing link for English', () => {
-      render(<HeroSection lng="en" />);
-      const pricingLink = screen.getByText('See Pricing').closest('a');
-      expect(pricingLink).toHaveAttribute('href', '/en/pricing');
-    });
-
-    it('has correct pricing link for German', () => {
+    it('has correct tools link for German', () => {
       render(<HeroSection lng="de" />);
-      const pricingLink = screen.getByText('Preise ansehen').closest('a');
-      expect(pricingLink).toHaveAttribute('href', '/de/pricing');
+      const toolsLink = screen.getByText('Tools entdecken').closest('a');
+      expect(toolsLink).toHaveAttribute('href', '#tools');
     });
   });
 });

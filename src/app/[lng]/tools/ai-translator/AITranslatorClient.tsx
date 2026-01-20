@@ -127,6 +127,8 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
     totalCredits: number;
     estimatedTime: number;
   } | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<{ name: string; type: string } | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const wordCount = inputText.trim() ? inputText.trim().split(/\s+/).length : 0;
   const charCount = inputText.length;
@@ -225,11 +227,49 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.type === 'text/plain' || file.name.endsWith('.md')) {
-      const text = await file.text();
-      setInputText(text);
-    } else {
-      setError('Currently only TXT and MD files are supported for direct upload');
+    // Check file size (10MB max)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setError('File too large. Maximum size is 10MB');
+      return;
+    }
+
+    // Check file type
+    const validExtensions = ['.txt', '.md', '.docx', '.pdf'];
+    const fileName = file.name.toLowerCase();
+    const isValidType = validExtensions.some(ext => fileName.endsWith(ext));
+
+    if (!isValidType) {
+      setError('Unsupported file type. Please upload TXT, MD, DOCX, or PDF files.');
+      return;
+    }
+
+    setIsUploading(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/ai/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to process file');
+      }
+
+      setInputText(data.text);
+      setUploadedFile({ name: file.name, type: data.fileType });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to upload file');
+    } finally {
+      setIsUploading(false);
+      // Reset the input so the same file can be uploaded again
+      e.target.value = '';
     }
   };
 
@@ -238,12 +278,12 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-indigo-500/20 p-3">
-            <Languages className="h-6 w-6 text-indigo-400" />
+          <div className="rounded-xl bg-indigo-100 dark:bg-indigo-500/20 p-3">
+            <Languages className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">{t.title}</h1>
-            <p className="text-zinc-400">{t.subtitle}</p>
+            <h1 className="text-2xl font-bold text-zinc-800 dark:text-white">{t.title}</h1>
+            <p className="text-zinc-600 dark:text-zinc-400">{t.subtitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -259,13 +299,13 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
       {/* Language Selection */}
       <div className="flex flex-col sm:flex-row items-center gap-3">
         <div className="flex-1 w-full">
-          <label className="block text-sm font-medium text-zinc-400 mb-2">
+          <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">
             {t.sourceLang}
           </label>
           <select
             value={sourceLang}
             onChange={(e) => setSourceLang(e.target.value as LanguageCode | 'auto')}
-            className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-xl border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-3 text-zinc-800 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
             <option value="auto">{t.autoDetect}</option>
             {Object.entries(t.languages).map(([code, name]) => (
@@ -279,20 +319,20 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
         <button
           onClick={handleSwapLanguages}
           disabled={sourceLang === 'auto'}
-          className="mt-6 rounded-xl border border-zinc-700 bg-zinc-800 p-3 text-zinc-400 transition-all hover:border-indigo-500 hover:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-6 rounded-xl border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-3 text-indigo-600 dark:text-zinc-400 transition-all hover:border-indigo-500 hover:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
           title={t.swapLanguages}
         >
           <ArrowLeftRight className="h-5 w-5" />
         </button>
 
         <div className="flex-1 w-full">
-          <label className="block text-sm font-medium text-zinc-400 mb-2">
+          <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">
             {t.targetLang}
           </label>
           <select
             value={targetLang}
             onChange={(e) => setTargetLang(e.target.value as LanguageCode)}
-            className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-xl border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-3 text-zinc-800 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
             {Object.entries(t.languages).map(([code, name]) => (
               <option key={code} value={code}>
@@ -308,7 +348,7 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
         {/* Input */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-zinc-400">{t.inputLabel}</label>
+            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{t.inputLabel}</label>
             <div className="flex items-center gap-3 text-xs text-zinc-500">
               <span>{wordCount} {t.wordCount}</span>
               <span>{charCount} {t.charCount}</span>
@@ -319,37 +359,62 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder={t.inputPlaceholder}
-              className="h-64 w-full resize-none rounded-xl border border-zinc-700 bg-zinc-800 p-4 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="h-64 w-full resize-none rounded-xl border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 text-zinc-800 dark:text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
-            <label className="absolute bottom-3 right-3 cursor-pointer rounded-lg border border-zinc-600 bg-zinc-700 px-3 py-1.5 text-xs text-zinc-300 transition-colors hover:border-indigo-500 hover:text-indigo-400">
+            <label className={`absolute bottom-3 right-3 cursor-pointer rounded-lg border border-indigo-200 dark:border-zinc-600 bg-indigo-50 dark:bg-zinc-700 px-3 py-1.5 text-xs text-indigo-700 dark:text-zinc-300 transition-colors hover:border-indigo-500 hover:text-indigo-400 ${isUploading ? 'opacity-50 cursor-wait' : ''}`}>
               <input
                 type="file"
                 className="hidden"
-                accept=".txt,.md"
+                accept=".txt,.md,.docx,.pdf"
                 onChange={handleFileUpload}
+                disabled={isUploading}
               />
-              <Upload className="mr-1.5 inline h-3 w-3" />
-              {t.uploadFile}
+              {isUploading ? (
+                <>
+                  <Loader2 className="mr-1.5 inline h-3 w-3 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Upload className="mr-1.5 inline h-3 w-3" />
+                  {t.uploadFile}
+                </>
+              )}
             </label>
+            {uploadedFile && (
+              <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 text-xs text-emerald-700 dark:text-emerald-400">
+                <FileText className="h-3 w-3" />
+                <span className="max-w-[150px] truncate">{uploadedFile.name}</span>
+                <button
+                  onClick={() => {
+                    setUploadedFile(null);
+                    setInputText('');
+                  }}
+                  className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300"
+                >
+                  ×
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Output */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-zinc-400">{t.outputLabel}</label>
+            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{t.outputLabel}</label>
             {outputText && (
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleCopy}
-                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
+                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-indigo-600 dark:text-zinc-400 transition-colors hover:bg-indigo-100 dark:hover:bg-zinc-800 hover:text-indigo-700 dark:hover:text-white"
                 >
                   {copied ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
                   {copied ? t.copied : t.copy}
                 </button>
                 <button
                   onClick={handleDownload}
-                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
+                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-indigo-600 dark:text-zinc-400 transition-colors hover:bg-indigo-100 dark:hover:bg-zinc-800 hover:text-indigo-700 dark:hover:text-white"
                 >
                   <Download className="h-3 w-3" />
                   {t.download}
@@ -361,7 +426,7 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
             value={outputText}
             readOnly
             placeholder={t.outputPlaceholder}
-            className="h-64 w-full resize-none rounded-xl border border-zinc-700 bg-zinc-900 p-4 text-white placeholder-zinc-600"
+            className="h-64 w-full resize-none rounded-xl border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-900 p-4 text-zinc-800 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-600"
           />
         </div>
       </div>
@@ -423,7 +488,7 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
         <button
           onClick={estimateCost}
           disabled={!inputText.trim() || isTranslating}
-          className="flex items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 px-6 py-3 font-medium text-white transition-all hover:border-indigo-500 hover:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-2 rounded-xl border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-6 py-3 font-medium text-indigo-700 dark:text-white transition-all hover:border-indigo-500 hover:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <FileText className="h-5 w-5" />
           {t.estimateCost}

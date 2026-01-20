@@ -6,8 +6,16 @@ export type ToolKey =
   | 'imageCompressor'
   | 'heicConverter'
   | 'pdfToolkit'
+  | 'pdfToJpg'
+  | 'videoTrimmer'
+  | 'wifiQr'
   | 'ocr'
   | 'audioCutter'
+  | 'audioConverter'
+  | 'socialCropper'
+  | 'bacCalculator'
+  | 'stickerMaker'
+  | 'qrBusinessCard'
   | 'backgroundRemover'
   | 'jsonFormatter'
   | 'aiTranslator'
@@ -23,8 +31,16 @@ export const toolConfigs: Record<ToolKey, ToolSEOConfig> = {
   imageCompressor: { path: 'image-compressor', variant: 'local' },
   heicConverter: { path: 'heic-converter', variant: 'local' },
   pdfToolkit: { path: 'pdf-toolkit', variant: 'local' },
+  pdfToJpg: { path: 'pdf-to-jpg', variant: 'local' },
+  videoTrimmer: { path: 'video-trimmer', variant: 'local' },
+  wifiQr: { path: 'wifi-qr', variant: 'local' },
   ocr: { path: 'ocr', variant: 'local' },
   audioCutter: { path: 'audio-cutter', variant: 'local' },
+  audioConverter: { path: 'audio-converter', variant: 'local' },
+  socialCropper: { path: 'social-cropper', variant: 'local' },
+  bacCalculator: { path: 'bac-calculator', variant: 'local' },
+  stickerMaker: { path: 'sticker-maker', variant: 'local' },
+  qrBusinessCard: { path: 'qr-business-card', variant: 'local' },
   backgroundRemover: { path: 'background-remover', variant: 'local' },
   jsonFormatter: { path: 'json-formatter', variant: 'local' },
   aiTranslator: { path: 'ai-translator', variant: 'ai' },
@@ -72,8 +88,16 @@ function getToolKeywords(toolKey: ToolKey, lng: Language): string[] {
       imageCompressor: ['image compression', 'compress images', 'reduce file size', 'JPG compress', 'PNG compress'],
       heicConverter: ['HEIC to JPG', 'HEIC converter', 'iOS photos', 'iPhone photos', 'convert HEIC'],
       pdfToolkit: ['PDF merge', 'PDF split', 'combine PDF', 'PDF tools', 'free PDF'],
+      pdfToJpg: ['PDF to JPG', 'PDF to image', 'convert PDF', 'PDF converter', 'PDF to PNG'],
+      videoTrimmer: ['video trimmer', 'video cutter', 'trim video', 'cut video', 'mute video'],
+      wifiQr: ['WiFi QR code', 'WiFi QR generator', 'share WiFi', 'WiFi password QR', 'guest WiFi'],
       ocr: ['OCR', 'text recognition', 'extract text', 'image to text', 'OCR free'],
       audioCutter: ['audio cutter', 'MP3 cutter', 'trim audio', 'cut MP3', 'audio editor'],
+      audioConverter: ['audio converter', 'convert to MP3', 'WAV to MP3', 'FLAC to MP3', 'audio to MP3'],
+      socialCropper: ['social media cropper', 'Instagram crop', 'Facebook image size', 'Twitter image', 'YouTube thumbnail'],
+      bacCalculator: ['BAC calculator', 'blood alcohol', 'alcohol calculator', 'promille calculator', 'drink calculator'],
+      stickerMaker: ['sticker maker', 'create stickers', 'photo sticker', 'sticker with outline', 'WhatsApp sticker'],
+      qrBusinessCard: ['QR business card', 'digital business card', 'vCard QR', 'contact QR code', 'business card generator'],
       backgroundRemover: ['remove background', 'background remover', 'transparent background', 'remove bg'],
       jsonFormatter: ['JSON formatter', 'JSON beautifier', 'format JSON', 'JSON validator'],
       aiTranslator: ['PDF translator', 'document translation', 'AI translation', 'translate PDF'],
@@ -84,8 +108,16 @@ function getToolKeywords(toolKey: ToolKey, lng: Language): string[] {
       imageCompressor: ['Bildkomprimierung', 'Bilder komprimieren', 'Dateigröße reduzieren'],
       heicConverter: ['HEIC zu JPG', 'HEIC Konverter', 'iOS Fotos', 'iPhone Fotos'],
       pdfToolkit: ['PDF zusammenführen', 'PDF teilen', 'PDF Tools', 'kostenlos PDF'],
+      pdfToJpg: ['PDF zu JPG', 'PDF zu Bild', 'PDF konvertieren', 'PDF Konverter'],
+      videoTrimmer: ['Video schneiden', 'Video trimmen', 'Video kürzen', 'Ton entfernen'],
+      wifiQr: ['WLAN QR-Code', 'WLAN teilen', 'WiFi QR Generator', 'Gast WLAN'],
       ocr: ['OCR', 'Texterkennung', 'Text extrahieren', 'Bild zu Text'],
       audioCutter: ['Audio schneiden', 'MP3 schneiden', 'Audio trimmen'],
+      audioConverter: ['Audio Konverter', 'zu MP3 konvertieren', 'WAV zu MP3', 'FLAC zu MP3'],
+      socialCropper: ['Social Media Cropper', 'Instagram zuschneiden', 'Facebook Bildgröße', 'YouTube Thumbnail'],
+      bacCalculator: ['Promillerechner', 'Blutalkohol', 'Alkoholrechner', 'BAC Rechner', 'Promille berechnen'],
+      stickerMaker: ['Sticker erstellen', 'Foto Sticker', 'Sticker mit Umrandung', 'WhatsApp Sticker', 'Aufkleber Generator'],
+      qrBusinessCard: ['QR Visitenkarte', 'digitale Visitenkarte', 'vCard QR', 'Kontakt QR-Code', 'Visitenkarten Generator'],
       backgroundRemover: ['Hintergrund entfernen', 'transparenter Hintergrund'],
       jsonFormatter: ['JSON formatieren', 'JSON Formatter', 'JSON validieren'],
       aiTranslator: ['PDF übersetzen', 'Dokumentübersetzung', 'KI-Übersetzung'],

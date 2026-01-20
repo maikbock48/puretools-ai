@@ -123,3 +123,17 @@ model CreditPackage {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+// Newsletter Subscribers
+model NewsletterSubscriber {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  language     String    @default("en")
+  isActive     Boolean   @default(true)
+  source       String?   // Where they signed up from (homepage, footer, etc.)
+  createdAt    DateTime  @default(now())
+  unsubscribedAt DateTime?
+
+  @@index([email])
+  @@index([createdAt])
+}

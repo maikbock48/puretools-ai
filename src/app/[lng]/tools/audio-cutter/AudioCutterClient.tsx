@@ -413,11 +413,11 @@ export default function AudioCutterClient({ lng }: AudioCutterClientProps) {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <div className="mb-4 inline-flex rounded-2xl bg-pink-500/10 p-4">
-            <Scissors className="h-10 w-10 text-pink-400" />
+          <div className="mb-4 inline-flex rounded-2xl bg-pink-100 dark:bg-pink-500/10 p-4">
+            <Scissors className="h-10 w-10 text-pink-600 dark:text-pink-400" />
           </div>
-          <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">{t.title}</h1>
-          <p className="mx-auto max-w-2xl text-zinc-400">{t.subtitle}</p>
+          <h1 className="mb-3 text-3xl font-bold text-zinc-800 dark:text-white sm:text-4xl">{t.title}</h1>
+          <p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">{t.subtitle}</p>
         </motion.div>
 
         {/* Upload / Waveform Area */}
@@ -436,11 +436,11 @@ export default function AudioCutterClient({ lng }: AudioCutterClientProps) {
               className={`flex h-48 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-all ${
                 isDragging
                   ? 'border-pink-500 bg-pink-500/10'
-                  : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-600'
+                  : 'border-indigo-300 dark:border-zinc-700 bg-gradient-to-br from-indigo-50/80 to-purple-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 hover:border-indigo-400 dark:hover:border-zinc-600'
               }`}
             >
-              <Upload className={`mb-4 h-12 w-12 ${isDragging ? 'text-pink-400' : 'text-zinc-500'}`} />
-              <p className="mb-2 text-zinc-300">{t.dropzone}</p>
+              <Upload className={`mb-4 h-12 w-12 ${isDragging ? 'text-pink-400' : 'text-indigo-400 dark:text-zinc-500'}`} />
+              <p className="mb-2 text-zinc-700 dark:text-zinc-300">{t.dropzone}</p>
               <p className="text-sm text-zinc-500">{t.supported}</p>
               <input
                 ref={fileInputRef}
@@ -451,16 +451,16 @@ export default function AudioCutterClient({ lng }: AudioCutterClientProps) {
               />
             </div>
           ) : (
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4">
+            <div className="rounded-2xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4">
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Music className="h-5 w-5 text-pink-400" />
-                  <span className="text-sm text-white">{audioFile.name}</span>
+                  <Music className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+                  <span className="text-sm text-zinc-800 dark:text-white">{audioFile.name}</span>
                   <span className="text-xs text-zinc-500">{formatTime(duration)}</span>
                 </div>
                 <button
                   onClick={clearAll}
-                  className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-800 hover:text-white"
+                  className="rounded-lg p-1 text-indigo-600 dark:text-zinc-400 hover:bg-indigo-100 dark:hover:bg-zinc-800 hover:text-indigo-700 dark:hover:text-white"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -483,7 +483,7 @@ export default function AudioCutterClient({ lng }: AudioCutterClientProps) {
                     type="text"
                     value={formatTime(startTime)}
                     onChange={(e) => setStartTime(parseTime(e.target.value))}
-                    className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white"
+                    className="w-full rounded-lg border border-indigo-200 dark:border-zinc-700 bg-indigo-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-white"
                   />
                 </div>
                 <div>
@@ -492,12 +492,12 @@ export default function AudioCutterClient({ lng }: AudioCutterClientProps) {
                     type="text"
                     value={formatTime(endTime)}
                     onChange={(e) => setEndTime(parseTime(e.target.value))}
-                    className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white"
+                    className="w-full rounded-lg border border-indigo-200 dark:border-zinc-700 bg-indigo-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-white"
                   />
                 </div>
                 <div>
                   <label className="mb-1 block text-xs text-zinc-500">{t.duration}</label>
-                  <div className="flex h-[38px] items-center rounded-lg border border-zinc-700 bg-zinc-900 px-3 text-sm text-zinc-400">
+                  <div className="flex h-[38px] items-center rounded-lg border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-sm text-zinc-600 dark:text-zinc-400">
                     {formatTime(endTime - startTime)}
                   </div>
                 </div>
@@ -523,17 +523,17 @@ export default function AudioCutterClient({ lng }: AudioCutterClientProps) {
                 </button>
                 <button
                   onClick={resetSelection}
-                  className="flex items-center gap-2 rounded-xl bg-zinc-700 px-4 py-3 font-medium text-white transition-colors hover:bg-zinc-600"
+                  className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-4 py-3 font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600"
                 >
                   <RotateCcw className="h-4 w-4" />
                   {t.reset}
                 </button>
-                <div className="flex items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-2">
+                <div className="flex items-center gap-2 rounded-xl border border-indigo-200 dark:border-zinc-700 bg-indigo-50 dark:bg-zinc-800 px-3 py-2">
                   <span className="text-xs text-zinc-500">{t.format}:</span>
                   <select
                     value={outputFormat}
                     onChange={(e) => setOutputFormat(e.target.value as 'wav' | 'mp3')}
-                    className="bg-transparent text-sm text-white"
+                    className="bg-transparent text-sm text-zinc-800 dark:text-white"
                   >
                     <option value="wav">WAV</option>
                   </select>
@@ -558,15 +558,15 @@ export default function AudioCutterClient({ lng }: AudioCutterClientProps) {
           transition={{ delay: 0.2 }}
           className="mt-16"
         >
-          <h2 className="mb-6 text-center text-xl font-semibold text-white">{t.features.title}</h2>
+          <h2 className="mb-6 text-center text-xl font-semibold text-zinc-800 dark:text-white">{t.features.title}</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {t.features.items.map((feature, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4"
+                className="rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4"
               >
-                <Volume2 className="mb-2 h-5 w-5 text-pink-400" />
-                <h3 className="mb-1 font-medium text-white">{feature.title}</h3>
+                <Volume2 className="mb-2 h-5 w-5 text-pink-600 dark:text-pink-400" />
+                <h3 className="mb-1 font-medium text-zinc-800 dark:text-white">{feature.title}</h3>
                 <p className="text-sm text-zinc-500">{feature.desc}</p>
               </div>
             ))}

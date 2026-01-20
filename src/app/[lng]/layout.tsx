@@ -6,6 +6,7 @@ import { getTranslation } from '@/i18n/server';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/theme-provider';
+import AuthProvider from '@/components/AuthProvider';
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData';
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
 import PWAInstaller from '@/components/PWAInstaller';
@@ -88,14 +89,15 @@ export default async function RootLayout({
         <WebsiteStructuredData />
         <OrganizationStructuredData />
       </head>
-      <body className={`${inter.variable} font-sans antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="relative min-h-screen flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50">
+      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem={false}
+            disableTransitionOnChange
+          >
+            <div className="relative min-h-screen flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50">
             {/* Background gradient - subtle in light, visible in dark */}
             <div className="pointer-events-none fixed inset-0 overflow-hidden">
               <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-indigo-100/50 dark:bg-indigo-500/10 blur-3xl" />
@@ -104,13 +106,14 @@ export default async function RootLayout({
 
             {/* Content */}
             <Navbar lng={lng} />
-            <main className="relative flex-1 pt-16">{children}</main>
+            <main className="relative flex-1 pt-24">{children}</main>
             <Footer lng={lng} />
             <PWAInstaller />
             <ReferralBanner lng={lng} />
             <ServiceWorkerRegistration />
-          </div>
-        </ThemeProvider>
+            </div>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

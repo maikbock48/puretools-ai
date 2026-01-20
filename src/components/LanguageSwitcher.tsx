@@ -30,8 +30,8 @@ export default function LanguageSwitcher({ lng }: LanguageSwitcherProps) {
   };
 
   return (
-    <div className="flex items-center gap-1 bg-zinc-900 rounded-lg p-1 border border-zinc-800">
-      <Globe className="h-4 w-4 text-zinc-500 ml-2" />
+    <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-1 border border-zinc-200 dark:border-zinc-800">
+      <Globe className="h-4 w-4 text-zinc-500 dark:text-zinc-500 ml-2" />
       {languages.map((lang) => (
         <motion.button
           key={lang}
@@ -40,8 +40,8 @@ export default function LanguageSwitcher({ lng }: LanguageSwitcherProps) {
           whileTap={{ scale: 0.95 }}
           className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
             lng === lang
-              ? 'bg-zinc-700 text-white'
-              : 'text-zinc-400 hover:text-white'
+              ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm'
+              : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
           }`}
         >
           {languageLabels[lang]}

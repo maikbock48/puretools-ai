@@ -6,6 +6,8 @@ import {
   ImageDown,
   Image,
   FileText,
+  FileImage,
+  Film,
   ScanText,
   Scissors,
   Eraser,
@@ -14,6 +16,12 @@ import {
   FileAudio,
   Shield,
   Sparkles,
+  Wifi,
+  Music,
+  Crop,
+  Wine,
+  Sticker,
+  CreditCard,
 } from 'lucide-react';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
@@ -28,8 +36,16 @@ const localTools = [
   { key: 'imageCompressor', icon: ImageDown, path: 'image-compressor' },
   { key: 'heicConverter', icon: Image, path: 'heic-converter' },
   { key: 'pdfToolkit', icon: FileText, path: 'pdf-toolkit' },
+  { key: 'pdfToJpg', icon: FileImage, path: 'pdf-to-jpg' },
+  { key: 'videoTrimmer', icon: Film, path: 'video-trimmer' },
+  { key: 'wifiQr', icon: Wifi, path: 'wifi-qr' },
   { key: 'ocr', icon: ScanText, path: 'ocr' },
   { key: 'audioCutter', icon: Scissors, path: 'audio-cutter' },
+  { key: 'audioConverter', icon: Music, path: 'audio-converter' },
+  { key: 'socialCropper', icon: Crop, path: 'social-cropper' },
+  { key: 'bacCalculator', icon: Wine, path: 'bac-calculator' },
+  { key: 'stickerMaker', icon: Sticker, path: 'sticker-maker' },
+  { key: 'qrBusinessCard', icon: CreditCard, path: 'qr-business-card' },
   { key: 'backgroundRemover', icon: Eraser, path: 'background-remover' },
   { key: 'jsonFormatter', icon: Braces, path: 'json-formatter' },
 ] as const;
@@ -75,13 +91,13 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
           transition={{ duration: 0.5 }}
           className="mb-16"
         >
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex flex-col items-center gap-3 mb-2 text-center">
             <div className="p-2 rounded-lg bg-emerald-500/10">
               <Shield className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{t('categories.local')}</h2>
           </div>
-          <p className="text-zinc-600 dark:text-zinc-400 ml-12 mb-8">{t('categories.localDescription')}</p>
+          <p className="text-zinc-600 dark:text-zinc-400 text-center mb-8">{t('categories.localDescription')}</p>
 
           <motion.div
             variants={containerVariants}
@@ -99,6 +115,7 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
                   href={`/${lng}/tools/${tool.path}`}
                   icon={tool.icon}
                   variant="local"
+                  toolKey={tool.key}
                 />
               </motion.div>
             ))}
@@ -112,13 +129,13 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex flex-col items-center gap-3 mb-2 text-center">
             <div className="p-2 rounded-lg bg-indigo-500/10">
               <Sparkles className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             </div>
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{t('categories.ai')}</h2>
           </div>
-          <p className="text-zinc-600 dark:text-zinc-400 ml-12 mb-8">{t('categories.aiDescription')}</p>
+          <p className="text-zinc-600 dark:text-zinc-400 text-center mb-8">{t('categories.aiDescription')}</p>
 
           <motion.div
             variants={containerVariants}
@@ -136,6 +153,7 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
                   href={`/${lng}/tools/${tool.path}`}
                   icon={tool.icon}
                   variant="ai"
+                  toolKey={tool.key}
                 />
               </motion.div>
             ))}
@@ -150,7 +168,7 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-16 text-center"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 shadow-sm">
+          <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/50 px-4 py-2 text-sm text-zinc-700 dark:text-zinc-400 shadow-sm backdrop-blur-sm">
             <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
             {t('common.privacyNote')}
           </div>

@@ -7,7 +7,10 @@
     "home": "Home",
     "tools": "Tools",
     "pricing": "Pricing",
-    "about": "About"
+    "faq": "FAQ",
+    "about": "About",
+    "signIn": "Sign In",
+    "getStarted": "Get Started"
   },
   "hero": {
     "title": "Privacy-First Tools",
@@ -47,6 +50,18 @@
       "metaTitle": "Free PDF Merge & Split Tool | PureTools AI",
       "metaDescription": "Merge multiple PDFs or split large documents. Works offline, no file uploads."
     },
+    "pdfToJpg": {
+      "title": "PDF to JPG",
+      "description": "Convert PDF pages to images for easy social media sharing.",
+      "metaTitle": "Free PDF to JPG Converter - Convert PDF to Images | PureTools AI",
+      "metaDescription": "Convert PDF pages to high-quality JPG or PNG images. Perfect for social media sharing. 100% local processing."
+    },
+    "videoTrimmer": {
+      "title": "Video Trimmer",
+      "description": "Trim videos and remove audio locally in your browser.",
+      "metaTitle": "Free Video Trimmer - Cut & Mute Videos Online | PureTools AI",
+      "metaDescription": "Trim videos and remove audio locally in your browser. No uploads, 100% private video editing."
+    },
     "ocr": {
       "title": "Privacy OCR",
       "description": "Extract text from images without uploading them.",
@@ -59,6 +74,36 @@
       "metaTitle": "Free MP3 Cutter - Trim Audio Online | PureTools AI",
       "metaDescription": "Cut and trim MP3 audio files locally. No uploads, instant processing."
     },
+    "audioConverter": {
+      "title": "Audio to MP3",
+      "description": "Convert WAV, OGG, FLAC and other audio formats to MP3.",
+      "metaTitle": "Free Audio to MP3 Converter - WAV, FLAC, OGG | PureTools AI",
+      "metaDescription": "Convert audio files to MP3 format with custom quality settings. Supports WAV, OGG, FLAC, M4A. 100% local processing."
+    },
+    "socialCropper": {
+      "title": "Social Media Cropper",
+      "description": "Crop images to perfect sizes for Instagram, Facebook, Twitter & more.",
+      "metaTitle": "Free Social Media Image Cropper - Instagram, Facebook, YouTube | PureTools AI",
+      "metaDescription": "Crop and resize images for all social media platforms. Perfect sizes for Instagram, Facebook, Twitter, YouTube, LinkedIn. 100% local."
+    },
+    "bacCalculator": {
+      "title": "BAC Calculator",
+      "description": "Estimate your blood alcohol content based on drinks consumed.",
+      "metaTitle": "Free BAC Calculator - Blood Alcohol Content Estimator | PureTools AI",
+      "metaDescription": "Calculate estimated blood alcohol content based on weight, gender, and drinks. For educational purposes only. 100% private."
+    },
+    "stickerMaker": {
+      "title": "Sticker Maker",
+      "description": "Create stickers with custom outlines from your photos.",
+      "metaTitle": "Free Sticker Maker - Create Photo Stickers with Outline | PureTools AI",
+      "metaDescription": "Turn your photos into stickers with customizable outlines. Perfect for WhatsApp and social media. 100% local processing."
+    },
+    "qrBusinessCard": {
+      "title": "QR Business Card",
+      "description": "Create a flippable digital business card with QR code.",
+      "metaTitle": "Free QR Business Card Generator - Digital vCard | PureTools AI",
+      "metaDescription": "Create a professional digital business card with vCard QR code. Flippable design with customizable colors. 100% local."
+    },
     "backgroundRemover": {
       "title": "Background Remover",
       "description": "Remove image backgrounds using local AI segmentation.",
@@ -70,6 +115,12 @@
       "description": "Format and validate JSON data with syntax highlighting.",
       "metaTitle": "Free JSON Formatter & Validator | PureTools AI",
       "metaDescription": "Format, validate, and beautify JSON data with syntax highlighting. 100% local processing."
+    },
+    "wifiQr": {
+      "title": "WiFi QR Code",
+      "description": "Generate QR codes for instant WiFi access sharing.",
+      "metaTitle": "Free WiFi QR Code Generator - Share WiFi Instantly | PureTools AI",
+      "metaDescription": "Create QR codes for WiFi networks. Guests can scan and connect instantly. 100% local, no data uploaded."
     },
     "aiTranslator": {
       "title": "AI Document Translator",
@@ -95,7 +146,9 @@
     "local": "Runs Locally",
     "free": "Free",
     "ai": "AI Powered",
-    "credits": "Credits"
+    "credits": "Credits",
+    "noAds": "No Ads",
+    "tryIt": "Try it out"
   },
   "common": {
     "privacyNote": "100% Secure. Processing happens locally in your browser.",

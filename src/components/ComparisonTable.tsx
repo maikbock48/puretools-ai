@@ -110,11 +110,11 @@ export default function ComparisonTable({ lng }: ComparisonTableProps) {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 mb-4">
+          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-1.5 text-sm font-medium text-emerald-700 dark:text-emerald-400 mb-4">
             <Shield className="h-4 w-4" />
             {t.badge}
           </span>
-          <h2 className="text-3xl font-bold text-zinc-900 dark:text-white sm:text-4xl mb-3">{t.title}</h2>
+          <h2 className="text-3xl font-bold text-zinc-800 dark:text-white sm:text-4xl mb-3">{t.title}</h2>
           <p className="text-zinc-600 dark:text-zinc-400">{t.subtitle}</p>
         </motion.div>
 
@@ -124,21 +124,21 @@ export default function ComparisonTable({ lng }: ComparisonTableProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-transparent"
+          className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-transparent backdrop-blur-sm shadow-sm"
         >
           {/* Table Header */}
-          <div className="grid grid-cols-3 bg-zinc-50 dark:bg-zinc-900/80">
+          <div className="grid grid-cols-3 bg-zinc-50/80 dark:bg-zinc-900/80">
             <div className="p-4 sm:p-6">
               <span className="text-sm font-medium text-zinc-500">{t.headers.feature}</span>
             </div>
-            <div className="p-4 sm:p-6 border-l border-zinc-200 dark:border-zinc-800">
-              <span className="text-sm font-medium text-zinc-500">{t.headers.others}</span>
-            </div>
-            <div className="p-4 sm:p-6 border-l border-zinc-200 dark:border-zinc-800 bg-indigo-500/5">
+            <div className="p-4 sm:p-6 border-l border-zinc-200 dark:border-zinc-800 bg-indigo-50/80 dark:bg-indigo-500/5">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                 <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">{t.headers.puretools}</span>
               </div>
+            </div>
+            <div className="p-4 sm:p-6 border-l border-zinc-200 dark:border-zinc-800">
+              <span className="text-sm font-medium text-zinc-500">{t.headers.others}</span>
             </div>
           </div>
 
@@ -159,23 +159,23 @@ export default function ComparisonTable({ lng }: ComparisonTableProps) {
                   <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800 p-2">
                     <Icon className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
                   </div>
-                  <span className="text-sm font-medium text-zinc-900 dark:text-white">{row.feature}</span>
+                  <span className="text-sm font-medium text-zinc-800 dark:text-white">{row.feature}</span>
+                </div>
+
+                {/* PureTools */}
+                <div className="p-4 sm:p-6 border-l border-zinc-200 dark:border-zinc-800 bg-indigo-50/50 dark:bg-indigo-500/5 flex items-center gap-2">
+                  <div className="rounded-full bg-emerald-100 dark:bg-emerald-500/20 p-1">
+                    <Check className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <span className="text-sm font-medium text-emerald-700 dark:text-emerald-400">{row.puretools.text}</span>
                 </div>
 
                 {/* Others */}
                 <div className="p-4 sm:p-6 border-l border-zinc-200 dark:border-zinc-800 flex items-center gap-2">
-                  <div className="rounded-full bg-red-500/20 p-1">
-                    <X className="h-3 w-3 text-red-500 dark:text-red-400" />
+                  <div className="rounded-full bg-red-100 dark:bg-red-500/20 p-1">
+                    <X className="h-3 w-3 text-red-600 dark:text-red-400" />
                   </div>
                   <span className="text-sm text-zinc-600 dark:text-zinc-400">{row.others.text}</span>
-                </div>
-
-                {/* PureTools */}
-                <div className="p-4 sm:p-6 border-l border-zinc-200 dark:border-zinc-800 bg-indigo-500/5 flex items-center gap-2">
-                  <div className="rounded-full bg-emerald-500/20 p-1">
-                    <Check className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{row.puretools.text}</span>
                 </div>
               </motion.div>
             );
@@ -192,7 +192,7 @@ export default function ComparisonTable({ lng }: ComparisonTableProps) {
         >
           <a
             href="#tools"
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-8 py-4 font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:bg-indigo-400 hover:shadow-indigo-500/40"
+            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-8 py-4 font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:bg-indigo-700 hover:shadow-indigo-500/40"
           >
             <Sparkles className="h-5 w-5" />
             {t.cta}

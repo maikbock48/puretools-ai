@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import Link from 'next/link';
+import * as Sentry from '@sentry/nextjs';
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -14,10 +15,8 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
     // Log error to console in development
     console.error('Page Error:', error);
 
-    // Here you could send to error tracking service
-    // if (typeof window !== 'undefined' && window.Sentry) {
-    //   window.Sentry.captureException(error);
-    // }
+    // Report error to Sentry
+    Sentry.captureException(error);
   }, [error]);
 
   return (

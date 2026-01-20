@@ -43,13 +43,29 @@ export default function NewsletterCTA({ lng, variant = 'card' }: NewsletterCTAPr
 
     setStatus('loading');
 
-    // Simulate API call - replace with actual newsletter service
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // TODO: Integrate with actual newsletter service (Mailchimp, ConvertKit, etc.)
-      setStatus('success');
-      setMessage(t.success);
-      setEmail('');
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          language: lng,
+          source: 'website',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        setMessage(t.success);
+        setEmail('');
+      } else {
+        setStatus('error');
+        setMessage(data.error || t.error);
+      }
     } catch {
       setStatus('error');
       setMessage(t.error);

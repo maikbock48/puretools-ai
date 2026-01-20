@@ -241,6 +241,12 @@ export default function PricingClient({ lng }: PricingClientProps) {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-24">
+        {/* Background gradient */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/80 via-white to-white dark:from-indigo-500/5 dark:via-transparent dark:to-transparent" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-purple-200/30 dark:bg-purple-500/10 rounded-full blur-3xl opacity-60 dark:opacity-20" />
+        </div>
+
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -250,43 +256,43 @@ export default function PricingClient({ lng }: PricingClientProps) {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400"
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-300 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-500/10 px-4 py-2 text-sm font-medium text-indigo-700 dark:text-indigo-400"
             >
               <CreditCard className="h-4 w-4" />
               {t.hero.badge}
             </motion.div>
 
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-white sm:text-6xl">
+            <h1 className="mb-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-white sm:text-6xl">
               {t.hero.title}{' '}
-              <span className="bg-gradient-to-r from-emerald-400 to-indigo-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
                 {t.hero.titleHighlight}
               </span>
             </h1>
 
-            <p className="text-lg text-zinc-400">{t.hero.subtitle}</p>
+            <p className="text-lg text-zinc-600 dark:text-zinc-400">{t.hero.subtitle}</p>
 
             {/* Billing Toggle */}
             <div className="mt-10 flex items-center justify-center gap-4">
-              <span className={`text-sm ${!isYearly ? 'text-white' : 'text-zinc-500'}`}>
+              <span className={`text-sm font-medium ${!isYearly ? 'text-zinc-800 dark:text-white' : 'text-zinc-500'}`}>
                 {t.toggle.monthly}
               </span>
               <button
                 onClick={() => setIsYearly(!isYearly)}
                 className={`relative h-7 w-14 rounded-full transition-colors ${
-                  isYearly ? 'bg-emerald-500' : 'bg-zinc-700'
+                  isYearly ? 'bg-indigo-600' : 'bg-zinc-300 dark:bg-zinc-700'
                 }`}
               >
                 <span
-                  className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${
+                  className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-transform ${
                     isYearly ? 'left-8' : 'left-1'
                   }`}
                 />
               </button>
-              <span className={`text-sm ${isYearly ? 'text-white' : 'text-zinc-500'}`}>
+              <span className={`text-sm font-medium ${isYearly ? 'text-zinc-800 dark:text-white' : 'text-zinc-500'}`}>
                 {t.toggle.yearly}
               </span>
               {isYearly && (
-                <span className="rounded-full bg-emerald-500/20 px-2 py-1 text-xs text-emerald-400">
+                <span className="rounded-full bg-indigo-100 dark:bg-indigo-500/20 px-2 py-1 text-xs font-medium text-indigo-700 dark:text-indigo-400">
                   {t.toggle.save}
                 </span>
               )}
@@ -304,30 +310,30 @@ export default function PricingClient({ lng }: PricingClientProps) {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-emerald-500/10 to-transparent p-8"
+              className="relative rounded-3xl border-2 border-emerald-300 dark:border-emerald-500/30 bg-gradient-to-b from-emerald-50 to-white dark:from-emerald-500/10 dark:to-transparent p-8 shadow-lg"
             >
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <span className="rounded-full bg-emerald-500 px-4 py-1 text-sm font-medium text-white">
+                <span className="rounded-full bg-emerald-500 px-4 py-1 text-sm font-medium text-white shadow-lg">
                   {t.tiers.free.badge}
                 </span>
               </div>
 
               <div className="mb-6 flex items-center gap-3">
-                <div className="rounded-xl bg-emerald-500/20 p-2">
-                  <Shield className="h-6 w-6 text-emerald-400" />
+                <div className="rounded-xl bg-emerald-100 dark:bg-emerald-500/20 p-2">
+                  <Shield className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">{t.tiers.free.name}</h3>
-                  <p className="text-sm text-zinc-500">{t.tiers.free.description}</p>
+                  <h3 className="text-xl font-bold text-zinc-800 dark:text-white">{t.tiers.free.name}</h3>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-500">{t.tiers.free.description}</p>
                 </div>
               </div>
 
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-5xl font-bold text-white">${t.tiers.free.price}</span>
+                  <span className="text-5xl font-bold text-zinc-800 dark:text-white">${t.tiers.free.price}</span>
                   <span className="text-zinc-500">{t.tiers.free.period}</span>
                 </div>
-                <div className="mt-2 flex items-center gap-2 text-sm text-emerald-400">
+                <div className="mt-2 flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400">
                   <Infinity className="h-4 w-4" />
                   Unlimited usage
                 </div>
@@ -335,8 +341,8 @@ export default function PricingClient({ lng }: PricingClientProps) {
 
               <ul className="mb-8 space-y-3">
                 {t.tiers.free.features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-3 text-sm text-zinc-300">
-                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400" />
+                  <li key={index} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-600 dark:text-emerald-400" />
                     {feature}
                   </li>
                 ))}
@@ -344,7 +350,7 @@ export default function PricingClient({ lng }: PricingClientProps) {
 
               <Link
                 href={`/${lng}`}
-                className="block w-full rounded-xl bg-emerald-500 py-3 text-center font-semibold text-white transition-colors hover:bg-emerald-400"
+                className="block w-full rounded-xl bg-emerald-500 py-3 text-center font-semibold text-white transition-colors hover:bg-emerald-600 shadow-lg shadow-emerald-500/25"
               >
                 {t.tiers.free.cta}
               </Link>
@@ -356,24 +362,24 @@ export default function PricingClient({ lng }: PricingClientProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="rounded-3xl border border-zinc-800 bg-zinc-900 p-8"
+              className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm"
             >
               <div className="mb-6 flex items-center gap-3">
-                <div className="rounded-xl bg-zinc-800 p-2">
-                  <Zap className="h-6 w-6 text-zinc-400" />
+                <div className="rounded-xl bg-purple-100 dark:bg-purple-500/20 p-2">
+                  <Zap className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">{t.tiers.starter.name}</h3>
-                  <p className="text-sm text-zinc-500">{t.tiers.starter.description}</p>
+                  <h3 className="text-xl font-bold text-zinc-800 dark:text-white">{t.tiers.starter.name}</h3>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-500">{t.tiers.starter.description}</p>
                 </div>
               </div>
 
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-5xl font-bold text-white">${getPrice(t.tiers.starter.price)}</span>
+                  <span className="text-5xl font-bold text-zinc-800 dark:text-white">${getPrice(t.tiers.starter.price)}</span>
                   <span className="text-zinc-500">{t.tiers.starter.period}</span>
                 </div>
-                <div className="mt-2 flex items-center gap-2 text-sm text-indigo-400">
+                <div className="mt-2 flex items-center gap-2 text-sm text-purple-600 dark:text-purple-400">
                   <Sparkles className="h-4 w-4" />
                   {t.tiers.starter.credits}
                 </div>
@@ -381,14 +387,14 @@ export default function PricingClient({ lng }: PricingClientProps) {
 
               <ul className="mb-8 space-y-3">
                 {t.tiers.starter.features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-3 text-sm text-zinc-300">
-                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-indigo-400" />
+                  <li key={index} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-600 dark:text-purple-400" />
                     {feature}
                   </li>
                 ))}
               </ul>
 
-              <button className="w-full rounded-xl border border-zinc-700 bg-zinc-800 py-3 font-semibold text-white transition-colors hover:bg-zinc-700">
+              <button className="w-full rounded-xl border-2 border-purple-200 dark:border-purple-500/30 bg-purple-50 dark:bg-purple-500/10 py-3 font-semibold text-purple-700 dark:text-purple-400 transition-colors hover:bg-purple-100 dark:hover:bg-purple-500/20">
                 {t.tiers.starter.cta}
               </button>
             </motion.div>
@@ -399,30 +405,30 @@ export default function PricingClient({ lng }: PricingClientProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="relative rounded-3xl border border-indigo-500/30 bg-gradient-to-b from-indigo-500/10 to-transparent p-8"
+              className="relative rounded-3xl border-2 border-indigo-300 dark:border-indigo-500/30 bg-gradient-to-b from-indigo-50 to-white dark:from-indigo-500/10 dark:to-transparent p-8 shadow-lg"
             >
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <span className="rounded-full bg-indigo-500 px-4 py-1 text-sm font-medium text-white">
+                <span className="rounded-full bg-indigo-600 px-4 py-1 text-sm font-medium text-white shadow-lg">
                   {t.tiers.pro.badge}
                 </span>
               </div>
 
               <div className="mb-6 flex items-center gap-3">
-                <div className="rounded-xl bg-indigo-500/20 p-2">
-                  <Crown className="h-6 w-6 text-indigo-400" />
+                <div className="rounded-xl bg-indigo-100 dark:bg-indigo-500/20 p-2">
+                  <Crown className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">{t.tiers.pro.name}</h3>
-                  <p className="text-sm text-zinc-500">{t.tiers.pro.description}</p>
+                  <h3 className="text-xl font-bold text-zinc-800 dark:text-white">{t.tiers.pro.name}</h3>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-500">{t.tiers.pro.description}</p>
                 </div>
               </div>
 
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-5xl font-bold text-white">${getPrice(t.tiers.pro.price)}</span>
+                  <span className="text-5xl font-bold text-zinc-800 dark:text-white">${getPrice(t.tiers.pro.price)}</span>
                   <span className="text-zinc-500">{t.tiers.pro.period}</span>
                 </div>
-                <div className="mt-2 flex items-center gap-2 text-sm text-indigo-400">
+                <div className="mt-2 flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400">
                   <Sparkles className="h-4 w-4" />
                   {t.tiers.pro.credits}
                 </div>
@@ -430,14 +436,14 @@ export default function PricingClient({ lng }: PricingClientProps) {
 
               <ul className="mb-8 space-y-3">
                 {t.tiers.pro.features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-3 text-sm text-zinc-300">
-                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-indigo-400" />
+                  <li key={index} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-indigo-600 dark:text-indigo-400" />
                     {feature}
                   </li>
                 ))}
               </ul>
 
-              <button className="w-full rounded-xl bg-indigo-500 py-3 font-semibold text-white transition-colors hover:bg-indigo-400">
+              <button className="w-full rounded-xl bg-indigo-600 py-3 font-semibold text-white transition-colors hover:bg-indigo-700 shadow-lg shadow-indigo-500/25">
                 {t.tiers.pro.cta}
               </button>
             </motion.div>
@@ -446,7 +452,7 @@ export default function PricingClient({ lng }: PricingClientProps) {
       </section>
 
       {/* Credits Explainer */}
-      <section className="border-y border-zinc-800 bg-zinc-900/50 py-24">
+      <section className="border-y border-zinc-200 dark:border-zinc-800 bg-gradient-to-r from-indigo-50/50 via-purple-50/50 to-indigo-50/50 dark:from-zinc-900/50 dark:via-zinc-900/50 dark:to-zinc-900/50 py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -454,8 +460,8 @@ export default function PricingClient({ lng }: PricingClientProps) {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="mb-2 text-3xl font-bold text-white">{t.credits.title}</h2>
-            <p className="mb-12 text-zinc-400">{t.credits.subtitle}</p>
+            <h2 className="mb-2 text-3xl font-bold text-zinc-800 dark:text-white">{t.credits.title}</h2>
+            <p className="mb-12 text-zinc-600 dark:text-zinc-400">{t.credits.subtitle}</p>
 
             <div className="grid gap-4 sm:grid-cols-2">
               {t.credits.items.map((item, index) => (
@@ -465,10 +471,10 @@ export default function PricingClient({ lng }: PricingClientProps) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.05 }}
-                  className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900 p-4"
+                  className="flex items-center justify-between rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 shadow-sm"
                 >
-                  <span className="text-zinc-300">{item.action}</span>
-                  <span className="rounded-full bg-indigo-500/20 px-3 py-1 text-sm font-medium text-indigo-400">
+                  <span className="text-zinc-700 dark:text-zinc-300">{item.action}</span>
+                  <span className="rounded-full bg-indigo-100 dark:bg-indigo-500/20 px-3 py-1 text-sm font-medium text-indigo-700 dark:text-indigo-400">
                     {item.cost}
                   </span>
                 </motion.div>
@@ -488,7 +494,7 @@ export default function PricingClient({ lng }: PricingClientProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="mb-12 text-center text-3xl font-bold text-white">{t.faq.title}</h2>
+            <h2 className="mb-12 text-center text-3xl font-bold text-zinc-800 dark:text-white">{t.faq.title}</h2>
 
             <div className="space-y-4">
               {t.faq.items.map((item, index) => (
@@ -498,13 +504,13 @@ export default function PricingClient({ lng }: PricingClientProps) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.05 }}
-                  className="rounded-xl border border-zinc-800 bg-zinc-900 p-6"
+                  className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm"
                 >
-                  <h3 className="mb-2 flex items-start gap-3 font-semibold text-white">
-                    <HelpCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-indigo-400" />
+                  <h3 className="mb-2 flex items-start gap-3 font-semibold text-zinc-800 dark:text-white">
+                    <HelpCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-indigo-600 dark:text-indigo-400" />
                     {item.q}
                   </h3>
-                  <p className="ml-8 text-sm text-zinc-400">{item.a}</p>
+                  <p className="ml-8 text-sm text-zinc-600 dark:text-zinc-400">{item.a}</p>
                 </motion.div>
               ))}
             </div>
@@ -519,19 +525,19 @@ export default function PricingClient({ lng }: PricingClientProps) {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-900/50 p-12 text-center"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-700 p-12 text-center shadow-xl"
           >
             <div className="absolute inset-0 -z-10">
-              <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" />
-              <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
+              <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+              <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
             </div>
 
             <h2 className="mb-4 text-3xl font-bold text-white">{t.cta.title}</h2>
-            <p className="mb-8 text-zinc-400">{t.cta.subtitle}</p>
+            <p className="mb-8 text-indigo-100">{t.cta.subtitle}</p>
 
             <Link
               href={`/${lng}`}
-              className="group inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-400"
+              className="group inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 font-semibold text-indigo-600 shadow-lg transition-all hover:bg-indigo-50"
             >
               {t.cta.button}
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />

@@ -232,11 +232,11 @@ export default function CodeBeautifierClient({ lng }: CodeBeautifierClientProps)
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <div className="mb-4 inline-flex rounded-2xl bg-emerald-500/10 p-4">
-            <Code2 className="h-10 w-10 text-emerald-400" />
+          <div className="mb-4 inline-flex rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 p-4">
+            <Code2 className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">{t.title}</h1>
-          <p className="mx-auto max-w-2xl text-zinc-400">{t.subtitle}</p>
+          <h1 className="mb-3 text-3xl font-bold text-zinc-800 dark:text-white sm:text-4xl">{t.title}</h1>
+          <p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">{t.subtitle}</p>
         </motion.div>
 
         {/* Settings Bar */}
@@ -244,17 +244,17 @@ export default function CodeBeautifierClient({ lng }: CodeBeautifierClientProps)
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-6 flex flex-wrap items-center justify-center gap-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4"
+          className="mb-6 flex flex-wrap items-center justify-center gap-4 rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4"
         >
           <div className="flex items-center gap-2">
-            <Settings2 className="h-4 w-4 text-zinc-500" />
+            <Settings2 className="h-4 w-4 text-indigo-500 dark:text-zinc-500" />
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-zinc-500">{t.language}:</span>
             <select
               value={codeLanguage}
               onChange={(e) => setCodeLanguage(e.target.value as CodeLanguage)}
-              className="rounded-lg bg-zinc-800 px-3 py-1 text-sm text-white"
+              className="rounded-lg bg-indigo-50 dark:bg-zinc-800 px-3 py-1 text-sm text-zinc-800 dark:text-white"
             >
               {Object.entries(t.languages).map(([key, name]) => (
                 <option key={key} value={key}>{name}</option>
@@ -266,38 +266,38 @@ export default function CodeBeautifierClient({ lng }: CodeBeautifierClientProps)
             <select
               value={tabWidth}
               onChange={(e) => setTabWidth(Number(e.target.value))}
-              className="rounded-lg bg-zinc-800 px-2 py-1 text-sm text-white"
+              className="rounded-lg bg-indigo-50 dark:bg-zinc-800 px-2 py-1 text-sm text-zinc-800 dark:text-white"
             >
               <option value={2}>2</option>
               <option value={4}>4</option>
             </select>
           </div>
-          <label className="flex items-center gap-2 text-xs text-zinc-400">
+          <label className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
             <input
               type="checkbox"
               checked={useTabs}
               onChange={(e) => setUseTabs(e.target.checked)}
-              className="rounded border-zinc-600 bg-zinc-800"
+              className="rounded border-indigo-300 dark:border-zinc-600 bg-white dark:bg-zinc-800"
             />
             {t.useTabs}
           </label>
           {(codeLanguage === 'javascript' || codeLanguage === 'typescript') && (
             <>
-              <label className="flex items-center gap-2 text-xs text-zinc-400">
+              <label className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
                 <input
                   type="checkbox"
                   checked={semi}
                   onChange={(e) => setSemi(e.target.checked)}
-                  className="rounded border-zinc-600 bg-zinc-800"
+                  className="rounded border-indigo-300 dark:border-zinc-600 bg-white dark:bg-zinc-800"
                 />
                 {t.semicolons}
               </label>
-              <label className="flex items-center gap-2 text-xs text-zinc-400">
+              <label className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
                 <input
                   type="checkbox"
                   checked={singleQuote}
                   onChange={(e) => setSingleQuote(e.target.checked)}
-                  className="rounded border-zinc-600 bg-zinc-800"
+                  className="rounded border-indigo-300 dark:border-zinc-600 bg-white dark:bg-zinc-800"
                 />
                 {t.singleQuotes}
               </label>
@@ -313,10 +313,10 @@ export default function CodeBeautifierClient({ lng }: CodeBeautifierClientProps)
             transition={{ delay: 0.2 }}
           >
             <div className="mb-3 flex items-center justify-between">
-              <label className="text-sm font-medium text-zinc-300">{t.inputLabel}</label>
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.inputLabel}</label>
               <button
                 onClick={loadSample}
-                className="text-xs text-emerald-400 hover:text-emerald-300"
+                className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300"
               >
                 {t.sample}
               </button>
@@ -325,7 +325,7 @@ export default function CodeBeautifierClient({ lng }: CodeBeautifierClientProps)
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={t.inputPlaceholder}
-              className="h-80 w-full rounded-xl border border-zinc-700 bg-zinc-900 p-4 font-mono text-sm text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              className="h-80 w-full rounded-xl border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 font-mono text-sm text-zinc-800 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
               spellCheck={false}
             />
           </motion.div>
@@ -337,16 +337,16 @@ export default function CodeBeautifierClient({ lng }: CodeBeautifierClientProps)
             transition={{ delay: 0.3 }}
           >
             <div className="mb-3 flex items-center justify-between">
-              <label className="text-sm font-medium text-zinc-300">{t.outputLabel}</label>
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.outputLabel}</label>
             </div>
             <textarea
               value={output}
               readOnly
-              className="h-80 w-full rounded-xl border border-zinc-700 bg-zinc-950 p-4 font-mono text-sm text-emerald-400 focus:outline-none"
+              className="h-80 w-full rounded-xl border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-950 p-4 font-mono text-sm text-emerald-700 dark:text-emerald-400 focus:outline-none"
               spellCheck={false}
             />
             {error && (
-              <p className="mt-2 text-sm text-red-400">{error}</p>
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
             )}
           </motion.div>
         </div>
@@ -369,11 +369,11 @@ export default function CodeBeautifierClient({ lng }: CodeBeautifierClientProps)
           <button
             onClick={copyToClipboard}
             disabled={!output && !input}
-            className="flex items-center gap-2 rounded-xl bg-zinc-700 px-6 py-3 font-medium text-white transition-colors hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-6 py-3 font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {copied ? (
               <>
-                <CheckCircle className="h-4 w-4 text-emerald-400" />
+                <CheckCircle className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                 {t.copied}
               </>
             ) : (
@@ -386,14 +386,14 @@ export default function CodeBeautifierClient({ lng }: CodeBeautifierClientProps)
           <button
             onClick={downloadCode}
             disabled={!output && !input}
-            className="flex items-center gap-2 rounded-xl bg-zinc-700 px-6 py-3 font-medium text-white transition-colors hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-6 py-3 font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Download className="h-4 w-4" />
             {t.download}
           </button>
           <button
             onClick={clearAll}
-            className="flex items-center gap-2 rounded-xl bg-zinc-800 px-6 py-3 font-medium text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white"
+            className="flex items-center gap-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 px-6 py-3 font-medium text-zinc-600 dark:text-zinc-400 transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-800 dark:hover:text-white"
           >
             <Trash2 className="h-4 w-4" />
             {t.clear}
@@ -407,15 +407,15 @@ export default function CodeBeautifierClient({ lng }: CodeBeautifierClientProps)
           transition={{ delay: 0.5 }}
           className="mt-16"
         >
-          <h2 className="mb-6 text-center text-xl font-semibold text-white">{t.features.title}</h2>
+          <h2 className="mb-6 text-center text-xl font-semibold text-zinc-800 dark:text-white">{t.features.title}</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {t.features.items.map((feature, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4"
+                className="rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4"
               >
-                <Code2 className="mb-2 h-5 w-5 text-emerald-400" />
-                <h3 className="mb-1 font-medium text-white">{feature.title}</h3>
+                <Code2 className="mb-2 h-5 w-5 text-emerald-500 dark:text-emerald-400" />
+                <h3 className="mb-1 font-medium text-zinc-800 dark:text-white">{feature.title}</h3>
                 <p className="text-sm text-zinc-500">{feature.desc}</p>
               </div>
             ))}

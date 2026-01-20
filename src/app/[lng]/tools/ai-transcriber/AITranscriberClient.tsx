@@ -298,12 +298,12 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-indigo-500/20 p-3">
-            <Mic className="h-6 w-6 text-indigo-400" />
+          <div className="rounded-xl bg-indigo-100 dark:bg-indigo-500/20 p-3">
+            <Mic className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">{t.title}</h1>
-            <p className="text-zinc-400">{t.subtitle}</p>
+            <h1 className="text-2xl font-bold text-zinc-800 dark:text-white">{t.title}</h1>
+            <p className="text-zinc-600 dark:text-zinc-400">{t.subtitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -327,7 +327,7 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
             ? 'border-indigo-500 bg-indigo-500/10'
             : file
             ? 'border-emerald-500/50 bg-emerald-500/5'
-            : 'border-zinc-700 hover:border-zinc-600 hover:bg-zinc-800/50'
+            : 'border-indigo-300 dark:border-zinc-700 bg-gradient-to-br from-indigo-50/80 to-purple-50/50 dark:from-zinc-800/50 dark:to-zinc-800/50 hover:border-indigo-400 dark:hover:border-zinc-600'
         }`}
       >
         <input
@@ -345,8 +345,8 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
                 <FileAudio className="h-8 w-8 text-emerald-400" />
               </div>
               <div className="text-left">
-                <p className="font-medium text-white">{file.name}</p>
-                <p className="text-sm text-zinc-400">
+                <p className="font-medium text-zinc-800 dark:text-white">{file.name}</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">
                   {formatBytes(file.size)} • {t.duration}: ~{formatDuration(estimatedDuration)}
                 </p>
               </div>
@@ -357,7 +357,7 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
                   setTranscription('');
                   setSegments([]);
                 }}
-                className="rounded-lg p-2 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                className="rounded-lg p-2 text-indigo-600 dark:text-zinc-400 hover:bg-indigo-100 dark:hover:bg-zinc-700 hover:text-indigo-700 dark:hover:text-white"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -376,7 +376,7 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
                   e.stopPropagation();
                   togglePlayPause();
                 }}
-                className="flex items-center gap-2 rounded-lg bg-zinc-700 px-4 py-2 text-sm text-white hover:bg-zinc-600"
+                className="flex items-center gap-2 rounded-lg bg-indigo-100 dark:bg-zinc-700 px-4 py-2 text-sm text-indigo-700 dark:text-white hover:bg-indigo-200 dark:hover:bg-zinc-600"
               >
                 {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                 {t.preview}
@@ -386,11 +386,11 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
         ) : (
           <div className="space-y-3">
             <div className="flex justify-center">
-              <div className="rounded-xl bg-zinc-800 p-4">
-                <Upload className="h-8 w-8 text-zinc-400" />
+              <div className="rounded-xl bg-indigo-100 dark:bg-zinc-800 p-4">
+                <Upload className="h-8 w-8 text-indigo-500 dark:text-zinc-400" />
               </div>
             </div>
-            <p className="text-lg font-medium text-white">
+            <p className="text-lg font-medium text-zinc-800 dark:text-white">
               {isDragActive ? t.dropzoneActive : t.dropzone}
             </p>
             <p className="text-sm text-zinc-500">{t.supportedFormats}</p>
@@ -400,13 +400,13 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
 
       {/* Language Selection */}
       <div>
-        <label className="block text-sm font-medium text-zinc-400 mb-2">
+        <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">
           {t.language}
         </label>
         <select
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
-          className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          className="w-full rounded-xl border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-3 text-zinc-800 dark:text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
         >
           {Object.entries(t.languages).map(([code, name]) => (
             <option key={code} value={code}>
@@ -424,18 +424,18 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
           className="space-y-2"
         >
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-zinc-400">{t.result}</label>
+            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{t.result}</label>
             <div className="flex items-center gap-2">
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
+                className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-indigo-600 dark:text-zinc-400 transition-colors hover:bg-indigo-100 dark:hover:bg-zinc-800 hover:text-indigo-700 dark:hover:text-white"
               >
                 {copied ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
                 {copied ? t.copied : t.copy}
               </button>
               <button
                 onClick={handleDownload}
-                className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
+                className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-indigo-600 dark:text-zinc-400 transition-colors hover:bg-indigo-100 dark:hover:bg-zinc-800 hover:text-indigo-700 dark:hover:text-white"
               >
                 <Download className="h-3 w-3" />
                 {t.download}
@@ -443,7 +443,7 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
               {segments.length > 0 && (
                 <button
                   onClick={handleDownloadSRT}
-                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
+                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-indigo-600 dark:text-zinc-400 transition-colors hover:bg-indigo-100 dark:hover:bg-zinc-800 hover:text-indigo-700 dark:hover:text-white"
                 >
                   <Clock className="h-3 w-3" />
                   {t.downloadSRT}
@@ -451,8 +451,8 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
               )}
             </div>
           </div>
-          <div className="rounded-xl border border-zinc-700 bg-zinc-900 p-4">
-            <p className="whitespace-pre-wrap text-white">{transcription}</p>
+          <div className="rounded-xl border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-900 p-4">
+            <p className="whitespace-pre-wrap text-zinc-800 dark:text-white">{transcription}</p>
           </div>
         </motion.div>
       )}
@@ -514,7 +514,7 @@ export default function AITranscriberClient({ lng }: AITranscriberClientProps) {
         <button
           onClick={estimateCost}
           disabled={!file || isTranscribing}
-          className="flex items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 px-6 py-3 font-medium text-white transition-all hover:border-indigo-500 hover:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-2 rounded-xl border border-indigo-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-6 py-3 font-medium text-indigo-700 dark:text-white transition-all hover:border-indigo-500 hover:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Clock className="h-5 w-5" />
           {t.estimateCost}

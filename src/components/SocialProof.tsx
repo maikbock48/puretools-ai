@@ -98,10 +98,10 @@ export default function SocialProof({ lng }: SocialProofProps) {
             transition={{ delay: index * 0.1 }}
             className="text-center"
           >
-            <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 ${stat.color} mb-3`}>
+            <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full bg-zinc-100/80 dark:bg-zinc-800 ${stat.color} mb-3 shadow-sm`}>
               <stat.icon className="h-6 w-6" />
             </div>
-            <div className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white">
+            <div className="text-3xl md:text-4xl font-bold text-zinc-800 dark:text-white">
               {stat.value}
             </div>
             <div className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">{stat.label}</div>

@@ -59,22 +59,6 @@
     }
   ],
   "categories": ["utilities", "productivity"],
-  "screenshots": [
-    {
-      "src": "/screenshots/desktop.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "PureTools Desktop View"
-    },
-    {
-      "src": "/screenshots/mobile.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "PureTools Mobile View"
-    }
-  ],
   "shortcuts": [
     {
       "name": "QR Generator",

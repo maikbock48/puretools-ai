@@ -176,11 +176,11 @@ export default function BackgroundRemoverClient({ lng }: BackgroundRemoverClient
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <div className="mb-4 inline-flex rounded-2xl bg-violet-500/10 p-4">
-            <Eraser className="h-10 w-10 text-violet-400" />
+          <div className="mb-4 inline-flex rounded-2xl bg-violet-100 dark:bg-violet-500/10 p-4">
+            <Eraser className="h-10 w-10 text-violet-600 dark:text-violet-400" />
           </div>
-          <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">{t.title}</h1>
-          <p className="mx-auto max-w-2xl text-zinc-400">{t.subtitle}</p>
+          <h1 className="mb-3 text-3xl font-bold text-zinc-800 dark:text-white sm:text-4xl">{t.title}</h1>
+          <p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400">{t.subtitle}</p>
         </motion.div>
 
         {/* Main Content */}
@@ -198,11 +198,11 @@ export default function BackgroundRemoverClient({ lng }: BackgroundRemoverClient
               className={`flex h-64 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-all ${
                 isDragging
                   ? 'border-violet-500 bg-violet-500/10'
-                  : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-600'
+                  : 'border-indigo-300 dark:border-zinc-700 bg-gradient-to-br from-indigo-50/80 to-purple-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 hover:border-indigo-400 dark:hover:border-zinc-600'
               }`}
             >
-              <Upload className={`mb-4 h-12 w-12 ${isDragging ? 'text-violet-400' : 'text-zinc-500'}`} />
-              <p className="mb-2 text-zinc-300">{t.dropzone}</p>
+              <Upload className={`mb-4 h-12 w-12 ${isDragging ? 'text-violet-400' : 'text-indigo-400 dark:text-zinc-500'}`} />
+              <p className="mb-2 text-zinc-700 dark:text-zinc-300">{t.dropzone}</p>
               <p className="text-sm text-zinc-500">{t.supported}</p>
               <input
                 ref={fileInputRef}
@@ -222,17 +222,17 @@ export default function BackgroundRemoverClient({ lng }: BackgroundRemoverClient
             {/* Image Comparison */}
             <div className="grid gap-6 lg:grid-cols-2">
               {/* Original */}
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4">
+              <div className="rounded-2xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4">
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-300">{t.original}</span>
+                  <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.original}</span>
                   <button
                     onClick={clearAll}
-                    className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-800 hover:text-white"
+                    className="rounded-lg p-1 text-indigo-600 dark:text-zinc-400 hover:bg-indigo-100 dark:hover:bg-zinc-800 hover:text-indigo-700 dark:hover:text-white"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="relative aspect-square overflow-hidden rounded-xl bg-zinc-950">
+                <div className="relative aspect-square overflow-hidden rounded-xl bg-indigo-50 dark:bg-zinc-950">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={originalImage}
@@ -243,9 +243,9 @@ export default function BackgroundRemoverClient({ lng }: BackgroundRemoverClient
               </div>
 
               {/* Result */}
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4">
+              <div className="rounded-2xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4">
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-300">{t.result}</span>
+                  <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.result}</span>
                   {resultImage && (
                     <CheckCircle className="h-4 w-4 text-emerald-400" />
                   )}
@@ -264,7 +264,7 @@ export default function BackgroundRemoverClient({ lng }: BackgroundRemoverClient
                       <Loader2 className="mb-4 h-12 w-12 animate-spin text-violet-400" />
                       <p className="mb-2 text-sm text-zinc-300">{progressMessage}</p>
                       <div className="w-48">
-                        <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
+                        <div className="h-2 overflow-hidden rounded-full bg-indigo-100 dark:bg-zinc-800">
                           <div
                             className="h-full bg-violet-500 transition-all"
                             style={{ width: `${progress}%` }}
@@ -301,7 +301,7 @@ export default function BackgroundRemoverClient({ lng }: BackgroundRemoverClient
                 </button>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-2 rounded-xl bg-zinc-700 px-6 py-3 font-medium text-white transition-colors hover:bg-zinc-600"
+                  className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-6 py-3 font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600"
                 >
                   <ImageIcon className="h-4 w-4" />
                   {t.tryAnother}
@@ -317,16 +317,16 @@ export default function BackgroundRemoverClient({ lng }: BackgroundRemoverClient
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6"
+            className="mt-8 rounded-2xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
           >
-            <h3 className="mb-4 flex items-center gap-2 font-medium text-white">
-              <Sparkles className="h-5 w-5 text-violet-400" />
+            <h3 className="mb-4 flex items-center gap-2 font-medium text-zinc-800 dark:text-white">
+              <Sparkles className="h-5 w-5 text-violet-600 dark:text-violet-400" />
               {t.tips.title}
             </h3>
-            <ul className="space-y-2 text-sm text-zinc-400">
+            <ul className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
               {t.tips.items.map((tip, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <span className="text-violet-400">•</span>
+                  <span className="text-violet-600 dark:text-violet-400">•</span>
                   {tip}
                 </li>
               ))}
@@ -341,15 +341,15 @@ export default function BackgroundRemoverClient({ lng }: BackgroundRemoverClient
           transition={{ delay: 0.3 }}
           className="mt-16"
         >
-          <h2 className="mb-6 text-center text-xl font-semibold text-white">{t.features.title}</h2>
+          <h2 className="mb-6 text-center text-xl font-semibold text-zinc-800 dark:text-white">{t.features.title}</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {t.features.items.map((feature, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4"
+                className="rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-4"
               >
-                <Sparkles className="mb-2 h-5 w-5 text-violet-400" />
-                <h3 className="mb-1 font-medium text-white">{feature.title}</h3>
+                <Sparkles className="mb-2 h-5 w-5 text-violet-600 dark:text-violet-400" />
+                <h3 className="mb-1 font-medium text-zinc-800 dark:text-white">{feature.title}</h3>
                 <p className="text-sm text-zinc-500">{feature.desc}</p>
               </div>
             ))}

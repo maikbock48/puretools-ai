@@ -215,14 +215,14 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12 text-center"
         >
-          <div className="mb-4 inline-flex rounded-xl bg-emerald-500/10 p-3">
-            <FileText className="h-8 w-8 text-emerald-400" />
+          <div className="mb-4 inline-flex rounded-xl bg-emerald-100 dark:bg-emerald-500/10 p-3">
+            <FileText className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">
+          <h1 className="mb-3 text-3xl font-bold text-zinc-800 dark:text-white sm:text-4xl">
             {t('tools.pdfToolkit.title')}
           </h1>
-          <p className="text-zinc-400">{t('tools.pdfToolkit.description')}</p>
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400">
+          <p className="text-zinc-600 dark:text-zinc-400">{t('tools.pdfToolkit.description')}</p>
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-300 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-2 text-sm text-emerald-700 dark:text-emerald-400">
             <Shield className="h-4 w-4" />
             {t('common.privacyNote')}
           </div>
@@ -234,13 +234,13 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
           animate={{ opacity: 1 }}
           className="mb-8 flex justify-center"
         >
-          <div className="inline-flex rounded-xl bg-zinc-900 p-1 border border-zinc-800">
+          <div className="inline-flex rounded-xl bg-white dark:bg-zinc-900 p-1 border border-indigo-200 dark:border-zinc-800">
             <button
               onClick={() => { setMode('merge'); clearAll(); }}
               className={`flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-medium transition-colors ${
                 mode === 'merge'
                   ? 'bg-emerald-500 text-white'
-                  : 'text-zinc-400 hover:text-white'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-white'
               }`}
             >
               <Merge className="h-4 w-4" />
@@ -251,7 +251,7 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
               className={`flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-medium transition-colors ${
                 mode === 'split'
                   ? 'bg-emerald-500 text-white'
-                  : 'text-zinc-400 hover:text-white'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-white'
               }`}
             >
               <Split className="h-4 w-4" />
@@ -268,10 +268,10 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onClick={() => fileInputRef.current?.click()}
-          className="mb-8 cursor-pointer rounded-2xl border-2 border-dashed border-zinc-700 bg-zinc-900/50 p-12 text-center transition-colors hover:border-emerald-500/50"
+          className="mb-8 cursor-pointer rounded-2xl border-2 border-dashed border-indigo-300 dark:border-zinc-700 bg-gradient-to-br from-indigo-50/80 to-purple-50/50 dark:from-zinc-900/50 dark:to-zinc-900/50 p-12 text-center transition-colors hover:border-indigo-400 dark:hover:border-emerald-500/50"
         >
-          <Upload className="mx-auto mb-4 h-12 w-12 text-zinc-500" />
-          <p className="mb-2 text-lg font-medium text-white">
+          <Upload className="mx-auto mb-4 h-12 w-12 text-indigo-400 dark:text-zinc-500" />
+          <p className="mb-2 text-lg font-medium text-zinc-800 dark:text-white">
             {mode === 'merge'
               ? lng === 'de' ? 'PDF-Dateien hier ablegen' : 'Drop PDF files here'
               : lng === 'de' ? 'PDF-Datei hier ablegen' : 'Drop PDF file here'}
@@ -297,13 +297,13 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
             className="space-y-4"
           >
             {/* Stats */}
-            <div className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-              <div className="text-sm text-zinc-400">
+            <div className="flex items-center justify-between rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
+              <div className="text-sm text-zinc-600 dark:text-zinc-400">
                 {files.length} {lng === 'de' ? 'Dateien' : 'files'} | {totalPages} {lng === 'de' ? 'Seiten' : 'pages'}
               </div>
               <button
                 onClick={clearAll}
-                className="flex items-center gap-2 text-sm text-zinc-500 hover:text-white"
+                className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-white"
               >
                 <Trash2 className="h-4 w-4" />
                 {lng === 'de' ? 'Alle löschen' : 'Clear All'}
@@ -311,28 +311,28 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
             </div>
 
             {/* Sortable List */}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900 overflow-hidden">
-              <div className="p-3 border-b border-zinc-800 text-xs text-zinc-500 uppercase tracking-wider">
+            <div className="rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
+              <div className="p-3 border-b border-indigo-100 dark:border-zinc-800 text-xs text-zinc-500 uppercase tracking-wider">
                 {lng === 'de' ? 'Reihenfolge durch Ziehen ändern' : 'Drag to reorder'}
               </div>
-              <Reorder.Group axis="y" values={files} onReorder={setFiles} className="divide-y divide-zinc-800">
+              <Reorder.Group axis="y" values={files} onReorder={setFiles} className="divide-y divide-indigo-100 dark:divide-zinc-800">
                 {files.map((file) => (
                   <Reorder.Item
                     key={file.id}
                     value={file}
-                    className="flex items-center gap-4 p-4 bg-zinc-900 cursor-grab active:cursor-grabbing"
+                    className="flex items-center gap-4 p-4 bg-white dark:bg-zinc-900 cursor-grab active:cursor-grabbing"
                   >
-                    <GripVertical className="h-5 w-5 text-zinc-600" />
-                    <File className="h-8 w-8 text-red-400" />
+                    <GripVertical className="h-5 w-5 text-zinc-400 dark:text-zinc-600" />
+                    <File className="h-8 w-8 text-red-500 dark:text-red-400" />
                     <div className="flex-1 min-w-0">
-                      <div className="truncate text-sm font-medium text-white">{file.name}</div>
+                      <div className="truncate text-sm font-medium text-zinc-800 dark:text-white">{file.name}</div>
                       <div className="text-xs text-zinc-500">
                         {formatBytes(file.size)} | {file.pageCount} {lng === 'de' ? 'Seiten' : 'pages'}
                       </div>
                     </div>
                     <button
                       onClick={() => removeFile(file.id)}
-                      className="p-1 text-zinc-500 hover:text-white"
+                      className="p-1 text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-white"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -378,25 +378,25 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
             className="space-y-6"
           >
             {/* File Info */}
-            <div className="flex items-center gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-              <File className="h-10 w-10 text-red-400" />
+            <div className="flex items-center gap-4 rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
+              <File className="h-10 w-10 text-red-500 dark:text-red-400" />
               <div className="flex-1">
-                <div className="font-medium text-white">{splitFile.name}</div>
+                <div className="font-medium text-zinc-800 dark:text-white">{splitFile.name}</div>
                 <div className="text-sm text-zinc-500">
                   {formatBytes(splitFile.size)} | {splitFile.pageCount} {lng === 'de' ? 'Seiten' : 'pages'}
                 </div>
               </div>
               <button
                 onClick={() => setSplitFile(null)}
-                className="p-2 text-zinc-500 hover:text-white"
+                className="p-2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-white"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Page Range */}
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
-              <h3 className="mb-4 font-medium text-white">
+            <div className="rounded-xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
+              <h3 className="mb-4 font-medium text-zinc-800 dark:text-white">
                 {lng === 'de' ? 'Seitenbereich auswählen' : 'Select Page Range'}
               </h3>
               <div className="flex items-center gap-4">
@@ -413,10 +413,10 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
                       ...prev,
                       from: Math.max(1, Math.min(parseInt(e.target.value) || 1, prev.to))
                     }))}
-                    className="w-24 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-emerald-500 focus:outline-none"
+                    className="w-24 rounded-lg border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-800 px-3 py-2 text-zinc-800 dark:text-white focus:border-indigo-500 dark:focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
-                <ChevronRight className="mt-5 h-5 w-5 text-zinc-600" />
+                <ChevronRight className="mt-5 h-5 w-5 text-zinc-400 dark:text-zinc-600" />
                 <div>
                   <label className="mb-1 block text-xs text-zinc-500">
                     {lng === 'de' ? 'Bis Seite' : 'To Page'}
@@ -430,7 +430,7 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
                       ...prev,
                       to: Math.max(prev.from, Math.min(parseInt(e.target.value) || 1, splitFile.pageCount || 1))
                     }))}
-                    className="w-24 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-white focus:border-emerald-500 focus:outline-none"
+                    className="w-24 rounded-lg border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-800 px-3 py-2 text-zinc-800 dark:text-white focus:border-indigo-500 dark:focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
                 <div className="ml-4 text-sm text-zinc-500">
@@ -442,26 +442,26 @@ export default function PdfToolkitClient({ lng }: PdfToolkitClientProps) {
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   onClick={() => setSplitRange({ from: 1, to: splitFile.pageCount || 1 })}
-                  className="rounded-lg bg-zinc-800 px-3 py-1.5 text-xs text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                  className="rounded-lg bg-indigo-100 dark:bg-zinc-800 px-3 py-1.5 text-xs text-indigo-700 dark:text-zinc-400 hover:bg-indigo-200 dark:hover:bg-zinc-700 hover:text-indigo-800 dark:hover:text-white"
                 >
                   {lng === 'de' ? 'Alle Seiten' : 'All Pages'}
                 </button>
                 <button
                   onClick={() => setSplitRange({ from: 1, to: 1 })}
-                  className="rounded-lg bg-zinc-800 px-3 py-1.5 text-xs text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                  className="rounded-lg bg-indigo-100 dark:bg-zinc-800 px-3 py-1.5 text-xs text-indigo-700 dark:text-zinc-400 hover:bg-indigo-200 dark:hover:bg-zinc-700 hover:text-indigo-800 dark:hover:text-white"
                 >
                   {lng === 'de' ? 'Erste Seite' : 'First Page'}
                 </button>
                 <button
                   onClick={() => setSplitRange({ from: splitFile.pageCount || 1, to: splitFile.pageCount || 1 })}
-                  className="rounded-lg bg-zinc-800 px-3 py-1.5 text-xs text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                  className="rounded-lg bg-indigo-100 dark:bg-zinc-800 px-3 py-1.5 text-xs text-indigo-700 dark:text-zinc-400 hover:bg-indigo-200 dark:hover:bg-zinc-700 hover:text-indigo-800 dark:hover:text-white"
                 >
                   {lng === 'de' ? 'Letzte Seite' : 'Last Page'}
                 </button>
                 {(splitFile.pageCount || 0) > 1 && (
                   <button
                     onClick={() => setSplitRange({ from: 1, to: Math.ceil((splitFile.pageCount || 1) / 2) })}
-                    className="rounded-lg bg-zinc-800 px-3 py-1.5 text-xs text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                    className="rounded-lg bg-indigo-100 dark:bg-zinc-800 px-3 py-1.5 text-xs text-indigo-700 dark:text-zinc-400 hover:bg-indigo-200 dark:hover:bg-zinc-700 hover:text-indigo-800 dark:hover:text-white"
                   >
                     {lng === 'de' ? 'Erste Hälfte' : 'First Half'}
                   </button>
