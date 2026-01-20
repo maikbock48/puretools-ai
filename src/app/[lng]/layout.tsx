@@ -78,11 +78,13 @@ export default async function RootLayout({
     <html lang={lng} suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <meta name="theme-color" content="#6366f1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="PureTools" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <WebsiteStructuredData />
         <OrganizationStructuredData />
       </head>
