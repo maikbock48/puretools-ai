@@ -168,8 +168,8 @@ export default function ToolCard({
           </div>
 
           {/* Try it out Button */}
-          <div className="mt-auto">
-            <span className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 px-4 py-2 text-sm font-medium text-white transition-colors group-hover:shadow-lg group-hover:shadow-indigo-500/25">
+          <div className="mt-auto pt-2">
+            <span className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 px-4 py-2.5 text-sm font-medium text-white transition-colors group-hover:shadow-lg group-hover:shadow-indigo-500/25">
               {t('badges.tryIt')}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </span>

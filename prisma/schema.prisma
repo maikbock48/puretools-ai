@@ -50,11 +50,16 @@ model User {
   // User credits
   credits       Int       @default(0)
 
+  // Referral code (unique for each user)
+  referralCode  String?   @unique
+
   // Relations
   accounts      Account[]
   sessions      Session[]
   transactions  Transaction[]
   usageLogs     UsageLog[]
+  referralsSent Referral[] @relation("ReferrerUser")
+  referralsReceived Referral[] @relation("ReferredUser")
 }
 
 model VerificationToken {
@@ -136,4 +141,25 @@ model NewsletterSubscriber {
 
   @@index([email])
   @@index([createdAt])
+}
+
+// Referral System
+model Referral {
+  id            String   @id @default(cuid())
+  referrerId    String   // User who shared the referral
+  referredId    String   // User who signed up with the referral
+  bonusCredits  Int      @default(100) // Credits awarded to each party
+  status        String   @default("pending") // pending, completed, expired
+  referrerPaid  Boolean  @default(false)
+  referredPaid  Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  completedAt   DateTime?
+
+  referrer      User     @relation("ReferrerUser", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred      User     @relation("ReferredUser", fields: [referredId], references: [id], onDelete: Cascade)
+
+  @@unique([referrerId, referredId])
+  @@index([referrerId])
+  @@index([referredId])
+  @@index([status])
 }

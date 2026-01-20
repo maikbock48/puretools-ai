@@ -81,6 +81,7 @@ const content = {
       overview: 'Overview',
       tools: 'Tools',
       analytics: 'Analytics',
+      billing: 'Billing',
       profile: 'Profile',
     },
     toolCategories: {
@@ -121,6 +122,23 @@ const content = {
     deleteAccountDesc: 'Permanently delete your account and all data',
     saveChanges: 'Save Changes',
     saved: 'Saved',
+    // Billing translations
+    billingTitle: 'Billing & Payments',
+    billingSubtitle: 'Manage your credits and payment history',
+    currentBalance: 'Current Balance',
+    purchaseHistory: 'Purchase History',
+    noPurchases: 'No purchases yet',
+    creditPackages: 'Credit Packages',
+    buyNow: 'Buy Now',
+    perCredit: 'per credit',
+    bestValue: 'Best Value',
+    processing: 'Processing...',
+    paymentMethods: 'Payment Methods',
+    securePayment: 'Secure payment via Stripe',
+    date: 'Date',
+    amount: 'Amount',
+    status: 'Status',
+    completed: 'Completed',
   },
   de: {
     greeting: 'Willkommen zurück',
@@ -155,6 +173,7 @@ const content = {
       overview: 'Übersicht',
       tools: 'Tools',
       analytics: 'Statistiken',
+      billing: 'Abrechnung',
       profile: 'Profil',
     },
     toolCategories: {
@@ -195,6 +214,23 @@ const content = {
     deleteAccountDesc: 'Konto und alle Daten dauerhaft löschen',
     saveChanges: 'Änderungen speichern',
     saved: 'Gespeichert',
+    // Billing translations
+    billingTitle: 'Abrechnung & Zahlungen',
+    billingSubtitle: 'Verwalte deine Credits und Zahlungshistorie',
+    currentBalance: 'Aktuelles Guthaben',
+    purchaseHistory: 'Kaufhistorie',
+    noPurchases: 'Noch keine Käufe',
+    creditPackages: 'Credit-Pakete',
+    buyNow: 'Jetzt kaufen',
+    perCredit: 'pro Credit',
+    bestValue: 'Bester Wert',
+    processing: 'Wird verarbeitet...',
+    paymentMethods: 'Zahlungsmethoden',
+    securePayment: 'Sichere Zahlung über Stripe',
+    date: 'Datum',
+    amount: 'Betrag',
+    status: 'Status',
+    completed: 'Abgeschlossen',
   },
 };
 
@@ -292,7 +328,7 @@ const toolIcons: Record<string, typeof Languages> = {
   summarize: FileText,
 };
 
-type TabKey = 'overview' | 'tools' | 'analytics' | 'profile';
+type TabKey = 'overview' | 'tools' | 'analytics' | 'billing' | 'profile';
 
 export default function DashboardClient({ lng, user }: DashboardClientProps) {
   const t = content[lng];
@@ -301,6 +337,7 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
   const [usageStats, setUsageStats] = useState<UsageStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   useEffect(() => {
     // Fetch user data
@@ -334,10 +371,30 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
     signOut({ callbackUrl: `/${lng}` });
   };
 
+  const handleCheckout = async (packageId: string) => {
+    setCheckoutLoading(packageId);
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ packageId, language: lng }),
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+    } finally {
+      setCheckoutLoading(null);
+    }
+  };
+
   const navItems = [
     { key: 'overview' as const, label: t.nav.overview, icon: LayoutDashboard },
     { key: 'tools' as const, label: t.nav.tools, icon: Wrench },
     { key: 'analytics' as const, label: t.nav.analytics, icon: BarChart3 },
+    { key: 'billing' as const, label: t.nav.billing, icon: CreditCard },
     { key: 'profile' as const, label: t.nav.profile, icon: User },
   ];
 
@@ -927,6 +984,141 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
               ) : (
                 <div className="flex items-center justify-center py-16 text-zinc-500">
                   {isLoading ? t.loading : t.noData}
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+
+        {activeTab === 'billing' && (
+          <div className="space-y-8">
+            <div>
+              <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">{t.billingTitle}</h1>
+              <p className="text-zinc-500 dark:text-zinc-400">{t.billingSubtitle}</p>
+            </div>
+
+            {/* Current Balance */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-2xl border border-indigo-200 dark:border-indigo-500/30 bg-gradient-to-br from-indigo-50 via-purple-50/50 to-white dark:from-indigo-500/10 dark:via-purple-500/5 dark:to-transparent p-6 shadow-lg"
+            >
+              <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 mb-2">
+                <Sparkles className="h-5 w-5" />
+                <span>{t.currentBalance}</span>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-5xl font-bold text-zinc-900 dark:text-white">{user.credits}</span>
+                <span className="text-zinc-500">{t.credits}</span>
+              </div>
+            </motion.div>
+
+            {/* Credit Packages */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
+            >
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-6">{t.creditPackages}</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[
+                  { id: 'starter', credits: 50, price: 499, priceDisplay: lng === 'de' ? '4,99' : '4.99' },
+                  { id: 'popular', credits: 150, price: 999, priceDisplay: lng === 'de' ? '9,99' : '9.99', popular: true },
+                  { id: 'pro', credits: 500, price: 2499, priceDisplay: lng === 'de' ? '24,99' : '24.99' },
+                ].map((pkg) => (
+                  <div
+                    key={pkg.id}
+                    className={`relative rounded-2xl border p-6 transition-all hover:shadow-lg ${
+                      pkg.popular
+                        ? 'border-indigo-300 dark:border-indigo-500/50 bg-indigo-50 dark:bg-indigo-500/5 ring-2 ring-indigo-500/20'
+                        : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 hover:border-indigo-200 dark:hover:border-indigo-500/30'
+                    }`}
+                  >
+                    {pkg.popular && (
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-lg">
+                        {t.popular}
+                      </span>
+                    )}
+                    <div className="text-center">
+                      <div className="flex items-center justify-center gap-1 mb-2">
+                        <Sparkles className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                        <span className="text-3xl font-bold text-zinc-900 dark:text-white">{pkg.credits}</span>
+                      </div>
+                      <p className="text-zinc-500 mb-1">{t.credits}</p>
+                      <p className="text-xs text-zinc-400 mb-4">
+                        €{(pkg.price / pkg.credits / 100).toFixed(2)} {t.perCredit}
+                      </p>
+                      <p className="text-2xl font-bold text-zinc-900 dark:text-white mb-4">€{pkg.priceDisplay}</p>
+                      <button
+                        onClick={() => handleCheckout(pkg.id)}
+                        disabled={checkoutLoading === pkg.id}
+                        className="w-full rounded-xl bg-indigo-600 py-2.5 font-medium text-white transition-colors hover:bg-indigo-500 shadow-lg shadow-indigo-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {checkoutLoading === pkg.id ? t.processing : t.buyNow}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 flex items-center justify-center gap-2 text-sm text-zinc-500">
+                <CreditCard className="h-4 w-4" />
+                <span>{t.securePayment}</span>
+              </div>
+            </motion.div>
+
+            {/* Purchase History */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
+            >
+              <div className="flex items-center gap-2 mb-6">
+                <div className="rounded-lg bg-emerald-100 dark:bg-emerald-500/10 p-2">
+                  <History className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <h2 className="font-semibold text-zinc-900 dark:text-white">{t.purchaseHistory}</h2>
+              </div>
+
+              {transactions.filter(tx => tx.type === 'PURCHASE').length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-zinc-200 dark:border-zinc-700">
+                        <th className="text-left py-3 px-4 text-sm font-medium text-zinc-500">{t.date}</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-zinc-500">{t.credits}</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-zinc-500">{t.amount}</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-zinc-500">{t.status}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {transactions
+                        .filter(tx => tx.type === 'PURCHASE')
+                        .map((tx) => (
+                          <tr key={tx.id} className="border-b border-zinc-100 dark:border-zinc-800">
+                            <td className="py-3 px-4 text-sm text-zinc-700 dark:text-zinc-300">
+                              {new Date(tx.createdAt).toLocaleDateString(lng === 'de' ? 'de-DE' : 'en-US')}
+                            </td>
+                            <td className="py-3 px-4 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                              +{tx.amount}
+                            </td>
+                            <td className="py-3 px-4 text-sm text-zinc-700 dark:text-zinc-300">
+                              {tx.description}
+                            </td>
+                            <td className="py-3 px-4">
+                              <span className="inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-500/20 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                                {t.completed}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center py-12 text-zinc-500">
+                  {isLoading ? t.loading : t.noPurchases}
                 </div>
               )}
             </motion.div>
