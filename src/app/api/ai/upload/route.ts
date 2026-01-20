@@ -3,9 +3,6 @@ import mammoth from 'mammoth';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 import { SUPPORTED_FILE_TYPES } from '@/lib/ai-config';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const pdfParse = require('pdf-parse');
-
 export async function POST(request: NextRequest) {
   try {
     // Check rate limit
@@ -49,7 +46,10 @@ export async function POST(request: NextRequest) {
       const result = await mammoth.extractRawText({ buffer });
       text = result.value;
     } else if (fileName.endsWith('.pdf')) {
-      // PDF file
+      // PDF file - dynamic import to avoid build issues
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const pdfParseModule = await import('pdf-parse') as any;
+      const pdfParse = pdfParseModule.default || pdfParseModule;
       const buffer = Buffer.from(await file.arrayBuffer());
       const result = await pdfParse(buffer);
       text = result.text;
