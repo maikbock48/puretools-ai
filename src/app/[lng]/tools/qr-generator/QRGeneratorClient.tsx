@@ -15,6 +15,7 @@ import {
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
 import SocialShare from '@/components/SocialShare';
+import { useShareModal } from '@/components/ShareModal';
 
 interface QRGeneratorClientProps {
   lng: Language;
@@ -28,6 +29,13 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
   const [logo, setLogo] = useState<string | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Share modal hook
+  const { openShareModal, ShareModalComponent } = useShareModal(
+    t('tools.qrGenerator.title'),
+    `/${lng}/tools/qr-generator`,
+    lng
+  );
 
   const handleLogoUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -55,8 +63,10 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
       link.download = 'qrcode.png';
       link.href = url;
       link.click();
+      // Show share modal after download
+      setTimeout(() => openShareModal(value ? `QR for: ${value.substring(0, 30)}...` : undefined), 500);
     }
-  }, []);
+  }, [value, openShareModal]);
 
   const downloadSVG = useCallback(() => {
     const svg = canvasRef.current?.querySelector('svg');
@@ -69,8 +79,10 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);
+      // Show share modal after download
+      setTimeout(() => openShareModal(value ? `QR for: ${value.substring(0, 30)}...` : undefined), 500);
     }
-  }, []);
+  }, [value, openShareModal]);
 
   return (
     <div className="min-h-screen py-12">
@@ -284,6 +296,9 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
           </motion.div>
         </div>
       </div>
+
+      {/* Share Modal */}
+      <ShareModalComponent />
     </div>
   );
 }

@@ -36,6 +36,7 @@ import {
 import Link from 'next/link';
 import { Language } from '@/i18n/settings';
 import PromoCodeInput from '@/components/PromoCodeInput';
+import CreditExpirationWarning from '@/components/CreditExpirationWarning';
 
 interface DashboardClientProps {
   lng: Language;
@@ -550,6 +551,9 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
               <p className="text-zinc-500 dark:text-zinc-400">{t.greeting},</p>
               <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">{user.name || user.email}</h1>
             </div>
+
+            {/* Credit Expiration Warning */}
+            <CreditExpirationWarning credits={userCredits} lng={lng} />
 
             {/* Credits Card */}
             <motion.div

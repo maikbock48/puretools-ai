@@ -3,6 +3,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import Google from 'next-auth/providers/google';
 import GitHub from 'next-auth/providers/github';
 import prisma from './prisma';
+import { sendWelcomeEmail } from './email';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -52,6 +53,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
           }),
         ]);
+
+        // Send welcome email (async, don't block signup)
+        if (user.email) {
+          sendWelcomeEmail(
+            user.email,
+            user.name || 'there',
+            'en' // Default to English, can be detected from browser later
+          ).catch((err) => console.error('Failed to send welcome email:', err));
+        }
       }
     },
   },

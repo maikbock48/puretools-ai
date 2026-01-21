@@ -1,6 +1,19 @@
 import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { languages, Language } from '@/i18n/settings';
-import OcrScannerClient from './OcrScannerClient';
+
+// Lazy load OCR scanner (includes Tesseract.js ~3MB)
+const OcrScannerClient = dynamic(() => import('./OcrScannerClient'), {
+  loading: () => (
+    <div className="min-h-screen py-12">
+      <div className="mx-auto max-w-5xl px-4 animate-pulse">
+        <div className="h-16 w-16 mx-auto rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+        <div className="mt-4 h-8 w-48 mx-auto rounded bg-zinc-200 dark:bg-zinc-800" />
+        <div className="mt-8 h-64 rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+      </div>
+    </div>
+  ),
+});
 
 export async function generateMetadata({
   params,

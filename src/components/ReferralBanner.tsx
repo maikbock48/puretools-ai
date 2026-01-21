@@ -15,11 +15,26 @@ export default function ReferralBanner({ userId, lng }: ReferralBannerProps) {
   const [referralCode, setReferralCode] = useState('');
 
   useEffect(() => {
-    // Generate referral code from userId or create guest code
-    const code = userId
-      ? `REF${userId.slice(0, 8).toUpperCase()}`
-      : `GUEST${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-    setReferralCode(code);
+    const fetchReferralCode = async () => {
+      if (userId) {
+        try {
+          const response = await fetch('/api/referral/code');
+          if (response.ok) {
+            const data = await response.json();
+            setReferralCode(data.code);
+          }
+        } catch (error) {
+          console.error('Failed to fetch referral code:', error);
+          // Fallback to generated code
+          setReferralCode(`REF${userId.slice(0, 8).toUpperCase()}`);
+        }
+      } else {
+        // Guest code for non-logged-in users
+        setReferralCode(`GUEST${Math.random().toString(36).slice(2, 8).toUpperCase()}`);
+      }
+    };
+
+    fetchReferralCode();
 
     // Show banner after some interaction
     const timer = setTimeout(() => {

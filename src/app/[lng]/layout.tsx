@@ -11,6 +11,7 @@ import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
 import PWAInstaller from '@/components/PWAInstaller';
 import ReferralBanner from '@/components/ReferralBanner';
+import ExitIntentPopup from '@/components/ExitIntentPopup';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
@@ -113,6 +114,7 @@ export default async function RootLayout({
             <Footer lng={lng} />
             <PWAInstaller />
             <ReferralBanner lng={lng} />
+            <ExitIntentPopup lng={lng} />
             <ServiceWorkerRegistration />
             </div>
           </ThemeProvider>
