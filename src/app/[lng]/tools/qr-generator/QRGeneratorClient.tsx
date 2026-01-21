@@ -11,11 +11,15 @@ import {
   Shield,
   Palette,
   Image as ImageIcon,
+  Code,
 } from 'lucide-react';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
 import SocialShare from '@/components/SocialShare';
 import { useShareModal } from '@/components/ShareModal';
+import { useWatermark } from '@/components/WatermarkToggle';
+import { addWatermarkToImage } from '@/lib/watermark';
+import { useEmbedModal } from '@/components/EmbedCodeModal';
 
 interface QRGeneratorClientProps {
   lng: Language;
@@ -37,6 +41,16 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
     lng
   );
 
+  // Watermark hook
+  const { watermarkEnabled, WatermarkToggle } = useWatermark(true);
+
+  // Embed modal hook
+  const { openEmbedModal, EmbedModalComponent } = useEmbedModal(
+    'qr-generator',
+    t('tools.qrGenerator.title'),
+    lng
+  );
+
   const handleLogoUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -55,18 +69,42 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
     }
   }, []);
 
-  const downloadPNG = useCallback(() => {
+  const downloadPNG = useCallback(async () => {
     const canvas = canvasRef.current?.querySelector('canvas');
     if (canvas) {
-      const url = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.download = 'qrcode.png';
-      link.href = url;
-      link.click();
+      const dataUrl = canvas.toDataURL('image/png');
+
+      if (watermarkEnabled) {
+        try {
+          // Convert data URL to blob for watermarking
+          const response = await fetch(dataUrl);
+          const blob = await response.blob();
+          const watermarkedBlob = await addWatermarkToImage(blob);
+
+          const url = URL.createObjectURL(watermarkedBlob);
+          const link = document.createElement('a');
+          link.download = 'qrcode.png';
+          link.href = url;
+          link.click();
+          URL.revokeObjectURL(url);
+        } catch {
+          // Fallback to original if watermarking fails
+          const link = document.createElement('a');
+          link.download = 'qrcode.png';
+          link.href = dataUrl;
+          link.click();
+        }
+      } else {
+        const link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = dataUrl;
+        link.click();
+      }
+
       // Show share modal after download
       setTimeout(() => openShareModal(value ? `QR for: ${value.substring(0, 30)}...` : undefined), 500);
     }
-  }, [value, openShareModal]);
+  }, [value, openShareModal, watermarkEnabled]);
 
   const downloadSVG = useCallback(() => {
     const svg = canvasRef.current?.querySelector('svg');
@@ -110,6 +148,13 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
               title={t('tools.qrGenerator.title')}
               description={t('tools.qrGenerator.description')}
             />
+            <button
+              onClick={openEmbedModal}
+              className="inline-flex items-center gap-2 rounded-full border border-indigo-300 dark:border-indigo-500/30 bg-indigo-50 dark:bg-indigo-500/10 px-4 py-2 text-sm text-indigo-700 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors"
+            >
+              <Code className="h-4 w-4" />
+              {lng === 'de' ? 'Einbetten' : 'Embed'}
+            </button>
           </div>
         </motion.div>
 
@@ -216,6 +261,9 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
               />
             </div>
 
+            {/* Watermark Toggle */}
+            <WatermarkToggle lng={lng} className="pt-2" />
+
             {/* Download Buttons */}
             <div className="flex gap-4 pt-4">
               <motion.button
@@ -299,6 +347,9 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
 
       {/* Share Modal */}
       <ShareModalComponent />
+
+      {/* Embed Modal */}
+      <EmbedModalComponent />
     </div>
   );
 }

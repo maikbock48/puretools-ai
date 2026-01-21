@@ -25,6 +25,8 @@ import {
   Clock,
 } from 'lucide-react';
 import { Language } from '@/i18n/settings';
+import { useWatermark } from '@/components/WatermarkToggle';
+import { addWatermarkToImage } from '@/lib/watermark';
 
 interface ImageCompressorClientProps {
   lng: Language;
@@ -215,6 +217,7 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
   const [showTransparency, setShowTransparency] = useState(false);
   const [totalCompressionTime, setTotalCompressionTime] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { watermarkEnabled, WatermarkToggle } = useWatermark(true);
 
   const formatBytes = (bytes: number): string => {
     if (bytes === 0) return '0 B';
@@ -341,17 +344,28 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
     setIsCompressing(false);
   }, [images, settings]);
 
-  const downloadImage = useCallback((image: ImageFile) => {
+  const downloadImage = useCallback(async (image: ImageFile) => {
     if (!image.compressed) return;
     const ext = settings.fileType === 'original' ? image.file.name.split('.').pop() : settings.fileType;
     const baseName = image.file.name.replace(/\.[^/.]+$/, '');
-    const url = URL.createObjectURL(image.compressed);
+
+    let blobToDownload = image.compressed;
+
+    if (watermarkEnabled) {
+      try {
+        blobToDownload = await addWatermarkToImage(image.compressed);
+      } catch {
+        // Fallback to original if watermarking fails
+      }
+    }
+
+    const url = URL.createObjectURL(blobToDownload);
     const link = document.createElement('a');
     link.href = url;
     link.download = `${baseName}_compressed.${ext}`;
     link.click();
     URL.revokeObjectURL(url);
-  }, [settings.fileType]);
+  }, [settings.fileType, watermarkEnabled]);
 
   const downloadAll = useCallback(() => {
     images.filter(img => img.status === 'done' && img.compressed).forEach(img => downloadImage(img));
@@ -719,6 +733,11 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
                   </motion.div>
                 ))}
               </AnimatePresence>
+            </div>
+
+            {/* Watermark Toggle */}
+            <div className="flex justify-center">
+              <WatermarkToggle lng={lng} />
             </div>
 
             {/* Compress Button */}
