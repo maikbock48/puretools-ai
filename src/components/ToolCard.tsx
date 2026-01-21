@@ -139,7 +139,7 @@ export default function ToolCard({
           </p>
 
           {/* Badges */}
-          <div className="flex flex-wrap items-center gap-2 mb-4">
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
             {isLocal ? (
               <>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">

@@ -60,6 +60,7 @@ model User {
   usageLogs     UsageLog[]
   referralsSent Referral[] @relation("ReferrerUser")
   referralsReceived Referral[] @relation("ReferredUser")
+  promoRedemptions PromoCodeRedemption[]
 }
 
 model VerificationToken {
@@ -141,6 +142,42 @@ model NewsletterSubscriber {
 
   @@index([email])
   @@index([createdAt])
+}
+
+// Promo Code System
+model PromoCode {
+  id              String    @id @default(cuid())
+  code            String    @unique // e.g., "WELCOME20", "SUMMER2026"
+  type            String    // "credits" | "discount_percent" | "discount_fixed"
+  value           Int       // Credits amount or discount percentage/cents
+  maxUses         Int?      // Null = unlimited
+  usedCount       Int       @default(0)
+  minPurchase     Int?      // Minimum purchase in cents (for discounts)
+  expiresAt       DateTime?
+  isActive        Boolean   @default(true)
+  description     String?   // Internal note
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  redemptions     PromoCodeRedemption[]
+
+  @@index([code])
+  @@index([isActive])
+}
+
+model PromoCodeRedemption {
+  id          String   @id @default(cuid())
+  promoCodeId String
+  userId      String
+  creditsAwarded Int?  // If type was "credits"
+  discountApplied Int? // If type was discount (in cents)
+  createdAt   DateTime @default(now())
+
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([promoCodeId, userId]) // Each user can only use a code once
+  @@index([userId])
 }
 
 // Referral System

@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { Language } from '@/i18n/settings';
+import PromoCodeInput from '@/components/PromoCodeInput';
 
 interface DashboardClientProps {
   lng: Language;
@@ -338,6 +339,11 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [userCredits, setUserCredits] = useState(user.credits);
+
+  const handlePromoSuccess = (credits: number) => {
+    setUserCredits((prev) => prev + credits);
+  };
 
   useEffect(() => {
     // Fetch user data
@@ -1007,10 +1013,11 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
                 <Sparkles className="h-5 w-5" />
                 <span>{t.currentBalance}</span>
               </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold text-zinc-900 dark:text-white">{user.credits}</span>
+              <div className="flex items-baseline gap-2 mb-4">
+                <span className="text-5xl font-bold text-zinc-900 dark:text-white">{userCredits}</span>
                 <span className="text-zinc-500">{t.credits}</span>
               </div>
+              <PromoCodeInput lng={lng} onSuccess={handlePromoSuccess} />
             </motion.div>
 
             {/* Credit Packages */}
