@@ -139,6 +139,18 @@
       "description": "Verdichten Sie lange Texte zu prägnanten Zusammenfassungen mit KI.",
       "metaTitle": "KI Textzusammenfassung - Dokumente verdichten | PureTools AI",
       "metaDescription": "Fassen Sie lange Texte und Dokumente sofort mit KI zusammen. Wählen Sie Stichpunkte, Absätze oder Executive-Stil."
+    },
+    "aiImageGenerator": {
+      "title": "KI-Bildgenerator",
+      "description": "Erstellen Sie beeindruckende Bilder aus Textbeschreibungen mit DALL-E 3.",
+      "metaTitle": "KI Bildgenerator - Text zu Bild | PureTools AI",
+      "metaDescription": "Generieren Sie schöne Bilder aus Text-Prompts mit DALL-E 3. Verschiedene Größen, Stile und Qualitätsoptionen."
+    },
+    "aiVideoGenerator": {
+      "title": "KI-Videogenerator",
+      "description": "Erstellen Sie Videos aus Textbeschreibungen mit OpenAI Sora.",
+      "metaTitle": "KI Videogenerator - Text zu Video (Sora) | PureTools AI",
+      "metaDescription": "Generieren Sie kinematische Videos aus Text-Prompts mit OpenAI Sora. Demnächst verfügbar!"
     }
   },
   "badges": {

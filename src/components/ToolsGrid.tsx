@@ -22,6 +22,8 @@ import {
   Wine,
   Sticker,
   CreditCard,
+  Wand2,
+  Video,
 } from 'lucide-react';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
@@ -54,6 +56,8 @@ const aiTools = [
   { key: 'aiTranslator', icon: Languages, path: 'ai-translator' },
   { key: 'aiTranscriber', icon: FileAudio, path: 'ai-transcriber' },
   { key: 'aiSummarizer', icon: FileText, path: 'ai-summarizer' },
+  { key: 'aiImageGenerator', icon: Wand2, path: 'ai-image-generator' },
+  { key: 'aiVideoGenerator', icon: Video, path: 'ai-video-generator' },
 ] as const;
 
 const containerVariants = {

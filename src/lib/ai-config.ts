@@ -9,6 +9,18 @@ export const AI_CONFIG = {
     model: 'whisper-1',
     maxFileSizeMB: 25,
   },
+  dalle: {
+    model: 'dall-e-3',
+    sizes: ['1024x1024', '1792x1024', '1024x1792'] as const,
+    qualities: ['standard', 'hd'] as const,
+    styles: ['vivid', 'natural'] as const,
+  },
+  sora: {
+    model: 'sora', // Placeholder - API not yet public
+    durations: [5, 10, 15, 20] as const,
+    aspectRatios: ['16:9', '9:16', '1:1'] as const,
+    styles: ['cinematic', 'animated', 'realistic'] as const,
+  },
 };
 
 // Credit pricing (1 credit = $0.01 USD equivalent)
@@ -25,8 +37,38 @@ export const CREDIT_PRICING = {
     baseCredits: 0.3, // per 1000 words
     minCredits: 1,
   },
+  generateImage: {
+    standard: 5, // 1024x1024 standard quality
+    hd: 8, // 1024x1024 HD quality
+    hdWide: 10, // 1792x1024 or 1024x1792 HD
+  },
+  generateVideo: {
+    '5': 25, // 5 seconds
+    '10': 40, // 10 seconds
+    '15': 55, // 15 seconds
+    '20': 70, // 20 seconds
+  },
   serviceFeePercent: 10, // 10% service fee
 };
+
+// Calculate credits for image generation
+export function calculateImageCredits(
+  size: '1024x1024' | '1792x1024' | '1024x1792',
+  quality: 'standard' | 'hd'
+): number {
+  if (quality === 'standard') {
+    return CREDIT_PRICING.generateImage.standard;
+  }
+  if (size === '1024x1024') {
+    return CREDIT_PRICING.generateImage.hd;
+  }
+  return CREDIT_PRICING.generateImage.hdWide;
+}
+
+// Calculate credits for video generation
+export function calculateVideoCredits(duration: 5 | 10 | 15 | 20): number {
+  return CREDIT_PRICING.generateVideo[String(duration) as keyof typeof CREDIT_PRICING.generateVideo];
+}
 
 export function calculateCredits(
   type: 'translate' | 'transcribe' | 'summarize',

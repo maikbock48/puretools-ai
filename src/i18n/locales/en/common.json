@@ -139,6 +139,18 @@
       "description": "Condense long texts into concise summaries with AI.",
       "metaTitle": "AI Text Summarizer - Condense Documents | PureTools AI",
       "metaDescription": "Summarize long texts and documents instantly with AI. Choose bullet points, paragraphs, or executive style."
+    },
+    "aiImageGenerator": {
+      "title": "AI Image Generator",
+      "description": "Create stunning images from text descriptions using DALL-E 3.",
+      "metaTitle": "AI Image Generator - Text to Image | PureTools AI",
+      "metaDescription": "Generate beautiful images from text prompts using DALL-E 3. Multiple sizes, styles, and quality options."
+    },
+    "aiVideoGenerator": {
+      "title": "AI Video Generator",
+      "description": "Create videos from text descriptions using OpenAI Sora.",
+      "metaTitle": "AI Video Generator - Text to Video (Sora) | PureTools AI",
+      "metaDescription": "Generate cinematic videos from text prompts using OpenAI Sora. Coming soon!"
     }
   },
   "badges": {
