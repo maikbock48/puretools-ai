@@ -32,11 +32,17 @@ import {
   Code,
   Menu,
   X,
+  Gift,
+  Copy,
+  Check,
+  Users,
+  ExternalLink,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Language } from '@/i18n/settings';
 import PromoCodeInput from '@/components/PromoCodeInput';
 import CreditExpirationWarning from '@/components/CreditExpirationWarning';
+import HistoryList from '@/components/HistoryList';
 
 interface DashboardClientProps {
   lng: Language;
@@ -82,9 +88,11 @@ const content = {
     nav: {
       overview: 'Overview',
       tools: 'Tools',
+      history: 'History',
       analytics: 'Analytics',
       billing: 'Billing',
       profile: 'Profile',
+      referral: 'Referral',
     },
     toolCategories: {
       image: 'Image Tools',
@@ -141,6 +149,21 @@ const content = {
     amount: 'Amount',
     status: 'Status',
     completed: 'Completed',
+    // Referral translations
+    referralTitle: 'Refer Friends & Earn Credits',
+    referralSubtitle: 'Share your link and both get 100 credits!',
+    yourReferralCode: 'Your Referral Code',
+    copyCode: 'Copy Code',
+    copyLink: 'Copy Link',
+    shareOn: 'Share on',
+    referralStats: 'Referral Statistics',
+    totalReferrals: 'Total Referrals',
+    successfulReferrals: 'Successful',
+    earnedCredits: 'Earned Credits',
+    yourReferrals: 'Your Referrals',
+    noReferralsYet: 'No referrals yet. Share your link to start earning!',
+    referredOn: 'Referred on',
+    pending: 'Pending',
   },
   de: {
     greeting: 'Willkommen zurück',
@@ -174,9 +197,11 @@ const content = {
     nav: {
       overview: 'Übersicht',
       tools: 'Tools',
+      history: 'Verlauf',
       analytics: 'Statistiken',
       billing: 'Abrechnung',
       profile: 'Profil',
+      referral: 'Empfehlung',
     },
     toolCategories: {
       image: 'Bild-Tools',
@@ -233,6 +258,21 @@ const content = {
     amount: 'Betrag',
     status: 'Status',
     completed: 'Abgeschlossen',
+    // Referral translations
+    referralTitle: 'Freunde einladen & Credits verdienen',
+    referralSubtitle: 'Teile deinen Link und beide erhalten 100 Credits!',
+    yourReferralCode: 'Dein Empfehlungscode',
+    copyCode: 'Code kopieren',
+    copyLink: 'Link kopieren',
+    shareOn: 'Teilen auf',
+    referralStats: 'Empfehlungsstatistik',
+    totalReferrals: 'Gesamt-Empfehlungen',
+    successfulReferrals: 'Erfolgreich',
+    earnedCredits: 'Verdiente Credits',
+    yourReferrals: 'Deine Empfehlungen',
+    noReferralsYet: 'Noch keine Empfehlungen. Teile deinen Link, um zu verdienen!',
+    referredOn: 'Empfohlen am',
+    pending: 'Ausstehend',
   },
 };
 
@@ -330,7 +370,7 @@ const toolIcons: Record<string, typeof Languages> = {
   summarize: FileText,
 };
 
-type TabKey = 'overview' | 'tools' | 'analytics' | 'billing' | 'profile';
+type TabKey = 'overview' | 'tools' | 'history' | 'analytics' | 'billing' | 'profile' | 'referral';
 
 export default function DashboardClient({ lng, user }: DashboardClientProps) {
   const t = content[lng];
@@ -341,6 +381,21 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [userCredits, setUserCredits] = useState(user.credits);
+  const [referralCode, setReferralCode] = useState<string>('');
+  const [referralLink, setReferralLink] = useState<string>('');
+  const [referralStats, setReferralStats] = useState<{
+    totalReferrals: number;
+    successfulReferrals: number;
+    totalCreditsEarned: number;
+    referrals: Array<{
+      id: string;
+      status: string;
+      creditsEarned: number;
+      referredAt: string;
+      referredName: string | null;
+    }>;
+  } | null>(null);
+  const [copied, setCopied] = useState<'code' | 'link' | null>(null);
 
   const handlePromoSuccess = (credits: number) => {
     setUserCredits((prev) => prev + credits);
@@ -374,6 +429,35 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
     fetchData();
   }, []);
 
+  // Fetch referral data when tab is active
+  useEffect(() => {
+    if (activeTab === 'referral') {
+      const fetchReferralData = async () => {
+        try {
+          const [codeRes, statsRes] = await Promise.all([
+            fetch('/api/referral/code'),
+            fetch('/api/referral/stats'),
+          ]);
+
+          if (codeRes.ok) {
+            const data = await codeRes.json();
+            setReferralCode(data.code);
+            setReferralLink(data.link);
+          }
+
+          if (statsRes.ok) {
+            const data = await statsRes.json();
+            setReferralStats(data);
+          }
+        } catch (error) {
+          console.error('Failed to fetch referral data:', error);
+        }
+      };
+
+      fetchReferralData();
+    }
+  }, [activeTab]);
+
   const handleSignOut = () => {
     signOut({ callbackUrl: `/${lng}` });
   };
@@ -400,8 +484,10 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
   const navItems = [
     { key: 'overview' as const, label: t.nav.overview, icon: LayoutDashboard },
     { key: 'tools' as const, label: t.nav.tools, icon: Wrench },
+    { key: 'history' as const, label: t.nav.history, icon: History },
     { key: 'analytics' as const, label: t.nav.analytics, icon: BarChart3 },
     { key: 'billing' as const, label: t.nav.billing, icon: CreditCard },
+    { key: 'referral' as const, label: t.nav.referral, icon: Gift },
     { key: 'profile' as const, label: t.nav.profile, icon: User },
   ];
 
@@ -805,6 +891,18 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
                 </div>
               </motion.div>
             ))}
+          </div>
+        )}
+
+        {activeTab === 'history' && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">{t.nav.history}</h1>
+              <p className="text-zinc-500 dark:text-zinc-400">
+                {lng === 'de' ? 'Deine gespeicherten Ergebnisse' : 'Your saved results'}
+              </p>
+            </div>
+            <HistoryList lng={lng} showFilters={true} limit={20} />
           </div>
         )}
 
@@ -1238,6 +1336,215 @@ export default function DashboardClient({ lng, user }: DashboardClientProps) {
                   {t.deleteAccount}
                 </button>
               </div>
+            </motion.div>
+          </div>
+        )}
+
+        {activeTab === 'referral' && (
+          <div className="space-y-8">
+            {/* Header */}
+            <div>
+              <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">{t.referralTitle}</h1>
+              <p className="text-zinc-500 dark:text-zinc-400">{t.referralSubtitle}</p>
+            </div>
+
+            {/* Referral Code Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-2xl border border-indigo-200 dark:border-indigo-500/30 bg-gradient-to-br from-indigo-50 via-purple-50/50 to-white dark:from-indigo-500/10 dark:via-purple-500/5 dark:to-transparent p-6 shadow-lg"
+            >
+              <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 mb-4">
+                <Gift className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                <span className="font-medium">{t.yourReferralCode}</span>
+              </div>
+
+              {/* Code Display */}
+              <div className="flex flex-col sm:flex-row gap-3 mb-6">
+                <div className="flex-1 flex items-center gap-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-3">
+                  <code className="flex-1 text-lg font-mono font-bold text-zinc-900 dark:text-white tracking-wider">
+                    {referralCode || '...'}
+                  </code>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(referralCode);
+                      setCopied('code');
+                      setTimeout(() => setCopied(null), 2000);
+                    }}
+                    className="flex items-center gap-2 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 px-3 py-1.5 text-sm font-medium text-indigo-700 dark:text-indigo-400 hover:bg-indigo-200 dark:hover:bg-indigo-500/30 transition-colors"
+                  >
+                    {copied === 'code' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copied === 'code' ? (lng === 'de' ? 'Kopiert!' : 'Copied!') : t.copyCode}
+                  </button>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(referralLink);
+                    setCopied('link');
+                    setTimeout(() => setCopied(null), 2000);
+                  }}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 font-medium text-white shadow-lg shadow-indigo-500/25 hover:bg-indigo-500 transition-colors"
+                >
+                  {copied === 'link' ? <Check className="h-5 w-5" /> : <ExternalLink className="h-5 w-5" />}
+                  {copied === 'link' ? (lng === 'de' ? 'Kopiert!' : 'Copied!') : t.copyLink}
+                </button>
+              </div>
+
+              {/* Social Share Buttons */}
+              <div>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">{t.shareOn}</p>
+                <div className="flex flex-wrap gap-2">
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Get free AI tools at PureTools! Sign up with my link and we both get 100 credits: ${referralLink}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-lg bg-[#1DA1F2] px-4 py-2 text-sm font-medium text-white hover:bg-[#1a8cd8] transition-colors"
+                  >
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Twitter/X
+                  </a>
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-lg bg-[#1877F2] px-4 py-2 text-sm font-medium text-white hover:bg-[#166fe5] transition-colors"
+                  >
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    Facebook
+                  </a>
+                  <a
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(referralLink)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-lg bg-[#0A66C2] px-4 py-2 text-sm font-medium text-white hover:bg-[#004182] transition-colors"
+                  >
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    LinkedIn
+                  </a>
+                  <a
+                    href={`https://wa.me/?text=${encodeURIComponent(`Get free AI tools at PureTools! Sign up with my link and we both get 100 credits: ${referralLink}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-lg bg-[#25D366] px-4 py-2 text-sm font-medium text-white hover:bg-[#20bd5a] transition-colors"
+                  >
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    WhatsApp
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="rounded-lg bg-indigo-100 dark:bg-indigo-500/10 p-2">
+                    <Users className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                  </div>
+                  <span className="text-sm text-zinc-500">{t.totalReferrals}</span>
+                </div>
+                <p className="text-3xl font-bold text-zinc-900 dark:text-white">
+                  {referralStats?.totalReferrals || 0}
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="rounded-lg bg-emerald-100 dark:bg-emerald-500/10 p-2">
+                    <Check className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <span className="text-sm text-zinc-500">{t.successfulReferrals}</span>
+                </div>
+                <p className="text-3xl font-bold text-zinc-900 dark:text-white">
+                  {referralStats?.successfulReferrals || 0}
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="rounded-lg bg-purple-100 dark:bg-purple-500/10 p-2">
+                    <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <span className="text-sm text-zinc-500">{t.earnedCredits}</span>
+                </div>
+                <p className="text-3xl font-bold text-zinc-900 dark:text-white">
+                  {referralStats?.totalCreditsEarned || 0}
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Referrals List */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6"
+            >
+              <div className="flex items-center gap-2 mb-6">
+                <div className="rounded-lg bg-indigo-100 dark:bg-indigo-500/10 p-2">
+                  <Users className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <h2 className="font-semibold text-zinc-900 dark:text-white">{t.yourReferrals}</h2>
+              </div>
+
+              {referralStats && referralStats.referrals.length > 0 ? (
+                <div className="space-y-3">
+                  {referralStats.referrals.map((referral) => (
+                    <div
+                      key={referral.id}
+                      className="flex items-center justify-between rounded-xl bg-zinc-50 dark:bg-zinc-800/50 p-4 border border-zinc-100 dark:border-zinc-700/50"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-500/20">
+                          <User className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-zinc-900 dark:text-white">
+                            {referral.referredName || (lng === 'de' ? 'Anonymer Nutzer' : 'Anonymous User')}
+                          </p>
+                          <p className="text-sm text-zinc-500">
+                            {t.referredOn} {new Date(referral.referredAt).toLocaleDateString(lng === 'de' ? 'de-DE' : 'en-US')}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                          referral.status === 'completed'
+                            ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400'
+                            : 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400'
+                        }`}>
+                          {referral.status === 'completed' ? t.completed : t.pending}
+                        </span>
+                        {referral.status === 'completed' && (
+                          <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400 mt-1">
+                            +{referral.creditsEarned} Credits
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12 text-zinc-500">
+                  <Gift className="h-12 w-12 text-zinc-300 dark:text-zinc-600 mb-4" />
+                  <p>{t.noReferralsYet}</p>
+                </div>
+              )}
             </motion.div>
           </div>
         )}

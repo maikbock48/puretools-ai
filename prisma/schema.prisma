@@ -53,11 +53,16 @@ model User {
   // Referral code (unique for each user)
   referralCode  String?   @unique
 
+  // Email tracking
+  day3EmailSent Boolean   @default(false)
+  day7EmailSent Boolean   @default(false)
+
   // Relations
   accounts      Account[]
   sessions      Session[]
   transactions  Transaction[]
   usageLogs     UsageLog[]
+  toolHistory   ToolHistory[]
   referralsSent Referral[] @relation("ReferrerUser")
   referralsReceived Referral[] @relation("ReferredUser")
   promoRedemptions PromoCodeRedemption[]
@@ -178,6 +183,27 @@ model PromoCodeRedemption {
 
   @@unique([promoCodeId, userId]) // Each user can only use a code once
   @@index([userId])
+}
+
+// Tool Usage History - Saves user's tool results
+model ToolHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  toolType    String   // 'qr-generator', 'ai-summarizer', 'ai-image-generator', etc.
+  title       String?  // User-friendly title or auto-generated
+  inputData   String?  // JSON: Original input (text, prompt, settings)
+  outputData  String?  // JSON: Result data (URLs, text snippets, metadata)
+  previewUrl  String?  // URL to preview image/thumbnail (for visual tools)
+  isFavorite  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([toolType])
+  @@index([createdAt])
+  @@index([isFavorite])
 }
 
 // Referral System
