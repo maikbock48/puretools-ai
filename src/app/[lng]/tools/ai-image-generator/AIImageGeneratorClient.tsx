@@ -21,6 +21,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Language } from '@/i18n/settings';
 import { useShareModal } from '@/components/ShareModal';
+import { useHistory } from '@/hooks/useHistory';
 
 interface AIImageGeneratorClientProps {
   lng: Language;
@@ -140,6 +141,8 @@ export default function AIImageGeneratorClient({ lng }: AIImageGeneratorClientPr
     lng
   );
 
+  const { saveToHistory } = useHistory();
+
   const currentCost = CREDIT_COSTS[size][quality];
 
   const generateImage = useCallback(async () => {
@@ -174,6 +177,15 @@ export default function AIImageGeneratorClient({ lng }: AIImageGeneratorClientPr
       setRevisedPrompt(data.revisedPrompt);
       setUserCredits(data.newBalance);
 
+      // Save to history
+      saveToHistory({
+        toolType: 'ai-image-generator',
+        title: prompt.length > 50 ? `${prompt.substring(0, 50)}...` : prompt,
+        inputData: { prompt, size, quality, style },
+        outputData: { revisedPrompt: data.revisedPrompt },
+        previewUrl: data.imageUrl,
+      });
+
       // Show share modal after successful generation
       setTimeout(() => openShareModal(prompt.substring(0, 50) + '...'), 1000);
     } catch {
@@ -181,7 +193,7 @@ export default function AIImageGeneratorClient({ lng }: AIImageGeneratorClientPr
     } finally {
       setIsGenerating(false);
     }
-  }, [prompt, size, quality, style, t, openShareModal]);
+  }, [prompt, size, quality, style, t, openShareModal, saveToHistory]);
 
   const downloadImage = useCallback(async () => {
     if (!generatedImage) return;

@@ -1,0 +1,52 @@
+# PureTools AI - Docker Compose for Development
+# Usage: docker-compose -f docker-compose.dev.yml up
+
+version: '3.8'
+
+services:
+  # ============================================
+  # PostgreSQL Database (Development)
+  # ============================================
+  db:
+    image: postgres:15-alpine
+    container_name: puretools-db-dev
+    environment:
+      POSTGRES_USER: puretools
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: puretools_dev
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U puretools"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # Adminer (Database UI)
+  # ============================================
+  adminer:
+    image: adminer
+    container_name: puretools-adminer
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+
+  # ============================================
+  # Mailpit (Email Testing)
+  # ============================================
+  mailpit:
+    image: axllent/mailpit
+    container_name: puretools-mailpit
+    ports:
+      - "8025:8025"  # Web UI
+      - "1025:1025"  # SMTP
+
+volumes:
+  postgres_dev_data:

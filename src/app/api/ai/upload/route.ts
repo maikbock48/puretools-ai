@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import mammoth from 'mammoth';
+import { auth } from '@/lib/auth';
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
 import { SUPPORTED_FILE_TYPES } from '@/lib/ai-config';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     // Check rate limit
     const { allowed, resetIn } = checkRateLimit(request, RATE_LIMITS.api);
     if (!allowed) {

@@ -15,14 +15,16 @@
 | AI Text Summarizer | Gemini 1.5 Flash | `/api/ai/summarize` | 0.3/1000 words | ✅ Live |
 | AI Document Translator | Gemini 1.5 Flash | `/api/ai/translate` | 0.5/1000 words | ✅ Live |
 | AI Audio Transcriber | OpenAI Whisper | `/api/ai/transcribe` | 1/minute | ✅ Live |
+| AI Image Generator | OpenAI DALL-E 3 | `/api/ai/generate-image` | 5-10/image | ✅ Live |
+| AI Voice Generator | OpenAI TTS | `/api/ai/tts` | 2-4/1000 chars | ✅ Live |
 
 ### 🚧 In Development
 
 | Tool | Model | API | Est. Credits | Priority |
 |------|-------|-----|--------------|----------|
-| AI Image Generator | OpenAI DALL-E 3 | `/api/ai/generate-image` | 5/image | HIGH |
-| AI Video Generator | OpenAI Sora | `/api/ai/generate-video` | 50/video | HIGH |
+| AI Video Generator | OpenAI Sora | `/api/ai/generate-video` | 50/video | HIGH (API not public) |
 | AI Code Assistant | Gemini 1.5 Pro | `/api/ai/code-assist` | 1/request | HIGH |
+| AI Grammar Checker | Gemini 1.5 Flash | `/api/ai/grammar` | 1/1000 words | HIGH |
 
 ### 📋 Planned Tools
 
@@ -31,7 +33,6 @@
 | AI Image Upscaler | Real-ESRGAN / Stable Diffusion | Enhance low-res images | MEDIUM |
 | AI Background Generator | DALL-E 3 | Create custom backgrounds | MEDIUM |
 | AI Logo Generator | DALL-E 3 + Gemini | Generate brand logos | MEDIUM |
-| AI Voice Generator (TTS) | OpenAI TTS / ElevenLabs | Text to natural speech | MEDIUM |
 | AI Voice Cloning | ElevenLabs | Clone voices from samples | LOW |
 | AI Music Generator | Suno / Udio API | Generate music from text | LOW |
 | AI Chatbot Builder | Gemini Pro | Custom chatbot creation | LOW |

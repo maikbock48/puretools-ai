@@ -20,6 +20,8 @@
     "ctaSecondary": "Learn More"
   },
   "categories": {
+    "favorites": "Your Favorites",
+    "favoritesDescription": "Quick access to your favorite tools.",
     "local": "Local Tools",
     "localDescription": "100% browser-based. No uploads needed.",
     "ai": "AI Power",
@@ -151,6 +153,12 @@
       "description": "Create videos from text descriptions using OpenAI Sora.",
       "metaTitle": "AI Video Generator - Text to Video (Sora) | PureTools AI",
       "metaDescription": "Generate cinematic videos from text prompts using OpenAI Sora. Coming soon!"
+    },
+    "aiVoiceGenerator": {
+      "title": "AI Voice Generator",
+      "description": "Convert text to natural speech with 6 premium AI voices.",
+      "metaTitle": "AI Voice Generator - Text to Speech | PureTools AI",
+      "metaDescription": "Transform text into natural-sounding speech with premium AI voices. Adjustable speed, multiple formats. Professional TTS powered by OpenAI."
     }
   },
   "badges": {

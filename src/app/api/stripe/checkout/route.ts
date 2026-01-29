@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { stripe, getPackageById, CreditPackageId } from '@/lib/stripe';
 import prisma from '@/lib/prisma';
+import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit';
+
+// Allowed languages to prevent open redirect
+const ALLOWED_LANGUAGES = ['en', 'de'];
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,11 +15,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Rate limiting
+    const { allowed, resetIn } = checkRateLimit(request, RATE_LIMITS.api);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: Math.ceil(resetIn / 1000) },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
-    const { packageId, language = 'en' } = body as {
+    const { packageId, language: rawLanguage = 'en' } = body as {
       packageId: CreditPackageId;
       language?: string;
     };
+
+    // Validate language to prevent open redirect
+    const language = ALLOWED_LANGUAGES.includes(rawLanguage) ? rawLanguage : 'en';
 
     const creditPackage = getPackageById(packageId);
 

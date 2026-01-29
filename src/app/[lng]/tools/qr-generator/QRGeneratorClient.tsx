@@ -20,6 +20,7 @@ import { useShareModal } from '@/components/ShareModal';
 import { useWatermark } from '@/components/WatermarkToggle';
 import { addWatermarkToImage } from '@/lib/watermark';
 import { useEmbedModal } from '@/components/EmbedCodeModal';
+import { useHistory } from '@/hooks/useHistory';
 
 interface QRGeneratorClientProps {
   lng: Language;
@@ -50,6 +51,9 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
     t('tools.qrGenerator.title'),
     lng
   );
+
+  // History hook
+  const { saveToHistory } = useHistory();
 
   const handleLogoUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -101,10 +105,18 @@ export default function QRGeneratorClient({ lng }: QRGeneratorClientProps) {
         link.click();
       }
 
+      // Save to history
+      saveToHistory({
+        toolType: 'qr-generator',
+        title: value ? `QR: ${value.substring(0, 40)}${value.length > 40 ? '...' : ''}` : 'QR Code',
+        inputData: { value, fgColor, bgColor, hasLogo: !!logo },
+        previewUrl: dataUrl,
+      });
+
       // Show share modal after download
       setTimeout(() => openShareModal(value ? `QR for: ${value.substring(0, 30)}...` : undefined), 500);
     }
-  }, [value, openShareModal, watermarkEnabled]);
+  }, [value, fgColor, bgColor, logo, openShareModal, watermarkEnabled, saveToHistory]);
 
   const downloadSVG = useCallback(() => {
     const svg = canvasRef.current?.querySelector('svg');

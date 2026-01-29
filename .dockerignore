@@ -1,0 +1,50 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Build output
+.next
+out
+build
+dist
+
+# Environment files (set via docker-compose)
+.env
+.env.*
+!.env.example
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage
+.nyc_output
+
+# Documentation (not needed in container)
+docs/
+*.md
+!README.md
+
+# Development files
+docker-compose.dev.yml
+*.log
+
+# Prisma SQLite (production uses PostgreSQL)
+prisma/*.db
+prisma/*.db-journal
+
+# Misc
+.turbo
+.vercel
+.sentryclirc

@@ -27,6 +27,7 @@ import {
 import { Language } from '@/i18n/settings';
 import { useWatermark } from '@/components/WatermarkToggle';
 import { addWatermarkToImage } from '@/lib/watermark';
+import { useHistory } from '@/hooks/useHistory';
 
 interface ImageCompressorClientProps {
   lng: Language;
@@ -206,6 +207,7 @@ const resolutionPresets = {
 
 export default function ImageCompressorClient({ lng }: ImageCompressorClientProps) {
   const t = content[lng];
+  const { saveToHistory } = useHistory();
   const [images, setImages] = useState<ImageFile[]>([]);
   const [preset, setPreset] = useState<PresetKey>('medium');
   const [settings, setSettings] = useState<CompressionSettings>({
@@ -331,6 +333,22 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
               }
             : img
         ));
+
+        // Save to history
+        saveToHistory({
+          toolType: 'image-compressor',
+          title: `Compressed: ${image.file.name}`,
+          inputData: {
+            fileName: image.file.name,
+            originalSize: image.originalSize,
+            preset,
+            quality: settings.quality,
+          },
+          outputData: {
+            compressedSize: compressedFile.size,
+            savings: calculateSavings(image.originalSize, compressedFile.size),
+          },
+        });
       } catch (error) {
         setImages(prev => prev.map(img =>
           img.id === image.id
@@ -342,7 +360,7 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
 
     setTotalCompressionTime(performance.now() - startTime);
     setIsCompressing(false);
-  }, [images, settings]);
+  }, [images, settings, preset, saveToHistory]);
 
   const downloadImage = useCallback(async (image: ImageFile) => {
     if (!image.compressed) return;
@@ -518,8 +536,11 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
                       min="0.1"
                       max="10"
                       step="0.1"
-                      value={settings.maxSizeMB}
-                      onChange={(e) => setSettings({ ...settings, maxSizeMB: parseFloat(e.target.value) })}
+                      value={isNaN(settings.maxSizeMB) ? '' : settings.maxSizeMB}
+                      onChange={(e) => {
+                        const value = parseFloat(e.target.value);
+                        setSettings({ ...settings, maxSizeMB: isNaN(value) ? 1 : value });
+                      }}
                       className="w-full rounded-lg border border-indigo-200 dark:border-zinc-700 bg-indigo-50/50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-white"
                     />
                     <p className="mt-1 text-xs text-zinc-500">{t.settings.maxSizeHint}</p>

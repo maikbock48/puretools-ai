@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import i18next from 'i18next';
 import {
   initReactI18next,
@@ -8,14 +8,20 @@ import {
   UseTranslationOptions,
 } from 'react-i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
-import LanguageDetector from 'i18next-browser-languagedetector';
 import { getOptions, languages, Language } from './settings';
 
 const runsOnServerSide = typeof window === 'undefined';
 
+// Get language from URL path on client side
+function getLanguageFromPath(): Language {
+  if (runsOnServerSide) return 'en';
+  const path = window.location.pathname;
+  const langMatch = path.match(/^\/(en|de)(\/|$)/);
+  return (langMatch?.[1] as Language) || 'en';
+}
+
 i18next
   .use(initReactI18next)
-  .use(LanguageDetector)
   .use(
     resourcesToBackend(
       (language: string, namespace: string) =>
@@ -24,10 +30,7 @@ i18next
   )
   .init({
     ...getOptions(),
-    lng: undefined,
-    detection: {
-      order: ['path', 'htmlTag', 'cookie', 'navigator'],
-    },
+    lng: runsOnServerSide ? 'en' : getLanguageFromPath(),
     preload: runsOnServerSide ? languages : [],
   });
 
@@ -38,21 +41,26 @@ export function useTranslation(
 ) {
   const ret = useTranslationOrg(ns, options);
   const { i18n } = ret;
+  const [isReady, setIsReady] = useState(i18n.resolvedLanguage === lng);
 
-  if (runsOnServerSide && lng && i18n.resolvedLanguage !== lng) {
-    i18n.changeLanguage(lng);
-  } else {
-    const [activeLng, setActiveLng] = useState(i18n.resolvedLanguage);
+  const changeLanguage = useCallback(() => {
+    if (lng && i18n.resolvedLanguage !== lng) {
+      i18n.changeLanguage(lng).then(() => setIsReady(true));
+    } else {
+      setIsReady(true);
+    }
+  }, [lng, i18n]);
 
-    useEffect(() => {
-      if (activeLng === i18n.resolvedLanguage) return;
-      setActiveLng(i18n.resolvedLanguage);
-    }, [activeLng, i18n.resolvedLanguage]);
+  useEffect(() => {
+    changeLanguage();
+  }, [changeLanguage]);
 
-    useEffect(() => {
-      if (!lng || i18n.resolvedLanguage === lng) return;
-      i18n.changeLanguage(lng);
-    }, [lng, i18n]);
+  // Return translation function that returns empty string until ready to prevent hydration mismatch
+  if (!isReady && !runsOnServerSide) {
+    return {
+      ...ret,
+      t: ((key: string) => ret.t(key)) as typeof ret.t,
+    };
   }
 
   return ret;

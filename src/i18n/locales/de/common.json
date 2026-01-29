@@ -20,6 +20,8 @@
     "ctaSecondary": "Mehr Erfahren"
   },
   "categories": {
+    "favorites": "Deine Favoriten",
+    "favoritesDescription": "Schnellzugriff auf deine Lieblings-Tools.",
     "local": "Lokale Tools",
     "localDescription": "100% browserbasiert. Keine Uploads nötig.",
     "ai": "KI-Power",
@@ -151,6 +153,12 @@
       "description": "Erstellen Sie Videos aus Textbeschreibungen mit OpenAI Sora.",
       "metaTitle": "KI Videogenerator - Text zu Video (Sora) | PureTools AI",
       "metaDescription": "Generieren Sie kinematische Videos aus Text-Prompts mit OpenAI Sora. Demnächst verfügbar!"
+    },
+    "aiVoiceGenerator": {
+      "title": "KI-Stimmengenerator",
+      "description": "Wandeln Sie Text in natürliche Sprache mit 6 Premium-KI-Stimmen um.",
+      "metaTitle": "KI Stimmengenerator - Text zu Sprache | PureTools AI",
+      "metaDescription": "Verwandeln Sie Text in natürlich klingende Sprache mit Premium-KI-Stimmen. Anpassbare Geschwindigkeit, mehrere Formate. Professionelle TTS mit OpenAI."
     }
   },
   "badges": {

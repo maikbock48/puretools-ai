@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { LucideIcon, Shield, Sparkles, Ban, ArrowRight } from 'lucide-react';
+import { LucideIcon, Shield, Sparkles, Ban, ArrowRight, Star } from 'lucide-react';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
 
@@ -14,6 +14,9 @@ interface ToolCardProps {
   icon: LucideIcon;
   variant: 'local' | 'ai';
   toolKey?: string;
+  isFavorite?: boolean;
+  onToggleFavorite?: (toolKey: string) => void;
+  showFavoriteButton?: boolean;
 }
 
 // Unique gradient backgrounds for each tool
@@ -81,12 +84,23 @@ export default function ToolCard({
   icon: Icon,
   variant,
   toolKey,
+  isFavorite = false,
+  onToggleFavorite,
+  showFavoriteButton = true,
 }: ToolCardProps) {
   const { t } = useTranslation(lng);
   const isLocal = variant === 'local';
 
   const bgGradient = toolKey ? toolBackgrounds[toolKey] || '' : '';
   const bgPattern = toolKey ? toolPatterns[toolKey] || '' : '';
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onToggleFavorite && toolKey) {
+      onToggleFavorite(toolKey);
+    }
+  };
 
   return (
     <Link href={href} className="block h-full">
@@ -100,6 +114,23 @@ export default function ToolCard({
             : 'bg-white dark:bg-zinc-900 border-indigo-200/60 dark:border-indigo-500/20 hover:border-indigo-300 dark:hover:border-indigo-500/40'
         }`}
       >
+        {/* Favorite Button */}
+        {showFavoriteButton && onToggleFavorite && toolKey && (
+          <button
+            onClick={handleFavoriteClick}
+            className={`absolute top-4 right-4 z-20 p-2 rounded-full transition-all duration-200 ${
+              isFavorite
+                ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-500'
+                : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10'
+            }`}
+            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          >
+            <Star
+              className={`h-4 w-4 transition-transform ${isFavorite ? 'fill-current scale-110' : ''}`}
+            />
+          </button>
+        )}
+
         {/* Unique tool background gradient */}
         {bgGradient && (
           <div className={`absolute inset-0 bg-gradient-to-br ${bgGradient} opacity-60 dark:opacity-40`} />

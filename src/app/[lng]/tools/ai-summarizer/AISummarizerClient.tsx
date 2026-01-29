@@ -21,6 +21,7 @@ import TransparencyTag from '@/components/TransparencyTag';
 import AICostPreview from '@/components/AICostPreview';
 import SocialShare from '@/components/SocialShare';
 import AIProgressIndicator from '@/components/AIProgressIndicator';
+import { useHistory } from '@/hooks/useHistory';
 
 interface AISummarizerClientProps {
   lng: Language;
@@ -98,6 +99,7 @@ type SummaryStyle = 'bullet' | 'paragraph' | 'executive';
 
 export default function AISummarizerClient({ lng }: AISummarizerClientProps) {
   const t = content[lng];
+  const { saveToHistory } = useHistory();
 
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
@@ -177,6 +179,14 @@ export default function AISummarizerClient({ lng }: AISummarizerClientProps) {
       const data = await response.json();
       setOutputText(data.summary);
       setCompressionRatio(data.compressionRatio);
+
+      // Save to history
+      saveToHistory({
+        toolType: 'ai-summarizer',
+        title: inputText.length > 50 ? `${inputText.substring(0, 50)}...` : inputText.substring(0, 50),
+        inputData: { textLength: inputText.length, wordCount, length, style },
+        outputData: { compressionRatio: data.compressionRatio, summaryLength: data.summary.length },
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : t.error);
     } finally {

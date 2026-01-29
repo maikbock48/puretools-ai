@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
+import { useHistory } from '@/hooks/useHistory';
 
 interface HeicConverterClientProps {
   lng: Language;
@@ -38,6 +39,7 @@ type OutputFormat = 'jpeg' | 'png' | 'webp';
 
 export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
   const { t } = useTranslation(lng);
+  const { saveToHistory } = useHistory();
   const [files, setFiles] = useState<HeicFile[]>([]);
   const [outputFormat, setOutputFormat] = useState<OutputFormat>('jpeg');
   const [quality, setQuality] = useState(0.9);
@@ -156,6 +158,21 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
               : f
           )
         );
+
+        // Save to history
+        saveToHistory({
+          toolType: 'heic-converter',
+          title: `Converted: ${file.file.name}`,
+          inputData: {
+            fileName: file.file.name,
+            originalSize: file.originalSize,
+            outputFormat,
+            quality,
+          },
+          outputData: {
+            convertedSize: resultBlob.size,
+          },
+        });
       } catch (error) {
         setFiles(prev =>
           prev.map(f =>
@@ -172,7 +189,7 @@ export default function HeicConverterClient({ lng }: HeicConverterClientProps) {
     }
 
     setIsConverting(false);
-  }, [files, outputFormat, quality]);
+  }, [files, outputFormat, quality, saveToHistory]);
 
   const downloadFile = useCallback((file: HeicFile) => {
     if (!file.converted) return;

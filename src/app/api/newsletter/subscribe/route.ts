@@ -99,6 +99,15 @@ export async function POST(request: NextRequest) {
 // Unsubscribe endpoint
 export async function DELETE(request: NextRequest) {
   try {
+    // Rate limit check
+    const { allowed, resetIn } = checkRateLimit(request, RATE_LIMITS.api);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429, headers: { 'X-RateLimit-Reset': Math.ceil(resetIn / 1000).toString() } }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
 

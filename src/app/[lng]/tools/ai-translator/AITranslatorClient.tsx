@@ -20,6 +20,7 @@ import TransparencyTag from '@/components/TransparencyTag';
 import AICostPreview from '@/components/AICostPreview';
 import SocialShare from '@/components/SocialShare';
 import AIProgressIndicator from '@/components/AIProgressIndicator';
+import { useHistory } from '@/hooks/useHistory';
 
 interface AITranslatorClientProps {
   lng: Language;
@@ -114,6 +115,7 @@ type LanguageCode = keyof typeof content.en.languages;
 
 export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
   const t = content[lng];
+  const { saveToHistory } = useHistory();
 
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
@@ -188,6 +190,16 @@ export default function AITranslatorClient({ lng }: AITranslatorClientProps) {
 
       const data = await response.json();
       setOutputText(data.translation);
+
+      // Save to history
+      const sourceLanguage = sourceLang === 'auto' ? 'Auto-detect' : t.languages[sourceLang];
+      const targetLanguage = t.languages[targetLang];
+      saveToHistory({
+        toolType: 'ai-translator',
+        title: `${sourceLanguage} → ${targetLanguage}: ${inputText.substring(0, 30)}...`,
+        inputData: { sourceLang, targetLang, textLength: inputText.length, wordCount },
+        outputData: { translationLength: data.translation.length },
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : t.error);
     } finally {

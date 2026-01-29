@@ -21,6 +21,21 @@ export const AI_CONFIG = {
     aspectRatios: ['16:9', '9:16', '1:1'] as const,
     styles: ['cinematic', 'animated', 'realistic'] as const,
   },
+  tts: {
+    models: ['tts-1', 'tts-1-hd'] as const,
+    voices: ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer'] as const,
+    voiceDescriptions: {
+      alloy: { en: 'Neutral & balanced', de: 'Neutral & ausgewogen', gender: 'neutral' },
+      echo: { en: 'Warm & conversational', de: 'Warm & gesprächig', gender: 'male' },
+      fable: { en: 'Expressive & dramatic', de: 'Ausdrucksvoll & dramatisch', gender: 'neutral' },
+      onyx: { en: 'Deep & authoritative', de: 'Tief & autoritär', gender: 'male' },
+      nova: { en: 'Friendly & upbeat', de: 'Freundlich & lebhaft', gender: 'female' },
+      shimmer: { en: 'Clear & pleasant', de: 'Klar & angenehm', gender: 'female' },
+    },
+    speedRange: { min: 0.25, max: 4.0, default: 1.0 },
+    outputFormats: ['mp3', 'opus', 'aac', 'flac', 'wav', 'pcm'] as const,
+    maxCharacters: 4096,
+  },
 };
 
 // Credit pricing (1 credit = $0.01 USD equivalent)
@@ -48,6 +63,11 @@ export const CREDIT_PRICING = {
     '15': 55, // 15 seconds
     '20': 70, // 20 seconds
   },
+  tts: {
+    standard: 2, // per 1000 characters
+    hd: 4, // per 1000 characters (tts-1-hd)
+    minCredits: 1,
+  },
   serviceFeePercent: 10, // 10% service fee
 };
 
@@ -68,6 +88,23 @@ export function calculateImageCredits(
 // Calculate credits for video generation
 export function calculateVideoCredits(duration: 5 | 10 | 15 | 20): number {
   return CREDIT_PRICING.generateVideo[String(duration) as keyof typeof CREDIT_PRICING.generateVideo];
+}
+
+// Calculate credits for TTS
+export function calculateTTSCredits(
+  characterCount: number,
+  model: 'tts-1' | 'tts-1-hd'
+): { baseCredits: number; serviceFee: number; totalCredits: number } {
+  const ratePerThousand = model === 'tts-1-hd'
+    ? CREDIT_PRICING.tts.hd
+    : CREDIT_PRICING.tts.standard;
+
+  const thousands = characterCount / 1000;
+  const baseCredits = Math.max(CREDIT_PRICING.tts.minCredits, Math.ceil(thousands * ratePerThousand));
+  const serviceFee = baseCredits * (CREDIT_PRICING.serviceFeePercent / 100);
+  const totalCredits = Math.ceil(baseCredits + serviceFee);
+
+  return { baseCredits, serviceFee, totalCredits };
 }
 
 export function calculateCredits(

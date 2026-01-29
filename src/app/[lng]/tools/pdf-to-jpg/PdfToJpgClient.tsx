@@ -108,6 +108,7 @@ export default function PdfToJpgClient({ lng }: PdfToJpgClientProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [quality, setQuality] = useState<'low' | 'medium' | 'high'>('medium');
   const [format, setFormat] = useState<'jpg' | 'png'>('jpg');
+  const [error, setError] = useState<string | null>(null);
 
   const qualityScale = { low: 1, medium: 2, high: 3 };
 
@@ -115,13 +116,14 @@ export default function PdfToJpgClient({ lng }: PdfToJpgClientProps) {
     setIsConverting(true);
     setProgress(0);
     setConvertedPages([]);
+    setError(null);
 
     try {
       // Dynamically import pdfjs-dist
       const pdfjsLib = await import('pdfjs-dist');
 
-      // Set worker source
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+      // Set worker source using unpkg which mirrors npm packages exactly
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -169,8 +171,11 @@ export default function PdfToJpgClient({ lng }: PdfToJpgClientProps) {
 
       setConvertedPages(pages);
       setCurrentPage(0);
-    } catch (error) {
-      console.error('PDF conversion error:', error);
+    } catch (err) {
+      console.error('PDF conversion error:', err);
+      setError(lng === 'de'
+        ? 'Fehler beim Konvertieren der PDF. Bitte versuche es erneut.'
+        : 'Error converting PDF. Please try again.');
     } finally {
       setIsConverting(false);
     }
@@ -356,6 +361,17 @@ export default function PdfToJpgClient({ lng }: PdfToJpgClientProps) {
                   </button>
                 </div>
               </div>
+
+              {/* Error */}
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 p-4"
+                >
+                  <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                </motion.div>
+              )}
 
               {/* Progress */}
               {isConverting && (

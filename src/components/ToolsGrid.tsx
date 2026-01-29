@@ -24,10 +24,13 @@ import {
   CreditCard,
   Wand2,
   Video,
+  Mic2,
+  Star,
 } from 'lucide-react';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
 import ToolCard from './ToolCard';
+import { useFavoriteTools } from '@/hooks/useFavoriteTools';
 
 interface ToolsGridProps {
   lng: Language;
@@ -58,6 +61,7 @@ const aiTools = [
   { key: 'aiSummarizer', icon: FileText, path: 'ai-summarizer' },
   { key: 'aiImageGenerator', icon: Wand2, path: 'ai-image-generator' },
   { key: 'aiVideoGenerator', icon: Video, path: 'ai-video-generator' },
+  { key: 'aiVoiceGenerator', icon: Mic2, path: 'ai-voice-generator' },
 ] as const;
 
 const containerVariants = {
@@ -81,12 +85,91 @@ const itemVariants = {
   },
 };
 
+// All tools combined for favorites lookup
+const allTools = [...localTools, ...aiTools];
+
+// Tool icon mapping for favorites section
+const toolIconMap: Record<string, typeof QrCode> = {
+  qrGenerator: QrCode,
+  imageCompressor: ImageDown,
+  heicConverter: Image,
+  pdfToolkit: FileText,
+  pdfToJpg: FileImage,
+  videoTrimmer: Film,
+  wifiQr: Wifi,
+  ocr: ScanText,
+  audioCutter: Scissors,
+  audioConverter: Music,
+  socialCropper: Crop,
+  bacCalculator: Wine,
+  stickerMaker: Sticker,
+  qrBusinessCard: CreditCard,
+  backgroundRemover: Eraser,
+  jsonFormatter: Braces,
+  aiTranslator: Languages,
+  aiTranscriber: FileAudio,
+  aiSummarizer: FileText,
+  aiImageGenerator: Wand2,
+  aiVideoGenerator: Video,
+  aiVoiceGenerator: Mic2,
+};
+
 export default function ToolsGrid({ lng }: ToolsGridProps) {
   const { t } = useTranslation(lng);
+  const { favorites, isLoaded, toggleFavorite, isFavorite } = useFavoriteTools();
+
+  // Get favorite tools data
+  const favoriteTools = favorites
+    .map((key) => allTools.find((tool) => tool.key === key))
+    .filter((tool): tool is (typeof allTools)[number] => tool !== undefined);
 
   return (
     <section id="tools" className="relative py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Favorites Section - Only show if there are favorites */}
+        {isLoaded && favoriteTools.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-16"
+          >
+            <div className="flex flex-col items-center gap-3 mb-2 text-center">
+              <div className="p-2 rounded-lg bg-amber-500/10">
+                <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
+              </div>
+              <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">{t('categories.favorites')}</h2>
+            </div>
+            <p className="text-zinc-600 dark:text-zinc-400 text-center mb-8">{t('categories.favoritesDescription')}</p>
+
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            >
+              {favoriteTools.map((tool) => {
+                const isAiTool = aiTools.some((ai) => ai.key === tool.key);
+                return (
+                  <motion.div key={tool.key} variants={itemVariants}>
+                    <ToolCard
+                      lng={lng}
+                      title={t(`tools.${tool.key}.title`)}
+                      description={t(`tools.${tool.key}.description`)}
+                      href={`/${lng}/tools/${tool.path}`}
+                      icon={toolIconMap[tool.key] || QrCode}
+                      variant={isAiTool ? 'ai' : 'local'}
+                      toolKey={tool.key}
+                      isFavorite={true}
+                      onToggleFavorite={toggleFavorite}
+                    />
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </motion.div>
+        )}
+
         {/* Local Tools Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -120,6 +203,8 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
                   icon={tool.icon}
                   variant="local"
                   toolKey={tool.key}
+                  isFavorite={isFavorite(tool.key)}
+                  onToggleFavorite={toggleFavorite}
                 />
               </motion.div>
             ))}
@@ -158,6 +243,8 @@ export default function ToolsGrid({ lng }: ToolsGridProps) {
                   icon={tool.icon}
                   variant="ai"
                   toolKey={tool.key}
+                  isFavorite={isFavorite(tool.key)}
+                  onToggleFavorite={toggleFavorite}
                 />
               </motion.div>
             ))}
