@@ -3,8 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Music, Upload, Download, Loader2, X, FileAudio, Settings } from 'lucide-react';
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile, toBlobURL } from '@ffmpeg/util';
+import { Mp3Encoder } from 'lamejs';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
 
@@ -34,44 +33,21 @@ const SUPPORTED_FORMATS = [
 ];
 
 const BITRATE_OPTIONS = [
-  { value: '128', label: '128 kbps', description: 'Good quality, small file' },
-  { value: '192', label: '192 kbps', description: 'High quality' },
-  { value: '256', label: '256 kbps', description: 'Very high quality' },
-  { value: '320', label: '320 kbps', description: 'Maximum quality' },
+  { value: 128, label: '128 kbps', description: 'Good quality, small file' },
+  { value: 192, label: '192 kbps', description: 'High quality' },
+  { value: 256, label: '256 kbps', description: 'Very high quality' },
+  { value: 320, label: '320 kbps', description: 'Maximum quality' },
 ];
 
 export default function AudioConverterClient({ lng }: AudioConverterClientProps) {
   const { t } = useTranslation(lng);
   const [audioFile, setAudioFile] = useState<AudioFile | null>(null);
   const [isConverting, setIsConverting] = useState(false);
-  const [isLoadingFFmpeg, setIsLoadingFFmpeg] = useState(false);
   const [progress, setProgress] = useState(0);
   const [convertedUrl, setConvertedUrl] = useState<string | null>(null);
-  const [bitrate, setBitrate] = useState('192');
+  const [bitrate, setBitrate] = useState(192);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const ffmpegRef = useRef<FFmpeg | null>(null);
-
-  const loadFFmpeg = async () => {
-    if (ffmpegRef.current) return ffmpegRef.current;
-
-    setIsLoadingFFmpeg(true);
-    const ffmpeg = new FFmpeg();
-
-    ffmpeg.on('progress', ({ progress }) => {
-      setProgress(Math.round(progress * 100));
-    });
-
-    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
-    await ffmpeg.load({
-      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-    });
-
-    ffmpegRef.current = ffmpeg;
-    setIsLoadingFFmpeg(false);
-    return ffmpeg;
-  };
 
   const handleFileSelect = useCallback((files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -113,37 +89,84 @@ export default function AudioConverterClient({ lng }: AudioConverterClientProps)
     setError(null);
 
     try {
-      const ffmpeg = await loadFFmpeg();
+      // Read the file as ArrayBuffer
+      const arrayBuffer = await audioFile.file.arrayBuffer();
+      setProgress(10);
 
-      // Get input file extension
-      const inputExt = audioFile.name.split('.').pop()?.toLowerCase() || 'audio';
-      const inputName = `input.${inputExt}`;
-      const outputName = 'output.mp3';
+      // Decode audio using Web Audio API
+      const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      setProgress(30);
 
-      // Write input file
-      await ffmpeg.writeFile(inputName, await fetchFile(audioFile.file));
+      // Get audio data
+      const numberOfChannels = audioBuffer.numberOfChannels;
+      const sampleRate = audioBuffer.sampleRate;
+      const length = audioBuffer.length;
 
-      // Convert to MP3
-      await ffmpeg.exec([
-        '-i', inputName,
-        '-vn',
-        '-ar', '44100',
-        '-ac', '2',
-        '-b:a', `${bitrate}k`,
-        outputName,
-      ]);
+      // Get channel data
+      const leftChannel = audioBuffer.getChannelData(0);
+      const rightChannel = numberOfChannels > 1 ? audioBuffer.getChannelData(1) : leftChannel;
 
-      // Read output
-      const data = await ffmpeg.readFile(outputName);
-      const uint8Array = new Uint8Array(data as Uint8Array);
-      const blob = new Blob([uint8Array], { type: 'audio/mpeg' });
+      // Convert Float32Array to Int16Array
+      const leftInt16 = floatTo16BitPCM(leftChannel);
+      const rightInt16 = floatTo16BitPCM(rightChannel);
+
+      setProgress(50);
+
+      // Create MP3 encoder
+      const mp3encoder = new Mp3Encoder(numberOfChannels, sampleRate, bitrate);
+      const mp3Data: Int8Array[] = [];
+
+      // Encode in chunks
+      const sampleBlockSize = 1152; // Standard MP3 frame size
+      const totalBlocks = Math.ceil(length / sampleBlockSize);
+
+      for (let i = 0; i < length; i += sampleBlockSize) {
+        const leftChunk = leftInt16.subarray(i, Math.min(i + sampleBlockSize, length));
+        const rightChunk = rightInt16.subarray(i, Math.min(i + sampleBlockSize, length));
+
+        let mp3buf: Int8Array;
+        if (numberOfChannels === 1) {
+          mp3buf = mp3encoder.encodeBuffer(leftChunk);
+        } else {
+          mp3buf = mp3encoder.encodeBuffer(leftChunk, rightChunk);
+        }
+
+        if (mp3buf.length > 0) {
+          mp3Data.push(mp3buf);
+        }
+
+        // Update progress
+        const currentBlock = Math.floor(i / sampleBlockSize);
+        setProgress(50 + Math.round((currentBlock / totalBlocks) * 45));
+      }
+
+      // Flush remaining data
+      const mp3buf = mp3encoder.flush();
+      if (mp3buf.length > 0) {
+        mp3Data.push(mp3buf);
+      }
+
+      setProgress(98);
+
+      // Combine all chunks
+      const totalLength = mp3Data.reduce((acc, chunk) => acc + chunk.length, 0);
+      const mp3Array = new Uint8Array(totalLength);
+      let offset = 0;
+      for (const chunk of mp3Data) {
+        mp3Array.set(new Uint8Array(chunk.buffer, chunk.byteOffset, chunk.length), offset);
+        offset += chunk.length;
+      }
+
+      // Create blob and URL
+      const blob = new Blob([mp3Array], { type: 'audio/mpeg' });
       const url = URL.createObjectURL(blob);
 
       setConvertedUrl(url);
+      setProgress(100);
 
-      // Cleanup
-      await ffmpeg.deleteFile(inputName);
-      await ffmpeg.deleteFile(outputName);
+      // Clean up audio context
+      await audioContext.close();
     } catch (err) {
       console.error('Conversion error:', err);
       setError(lng === 'de'
@@ -152,6 +175,16 @@ export default function AudioConverterClient({ lng }: AudioConverterClientProps)
     } finally {
       setIsConverting(false);
     }
+  };
+
+  // Helper function to convert Float32Array to Int16Array
+  const floatTo16BitPCM = (input: Float32Array): Int16Array => {
+    const output = new Int16Array(input.length);
+    for (let i = 0; i < input.length; i++) {
+      const s = Math.max(-1, Math.min(1, input[i]));
+      output[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+    }
+    return output;
   };
 
   const handleDownload = () => {
@@ -285,13 +318,11 @@ export default function AudioConverterClient({ lng }: AudioConverterClientProps)
                 </div>
 
                 {/* Progress Bar */}
-                {(isConverting || isLoadingFFmpeg) && (
+                {isConverting && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-zinc-600 dark:text-zinc-400">
-                        {isLoadingFFmpeg
-                          ? (lng === 'de' ? 'Lade Konverter...' : 'Loading converter...')
-                          : (lng === 'de' ? 'Konvertiere...' : 'Converting...')}
+                        {lng === 'de' ? 'Konvertiere...' : 'Converting...'}
                       </span>
                       <span className="text-indigo-600 dark:text-indigo-400">{progress}%</span>
                     </div>
@@ -318,10 +349,10 @@ export default function AudioConverterClient({ lng }: AudioConverterClientProps)
                   {!convertedUrl ? (
                     <button
                       onClick={convertToMp3}
-                      disabled={isConverting || isLoadingFFmpeg}
+                      disabled={isConverting}
                       className="flex-1 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      {isConverting || isLoadingFFmpeg ? (
+                      {isConverting ? (
                         <>
                           <Loader2 className="h-5 w-5 animate-spin" />
                           {lng === 'de' ? 'Konvertiere...' : 'Converting...'}
