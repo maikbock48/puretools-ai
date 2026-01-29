@@ -29,6 +29,88 @@ import { useWatermark } from '@/components/WatermarkToggle';
 import { addWatermarkToImage } from '@/lib/watermark';
 import { useHistory } from '@/hooks/useHistory';
 
+/**
+ * Compress image to get as close as possible to target size without exceeding it.
+ * Uses binary search to find optimal quality.
+ */
+async function compressToTargetSize(
+  file: File,
+  targetSizeMB: number,
+  maxWidthOrHeight: number,
+  fileType?: string
+): Promise<Blob> {
+  const targetSizeBytes = targetSizeMB * 1024 * 1024;
+
+  // If file is already under target, return as-is (optionally resize)
+  if (file.size <= targetSizeBytes) {
+    // Still apply resize if needed
+    const resized = await imageCompression(file, {
+      maxWidthOrHeight,
+      useWebWorker: true,
+      initialQuality: 1,
+      fileType: fileType as 'image/jpeg' | 'image/png' | 'image/webp' | undefined,
+    });
+    return resized;
+  }
+
+  // Binary search for optimal quality
+  let minQuality = 0.1;
+  let maxQuality = 1.0;
+  let bestResult: Blob | null = null;
+  let bestQuality = minQuality;
+
+  // First, try with max quality to see if we can even get under target with just resize
+  const maxQualityResult = await imageCompression(file, {
+    maxWidthOrHeight,
+    useWebWorker: true,
+    initialQuality: 1.0,
+    fileType: fileType as 'image/jpeg' | 'image/png' | 'image/webp' | undefined,
+  });
+
+  if (maxQualityResult.size <= targetSizeBytes) {
+    return maxQualityResult;
+  }
+
+  // Binary search iterations
+  for (let i = 0; i < 8; i++) {
+    const midQuality = (minQuality + maxQuality) / 2;
+
+    const result = await imageCompression(file, {
+      maxWidthOrHeight,
+      useWebWorker: true,
+      initialQuality: midQuality,
+      fileType: fileType as 'image/jpeg' | 'image/png' | 'image/webp' | undefined,
+    });
+
+    if (result.size <= targetSizeBytes) {
+      // Under target - this is a valid result, try higher quality
+      bestResult = result;
+      bestQuality = midQuality;
+      minQuality = midQuality;
+    } else {
+      // Over target - need lower quality
+      maxQuality = midQuality;
+    }
+
+    // If we're within 5% of target, good enough
+    if (bestResult && bestResult.size >= targetSizeBytes * 0.95) {
+      break;
+    }
+  }
+
+  // If no valid result found, use minimum quality
+  if (!bestResult) {
+    bestResult = await imageCompression(file, {
+      maxWidthOrHeight,
+      useWebWorker: true,
+      initialQuality: 0.1,
+      fileType: fileType as 'image/jpeg' | 'image/png' | 'image/webp' | undefined,
+    });
+  }
+
+  return bestResult;
+}
+
 interface ImageCompressorClientProps {
   lng: Language;
 }
@@ -309,15 +391,15 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
       const imgStart = performance.now();
 
       try {
-        const options = {
-          maxSizeMB: settings.maxSizeMB,
-          maxWidthOrHeight: settings.maxWidthOrHeight,
-          useWebWorker: true,
-          initialQuality: settings.quality,
-          fileType: settings.fileType === 'original' ? undefined : `image/${settings.fileType}`,
-        };
+        const fileType = settings.fileType === 'original' ? undefined : `image/${settings.fileType}`;
 
-        const compressedFile = await imageCompression(image.file, options);
+        // Use iterative compression to get closer to target size
+        const compressedFile = await compressToTargetSize(
+          image.file,
+          settings.maxSizeMB,
+          settings.maxWidthOrHeight,
+          fileType
+        );
         const compressedPreview = URL.createObjectURL(compressedFile);
         const compressionTime = performance.now() - imgStart;
 

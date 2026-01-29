@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Film,
@@ -14,6 +14,8 @@ import {
   VolumeX,
   Volume2,
   RotateCcw,
+  SkipBack,
+  SkipForward,
 } from 'lucide-react';
 import { Language } from '@/i18n/settings';
 
@@ -378,84 +380,174 @@ export default function VideoTrimmerClient({ lng }: VideoTrimmerClientProps) {
               {/* Trim Controls */}
               <div className="rounded-2xl border border-indigo-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6">
                 <div className="space-y-6">
-                  {/* Timeline */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm text-zinc-600 dark:text-zinc-400">
-                      <span>{t.startTime}: {formatTime(startTime)}</span>
-                      <span>{t.endTime}: {formatTime(endTime)}</span>
+                  {/* Timeline Visual */}
+                  <div className="space-y-4">
+                    {/* Time Display */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <SkipBack className="h-4 w-4 text-purple-500" />
+                        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                          {t.startTime}: <span className="text-purple-600 dark:text-purple-400">{formatTime(startTime)}</span>
+                        </span>
+                      </div>
+                      <div className="text-sm text-zinc-500">
+                        {t.duration}: {formatTime(Math.max(0, endTime - startTime))}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                          {t.endTime}: <span className="text-purple-600 dark:text-purple-400">{formatTime(endTime)}</span>
+                        </span>
+                        <SkipForward className="h-4 w-4 text-purple-500" />
+                      </div>
                     </div>
-                    <div className="relative h-12 rounded-lg bg-indigo-100 dark:bg-zinc-800">
-                      {/* Timeline bar */}
-                      <div
-                        className="absolute top-0 bottom-0 bg-purple-500/30"
-                        style={{
-                          left: `${(startTime / duration) * 100}%`,
-                          width: `${((endTime - startTime) / duration) * 100}%`,
+
+                    {/* Visual Timeline Bar */}
+                    <div className="relative h-16 rounded-xl bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+                      {/* Selected region highlight */}
+                      {duration > 0 && (
+                        <div
+                          className="absolute top-0 bottom-0 bg-purple-500/30 border-x-2 border-purple-500"
+                          style={{
+                            left: `${(startTime / duration) * 100}%`,
+                            width: `${((endTime - startTime) / duration) * 100}%`,
+                          }}
+                        />
+                      )}
+                      {/* Current playhead */}
+                      {duration > 0 && (
+                        <div
+                          className="absolute top-0 bottom-0 w-1 bg-white shadow-lg z-10"
+                          style={{ left: `${(currentTime / duration) * 100}%` }}
+                        />
+                      )}
+                      {/* Time markers */}
+                      <div className="absolute bottom-1 left-2 text-xs text-zinc-400">0:00</div>
+                      <div className="absolute bottom-1 right-2 text-xs text-zinc-400">{formatTime(duration)}</div>
+                    </div>
+
+                    {/* Dual Range Sliders */}
+                    <div className="grid grid-cols-2 gap-6">
+                      {/* Start Time Slider */}
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                          <SkipBack className="h-4 w-4" />
+                          {t.startTime}
+                        </label>
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="range"
+                            min={0}
+                            max={duration || 100}
+                            step={0.1}
+                            value={startTime}
+                            onChange={(e) => handleRangeChange('start', parseFloat(e.target.value))}
+                            disabled={duration === 0}
+                            className="flex-1 h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                          />
+                          <input
+                            type="number"
+                            min={0}
+                            max={Math.max(0, endTime - 0.1)}
+                            step={0.1}
+                            value={startTime.toFixed(1)}
+                            onChange={(e) => handleRangeChange('start', parseFloat(e.target.value) || 0)}
+                            disabled={duration === 0}
+                            className="w-20 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-sm text-center disabled:opacity-50"
+                          />
+                        </div>
+                      </div>
+
+                      {/* End Time Slider */}
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                          <SkipForward className="h-4 w-4" />
+                          {t.endTime}
+                        </label>
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="range"
+                            min={0}
+                            max={duration || 100}
+                            step={0.1}
+                            value={endTime}
+                            onChange={(e) => handleRangeChange('end', parseFloat(e.target.value))}
+                            disabled={duration === 0}
+                            className="flex-1 h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                          />
+                          <input
+                            type="number"
+                            min={Math.min(duration, startTime + 0.1)}
+                            max={duration}
+                            step={0.1}
+                            value={endTime.toFixed(1)}
+                            onChange={(e) => handleRangeChange('end', parseFloat(e.target.value) || duration)}
+                            disabled={duration === 0}
+                            className="w-20 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-sm text-center disabled:opacity-50"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick trim buttons */}
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => { setStartTime(currentTime); }}
+                        disabled={duration === 0}
+                        className="text-xs px-3 py-1.5 rounded-lg bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 hover:bg-purple-200 dark:hover:bg-purple-500/30 disabled:opacity-50"
+                      >
+                        Set Start to Current
+                      </button>
+                      <button
+                        onClick={() => { setEndTime(currentTime); }}
+                        disabled={duration === 0}
+                        className="text-xs px-3 py-1.5 rounded-lg bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 hover:bg-purple-200 dark:hover:bg-purple-500/30 disabled:opacity-50"
+                      >
+                        Set End to Current
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (videoRef.current) {
+                            videoRef.current.currentTime = startTime;
+                          }
                         }}
-                      />
-                      {/* Current time indicator */}
-                      <div
-                        className="absolute top-0 bottom-0 w-0.5 bg-white"
-                        style={{ left: `${(currentTime / duration) * 100}%` }}
-                      />
-                      {/* Start handle */}
-                      <input
-                        type="range"
-                        min={0}
-                        max={duration}
-                        step={0.1}
-                        value={startTime}
-                        onChange={(e) => handleRangeChange('start', parseFloat(e.target.value))}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      />
-                    </div>
-                    <div className="flex gap-4">
-                      <div className="flex-1">
-                        <label className="block text-xs text-zinc-500 mb-1">{t.startTime}</label>
-                        <input
-                          type="range"
-                          min={0}
-                          max={duration}
-                          step={0.1}
-                          value={startTime}
-                          onChange={(e) => handleRangeChange('start', parseFloat(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="block text-xs text-zinc-500 mb-1">{t.endTime}</label>
-                        <input
-                          type="range"
-                          min={0}
-                          max={duration}
-                          step={0.1}
-                          value={endTime}
-                          onChange={(e) => handleRangeChange('end', parseFloat(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
+                        disabled={duration === 0}
+                        className="text-xs px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50"
+                      >
+                        Jump to Start
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (videoRef.current) {
+                            videoRef.current.currentTime = endTime;
+                          }
+                        }}
+                        disabled={duration === 0}
+                        className="text-xs px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50"
+                      >
+                        Jump to End
+                      </button>
                     </div>
                   </div>
 
-                  {/* Options */}
-                  <div className="flex flex-wrap items-center gap-4">
+                  {/* Options Row */}
+                  <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
                     <button
                       onClick={() => setMuteAudio(!muteAudio)}
-                      className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition-colors ${
+                      className={`flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition-colors ${
                         muteAudio
-                          ? 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400'
-                          : 'bg-indigo-100 dark:bg-zinc-800 text-indigo-700 dark:text-zinc-300'
+                          ? 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 ring-2 ring-red-500/50'
+                          : 'bg-indigo-100 dark:bg-zinc-800 text-indigo-700 dark:text-zinc-300 hover:bg-indigo-200 dark:hover:bg-zinc-700'
                       }`}
                     >
                       {muteAudio ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                       {muteAudio ? t.muteAudio : t.keepAudio}
                     </button>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 px-3 py-2">
                       <span className="text-sm text-zinc-600 dark:text-zinc-400">{t.outputFormat}:</span>
                       <select
                         value={outputFormat}
                         onChange={(e) => setOutputFormat(e.target.value as 'mp4' | 'webm')}
-                        className="rounded-lg bg-indigo-50 dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-white"
+                        className="rounded-lg bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-sm text-zinc-800 dark:text-white"
                       >
                         <option value="mp4">MP4</option>
                         <option value="webm">WebM</option>
@@ -463,16 +555,12 @@ export default function VideoTrimmerClient({ lng }: VideoTrimmerClientProps) {
                     </div>
                     <button
                       onClick={resetTrim}
-                      className="flex items-center gap-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 px-4 py-2 font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                      disabled={duration === 0}
+                      className="flex items-center gap-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 px-4 py-2.5 font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50"
                     >
                       <RotateCcw className="h-4 w-4" />
                       {t.reset}
                     </button>
-                  </div>
-
-                  {/* Duration info */}
-                  <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                    {t.duration}: {formatTime(endTime - startTime)}
                   </div>
 
                   {/* Progress */}
