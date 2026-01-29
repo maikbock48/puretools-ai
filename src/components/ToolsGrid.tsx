@@ -44,7 +44,7 @@ const localTools = [
   { key: 'pdfToJpg', icon: FileImage, path: 'pdf-to-jpg' },
   { key: 'videoTrimmer', icon: Film, path: 'video-trimmer' },
   { key: 'wifiQr', icon: Wifi, path: 'wifi-qr' },
-  { key: 'ocr', icon: ScanText, path: 'ocr' },
+  { key: 'ocr', icon: ScanText, path: 'ocr-scanner' },
   { key: 'audioCutter', icon: Scissors, path: 'audio-cutter' },
   { key: 'audioConverter', icon: Music, path: 'audio-converter' },
   { key: 'socialCropper', icon: Crop, path: 'social-cropper' },

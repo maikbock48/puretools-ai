@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ScanText,
   Upload,
@@ -12,6 +12,7 @@ import {
   Image as ImageIcon,
   X,
   Globe,
+  AlertCircle,
 } from 'lucide-react';
 import { Language } from '@/i18n/settings';
 
@@ -19,13 +20,17 @@ interface OcrScannerClientProps {
   lng: Language;
 }
 
+const SUPPORTED_FORMATS = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/bmp', 'image/gif', 'image/heic', 'image/heif'];
+const SUPPORTED_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.bmp', '.gif', '.heic', '.heif'];
+
 const content = {
   en: {
     title: 'Privacy OCR Scanner',
     subtitle: 'Extract text from images locally in your browser. No uploads, 100% private.',
     dropzone: 'Drop an image here or click to upload',
-    supported: 'Supports: PNG, JPG, JPEG, WebP, BMP, GIF',
+    supported: 'Supports: PNG, JPG, JPEG, WebP, BMP, GIF, HEIC',
     extracting: 'Extracting text...',
+    converting: 'Converting HEIC...',
     progress: 'Progress',
     resultLabel: 'Extracted Text',
     copy: 'Copy Text',
@@ -58,13 +63,20 @@ const content = {
         { title: 'Offline Ready', desc: 'Works without internet after loading' },
       ],
     },
+    errorModal: {
+      title: 'Unsupported Format',
+      message: 'The selected file format is not supported. Please use one of the following formats:',
+      formats: 'PNG, JPG, JPEG, WebP, BMP, GIF, HEIC',
+      close: 'Got it',
+    },
   },
   de: {
     title: 'Datenschutz OCR Scanner',
     subtitle: 'Extrahieren Sie Text aus Bildern lokal in Ihrem Browser. Keine Uploads, 100% privat.',
     dropzone: 'Bild hier ablegen oder klicken zum Hochladen',
-    supported: 'Unterstützt: PNG, JPG, JPEG, WebP, BMP, GIF',
+    supported: 'Unterstützt: PNG, JPG, JPEG, WebP, BMP, GIF, HEIC',
     extracting: 'Text wird extrahiert...',
+    converting: 'HEIC wird konvertiert...',
     progress: 'Fortschritt',
     resultLabel: 'Extrahierter Text',
     copy: 'Text kopieren',
@@ -97,6 +109,12 @@ const content = {
         { title: 'Offline bereit', desc: 'Funktioniert ohne Internet nach dem Laden' },
       ],
     },
+    errorModal: {
+      title: 'Format nicht unterstützt',
+      message: 'Das ausgewählte Dateiformat wird nicht unterstützt. Bitte verwenden Sie eines der folgenden Formate:',
+      formats: 'PNG, JPG, JPEG, WebP, BMP, GIF, HEIC',
+      close: 'Verstanden',
+    },
   },
 };
 
@@ -109,47 +127,99 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
   const [imageName, setImageName] = useState<string>('');
   const [extractedText, setExtractedText] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isConverting, setIsConverting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [copied, setCopied] = useState(false);
   const [ocrLanguage, setOcrLanguage] = useState<OcrLanguage>(lng === 'de' ? 'deu' : 'eng');
   const [isDragging, setIsDragging] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+
+  const isHeicFile = (file: File): boolean => {
+    const extension = file.name.toLowerCase().split('.').pop();
+    return extension === 'heic' || extension === 'heif' ||
+           file.type === 'image/heic' || file.type === 'image/heif';
+  };
+
+  const isValidFormat = (file: File): boolean => {
+    // Check by MIME type
+    if (SUPPORTED_FORMATS.includes(file.type)) {
+      return true;
+    }
+    // Check by extension (for HEIC files that may not have correct MIME type)
+    const extension = '.' + file.name.toLowerCase().split('.').pop();
+    return SUPPORTED_EXTENSIONS.includes(extension);
+  };
 
   const processImage = useCallback(async (file: File) => {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const imageData = e.target?.result as string;
-      setImage(imageData);
-      setImageName(file.name);
-      setIsProcessing(true);
-      setProgress(0);
-      setExtractedText('');
+    // Validate file format
+    if (!isValidFormat(file)) {
+      setShowErrorModal(true);
+      return;
+    }
 
-      try {
-        const Tesseract = (await import('tesseract.js')).default;
+    setIsProcessing(true);
+    setProgress(0);
+    setExtractedText('');
+    setImageName(file.name);
 
-        const result = await Tesseract.recognize(imageData, ocrLanguage, {
-          logger: (m) => {
-            if (m.status === 'recognizing text') {
-              setProgress(Math.round(m.progress * 100));
-            }
-          },
+    try {
+      let imageData: string;
+
+      // Convert HEIC to JPEG first
+      if (isHeicFile(file)) {
+        setIsConverting(true);
+        const heic2any = (await import('heic2any')).default;
+        const convertedBlob = await heic2any({
+          blob: file,
+          toType: 'image/jpeg',
+          quality: 0.9,
         });
 
-        setExtractedText(result.data.text.trim());
-      } catch (error) {
-        console.error('OCR Error:', error);
-        setExtractedText('');
-      } finally {
-        setIsProcessing(false);
+        const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+        imageData = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target?.result as string);
+          reader.readAsDataURL(blob);
+        });
+        setIsConverting(false);
+      } else {
+        imageData = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target?.result as string);
+          reader.readAsDataURL(file);
+        });
       }
-    };
-    reader.readAsDataURL(file);
+
+      setImage(imageData);
+
+      const Tesseract = (await import('tesseract.js')).default;
+
+      const result = await Tesseract.recognize(imageData, ocrLanguage, {
+        logger: (m) => {
+          if (m.status === 'recognizing text') {
+            setProgress(Math.round(m.progress * 100));
+          }
+        },
+      });
+
+      setExtractedText(result.data.text.trim());
+    } catch (error) {
+      console.error('OCR Error:', error);
+      setExtractedText('');
+    } finally {
+      setIsProcessing(false);
+      setIsConverting(false);
+    }
   }, [ocrLanguage]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file) {
       processImage(file);
+    }
+    // Reset input so same file can be selected again
+    if (e.target) {
+      e.target.value = '';
     }
   };
 
@@ -157,7 +227,7 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file) {
       processImage(file);
     }
   };
@@ -266,7 +336,7 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
+                  accept=".png,.jpg,.jpeg,.webp,.bmp,.gif,.heic,.heif,image/png,image/jpeg,image/webp,image/bmp,image/gif,image/heic,image/heif"
                   onChange={handleFileSelect}
                   className="hidden"
                 />
@@ -292,7 +362,7 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
             )}
 
             {/* Progress */}
-            {isProcessing && (
+            {(isProcessing || isConverting) && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -301,14 +371,14 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
                 <div className="mb-2 flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2 text-cyan-400">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    {t.extracting}
+                    {isConverting ? t.converting : t.extracting}
                   </span>
-                  <span className="text-zinc-500">{progress}%</span>
+                  <span className="text-zinc-500">{isConverting ? '...' : `${progress}%`}</span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-indigo-100 dark:bg-zinc-800">
                   <div
                     className="h-full bg-cyan-500 transition-all"
-                    style={{ width: `${progress}%` }}
+                    style={{ width: isConverting ? '50%' : `${progress}%` }}
                   />
                 </div>
               </motion.div>
@@ -382,6 +452,50 @@ export default function OcrScannerClient({ lng }: OcrScannerClientProps) {
           </div>
         </motion.div>
       </div>
+
+      {/* Error Modal */}
+      <AnimatePresence>
+        {showErrorModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            onClick={() => setShowErrorModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="w-full max-w-md rounded-2xl border border-red-200 dark:border-red-900/50 bg-white dark:bg-zinc-900 p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/20">
+                  <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
+                  {t.errorModal.title}
+                </h3>
+              </div>
+              <p className="mb-3 text-zinc-600 dark:text-zinc-400">
+                {t.errorModal.message}
+              </p>
+              <div className="mb-6 rounded-lg bg-zinc-100 dark:bg-zinc-800 px-4 py-2">
+                <code className="text-sm font-medium text-cyan-600 dark:text-cyan-400">
+                  {t.errorModal.formats}
+                </code>
+              </div>
+              <button
+                onClick={() => setShowErrorModal(false)}
+                className="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 py-3 font-medium text-white transition-all hover:from-cyan-400 hover:to-blue-400"
+              >
+                {t.errorModal.close}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

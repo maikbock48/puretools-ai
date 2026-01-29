@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import i18next from 'i18next';
 import {
   initReactI18next,
@@ -11,12 +11,17 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 import { getOptions, languages, Language } from './settings';
 
 const runsOnServerSide = typeof window === 'undefined';
+const useIsomorphicLayoutEffect = runsOnServerSide ? useEffect : useLayoutEffect;
 
-// Initialize i18next once
+// Track initialization state
 let initialized = false;
+let currentLng: Language | null = null;
 
 function initI18n(lng: Language) {
-  if (initialized) return;
+  if (initialized) {
+    // Already initialized - language change will be handled by effect
+    return;
+  }
 
   i18next
     .use(initReactI18next)
@@ -33,6 +38,7 @@ function initI18n(lng: Language) {
     });
 
   initialized = true;
+  currentLng = lng;
 }
 
 // Initialize with default on server
@@ -45,7 +51,7 @@ export function useTranslation(
   ns?: string | string[],
   options?: UseTranslationOptions<undefined>
 ) {
-  // Ensure i18next is initialized with the correct language
+  // Initialize on first use with the correct language
   if (!initialized) {
     initI18n(lng);
   }
@@ -53,21 +59,11 @@ export function useTranslation(
   const ret = useTranslationOrg(ns, options);
   const { i18n } = ret;
 
-  // Track if language change is needed
-  const [, forceUpdate] = useState(0);
-
-  // Synchronously change language if needed (before first render completes)
-  if (i18n.resolvedLanguage !== lng) {
-    // Change language synchronously if possible
-    i18n.changeLanguage(lng);
-  }
-
-  // Also handle async language changes
-  useEffect(() => {
+  // Handle language changes in an effect (not during render!)
+  useIsomorphicLayoutEffect(() => {
     if (i18n.resolvedLanguage !== lng) {
-      i18n.changeLanguage(lng).then(() => {
-        forceUpdate(n => n + 1);
-      });
+      i18n.changeLanguage(lng);
+      currentLng = lng;
     }
   }, [lng, i18n]);
 

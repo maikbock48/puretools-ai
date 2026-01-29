@@ -11,9 +11,11 @@ import {
   EyeOff,
   Share2,
   Smartphone,
+  ImageDown,
 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Language } from '@/i18n/settings';
+import { useShareModal } from '@/components/ShareModal';
 
 interface WifiQrClientProps {
   lng: Language;
@@ -40,6 +42,8 @@ const content = {
     generate: 'Generate QR Code',
     downloadPng: 'Download PNG',
     downloadSvg: 'Download SVG',
+    downloadPreview: 'Download with Label',
+    share: 'Share',
     copied: 'Copied!',
     copy: 'Copy WiFi String',
     preview: 'Preview',
@@ -85,6 +89,8 @@ const content = {
     generate: 'QR-Code generieren',
     downloadPng: 'PNG herunterladen',
     downloadSvg: 'SVG herunterladen',
+    downloadPreview: 'Mit Beschriftung',
+    share: 'Teilen',
     copied: 'Kopiert!',
     copy: 'WLAN-String kopieren',
     preview: 'Vorschau',
@@ -117,6 +123,7 @@ type EncryptionType = 'WPA' | 'WEP' | 'nopass';
 export default function WifiQrClient({ lng }: WifiQrClientProps) {
   const t = content[lng];
   const qrRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const [ssid, setSsid] = useState('');
   const [password, setPassword] = useState('');
@@ -126,6 +133,13 @@ export default function WifiQrClient({ lng }: WifiQrClientProps) {
   const [copied, setCopied] = useState(false);
   const [qrColor, setQrColor] = useState('#000000');
   const [bgColor, setBgColor] = useState('#FFFFFF');
+
+  // Share modal
+  const { openShareModal, ShareModalComponent } = useShareModal(
+    lng === 'de' ? 'WLAN QR-Code Generator' : 'WiFi QR Code Generator',
+    `/${lng}/tools/wifi-qr`,
+    lng
+  );
 
   // Generate WiFi QR code string
   const generateWifiString = useCallback(() => {
@@ -211,6 +225,58 @@ export default function WifiQrClient({ lng }: WifiQrClientProps) {
     await navigator.clipboard.writeText(wifiString);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Download preview with text label
+  const downloadPreview = async () => {
+    if (!qrRef.current || !ssid) return;
+
+    const canvas = qrRef.current.querySelector('canvas');
+    if (!canvas) return;
+
+    // Create a new canvas with text
+    const qrSize = canvas.width;
+    const padding = 40;
+    const textHeight = 80;
+    const totalWidth = qrSize + padding * 2;
+    const totalHeight = qrSize + padding * 2 + textHeight;
+
+    const newCanvas = document.createElement('canvas');
+    newCanvas.width = totalWidth;
+    newCanvas.height = totalHeight;
+    const ctx = newCanvas.getContext('2d');
+    if (!ctx) return;
+
+    // Fill background
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, totalWidth, totalHeight);
+
+    // Draw QR code
+    ctx.drawImage(canvas, padding, padding);
+
+    // Draw text
+    ctx.fillStyle = qrColor;
+    ctx.textAlign = 'center';
+
+    // "Scan to connect" text
+    ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText(t.scanToConnect, totalWidth / 2, qrSize + padding + 30);
+
+    // Network name text (bold)
+    ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText(ssid, totalWidth / 2, qrSize + padding + 60);
+
+    // Download
+    const url = newCanvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `wifi-${ssid}-preview.png`;
+    a.click();
+  };
+
+  // Handle share
+  const handleShare = () => {
+    openShareModal(`WiFi: ${ssid}`);
   };
 
   return (
@@ -420,37 +486,57 @@ export default function WifiQrClient({ lng }: WifiQrClientProps) {
 
                 {/* Actions */}
                 {ssid && (
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <button
-                      onClick={() => downloadQR('png')}
-                      className="flex items-center gap-2 rounded-xl bg-blue-500 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-400"
-                    >
-                      <Download className="h-4 w-4" />
-                      {t.downloadPng}
-                    </button>
-                    <button
-                      onClick={() => downloadQR('svg')}
-                      className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-4 py-2 font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600"
-                    >
-                      <Download className="h-4 w-4" />
-                      {t.downloadSvg}
-                    </button>
-                    <button
-                      onClick={copyWifiString}
-                      className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-4 py-2 font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600"
-                    >
-                      {copied ? (
-                        <>
-                          <CheckCircle className="h-4 w-4 text-emerald-500" />
-                          {t.copied}
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-4 w-4" />
-                          {t.copy}
-                        </>
-                      )}
-                    </button>
+                  <div className="mt-6 space-y-3">
+                    {/* Primary actions */}
+                    <div className="flex flex-wrap gap-3">
+                      <button
+                        onClick={downloadPreview}
+                        className="flex items-center gap-2 rounded-xl bg-blue-500 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-400"
+                      >
+                        <ImageDown className="h-4 w-4" />
+                        {t.downloadPreview}
+                      </button>
+                      <button
+                        onClick={handleShare}
+                        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-2 font-medium text-white transition-colors hover:from-indigo-400 hover:to-purple-400"
+                      >
+                        <Share2 className="h-4 w-4" />
+                        {t.share}
+                      </button>
+                    </div>
+                    {/* Secondary actions */}
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => downloadQR('png')}
+                        className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-3 py-1.5 text-sm font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        {t.downloadPng}
+                      </button>
+                      <button
+                        onClick={() => downloadQR('svg')}
+                        className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-3 py-1.5 text-sm font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        {t.downloadSvg}
+                      </button>
+                      <button
+                        onClick={copyWifiString}
+                        className="flex items-center gap-2 rounded-xl bg-indigo-100 dark:bg-zinc-700 px-3 py-1.5 text-sm font-medium text-indigo-700 dark:text-white transition-colors hover:bg-indigo-200 dark:hover:bg-zinc-600"
+                      >
+                        {copied ? (
+                          <>
+                            <CheckCircle className="h-3.5 w-3.5 text-emerald-500" />
+                            {t.copied}
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-3.5 w-3.5" />
+                            {t.copy}
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -480,6 +566,9 @@ export default function WifiQrClient({ lng }: WifiQrClientProps) {
           </div>
         </motion.div>
       </div>
+
+      {/* Share Modal */}
+      <ShareModalComponent />
     </div>
   );
 }
