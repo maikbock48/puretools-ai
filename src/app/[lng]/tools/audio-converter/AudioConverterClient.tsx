@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Music, Upload, Download, Loader2, X, FileAudio, Settings } from 'lucide-react';
-import { Mp3Encoder } from 'lamejs';
+import { Mp3Encoder } from '@breezystack/lamejs';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
 
@@ -115,7 +115,7 @@ export default function AudioConverterClient({ lng }: AudioConverterClientProps)
 
       // Create MP3 encoder
       const mp3encoder = new Mp3Encoder(numberOfChannels, sampleRate, bitrate);
-      const mp3Data: Int8Array[] = [];
+      const mp3Data: Uint8Array[] = [];
 
       // Encode in chunks
       const sampleBlockSize = 1152; // Standard MP3 frame size
@@ -125,7 +125,7 @@ export default function AudioConverterClient({ lng }: AudioConverterClientProps)
         const leftChunk = leftInt16.subarray(i, Math.min(i + sampleBlockSize, length));
         const rightChunk = rightInt16.subarray(i, Math.min(i + sampleBlockSize, length));
 
-        let mp3buf: Int8Array;
+        let mp3buf: Uint8Array;
         if (numberOfChannels === 1) {
           mp3buf = mp3encoder.encodeBuffer(leftChunk);
         } else {
@@ -154,7 +154,7 @@ export default function AudioConverterClient({ lng }: AudioConverterClientProps)
       const mp3Array = new Uint8Array(totalLength);
       let offset = 0;
       for (const chunk of mp3Data) {
-        mp3Array.set(new Uint8Array(chunk.buffer, chunk.byteOffset, chunk.length), offset);
+        mp3Array.set(chunk, offset);
         offset += chunk.length;
       }
 

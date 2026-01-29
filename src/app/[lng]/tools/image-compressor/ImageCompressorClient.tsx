@@ -32,6 +32,7 @@ import { useHistory } from '@/hooks/useHistory';
 /**
  * Compress image to get as close as possible to target size without exceeding it.
  * Uses binary search to find optimal quality.
+ * For PNG: automatically converts to JPEG if target size cannot be reached.
  */
 async function compressToTargetSize(
   file: File,
@@ -40,6 +41,11 @@ async function compressToTargetSize(
   fileType?: string
 ): Promise<Blob> {
   const targetSizeBytes = targetSizeMB * 1024 * 1024;
+  const isPng = file.type === 'image/png' || file.name.toLowerCase().endsWith('.png');
+  const keepPng = fileType === 'image/png';
+
+  // Determine output format - for PNG, we may need to convert to JPEG to reach target size
+  let outputFormat = fileType as 'image/jpeg' | 'image/png' | 'image/webp' | undefined;
 
   // If file is already under target, return as-is (optionally resize)
   if (file.size <= targetSizeBytes) {
@@ -48,23 +54,42 @@ async function compressToTargetSize(
       maxWidthOrHeight,
       useWebWorker: true,
       initialQuality: 1,
-      fileType: fileType as 'image/jpeg' | 'image/png' | 'image/webp' | undefined,
+      fileType: outputFormat,
     });
     return resized;
   }
 
-  // Binary search for optimal quality
+  // For PNG files where user wants to keep PNG format:
+  // First try PNG compression (resize only), if still too large, convert to JPEG
+  if (isPng && !fileType) {
+    // Try PNG first (lossless, only resize helps)
+    const pngResult = await imageCompression(file, {
+      maxWidthOrHeight,
+      useWebWorker: true,
+      initialQuality: 1.0,
+      fileType: 'image/png',
+    });
+
+    if (pngResult.size <= targetSizeBytes) {
+      return pngResult;
+    }
+
+    // PNG can't reach target size - automatically switch to JPEG for better compression
+    // This is the expected behavior for size-constrained compression
+    outputFormat = 'image/jpeg';
+  }
+
+  // Binary search for optimal quality (works for JPEG/WebP)
   let minQuality = 0.1;
   let maxQuality = 1.0;
   let bestResult: Blob | null = null;
-  let bestQuality = minQuality;
 
   // First, try with max quality to see if we can even get under target with just resize
   const maxQualityResult = await imageCompression(file, {
     maxWidthOrHeight,
     useWebWorker: true,
     initialQuality: 1.0,
-    fileType: fileType as 'image/jpeg' | 'image/png' | 'image/webp' | undefined,
+    fileType: outputFormat,
   });
 
   if (maxQualityResult.size <= targetSizeBytes) {
@@ -79,13 +104,12 @@ async function compressToTargetSize(
       maxWidthOrHeight,
       useWebWorker: true,
       initialQuality: midQuality,
-      fileType: fileType as 'image/jpeg' | 'image/png' | 'image/webp' | undefined,
+      fileType: outputFormat,
     });
 
     if (result.size <= targetSizeBytes) {
       // Under target - this is a valid result, try higher quality
       bestResult = result;
-      bestQuality = midQuality;
       minQuality = midQuality;
     } else {
       // Over target - need lower quality
@@ -104,7 +128,7 @@ async function compressToTargetSize(
       maxWidthOrHeight,
       useWebWorker: true,
       initialQuality: 0.1,
-      fileType: fileType as 'image/jpeg' | 'image/png' | 'image/webp' | undefined,
+      fileType: outputFormat,
     });
   }
 
@@ -446,7 +470,14 @@ export default function ImageCompressorClient({ lng }: ImageCompressorClientProp
 
   const downloadImage = useCallback(async (image: ImageFile) => {
     if (!image.compressed) return;
-    const ext = settings.fileType === 'original' ? image.file.name.split('.').pop() : settings.fileType;
+
+    // Detect actual format from blob type (may differ from original if PNG was converted to JPEG)
+    let ext = settings.fileType === 'original' ? image.file.name.split('.').pop() : settings.fileType;
+    const blobType = image.compressed.type;
+    if (blobType === 'image/jpeg') ext = 'jpg';
+    else if (blobType === 'image/png') ext = 'png';
+    else if (blobType === 'image/webp') ext = 'webp';
+
     const baseName = image.file.name.replace(/\.[^/.]+$/, '');
 
     let blobToDownload = image.compressed;
