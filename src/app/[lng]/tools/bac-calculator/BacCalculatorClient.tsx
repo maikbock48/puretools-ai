@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Wine, Plus, Trash2, AlertTriangle, Clock, User } from 'lucide-react';
+import { Wine, Plus, Trash2, AlertTriangle, Clock, User, Globe } from 'lucide-react';
 import { useTranslation } from '@/i18n/client';
 import { Language } from '@/i18n/settings';
 
@@ -16,6 +16,79 @@ interface Drink {
   amount: number; // in ml
   alcoholPercent: number;
 }
+
+type CountryCode = 'DE' | 'GB' | 'US' | 'ES' | 'FR' | 'PL';
+
+interface DrivingLimit {
+  country: CountryCode;
+  flag: string;
+  name: { en: string; de: string };
+  limits: {
+    label: { en: string; de: string };
+    value: string;
+  }[];
+}
+
+const DRIVING_LIMITS: DrivingLimit[] = [
+  {
+    country: 'DE',
+    flag: '🇩🇪',
+    name: { en: 'Germany', de: 'Deutschland' },
+    limits: [
+      { label: { en: 'Novice drivers (< 21 years)', de: 'Fahranfänger (< 21 Jahre)' }, value: '0.0‰' },
+      { label: { en: 'General limit', de: 'Allgemeines Limit' }, value: '0.5‰' },
+      { label: { en: 'Absolute driving incapacity', de: 'Absolute Fahruntüchtigkeit' }, value: '1.1‰' },
+    ],
+  },
+  {
+    country: 'GB',
+    flag: '🇬🇧',
+    name: { en: 'United Kingdom', de: 'Großbritannien' },
+    limits: [
+      { label: { en: 'England, Wales, Northern Ireland', de: 'England, Wales, Nordirland' }, value: '0.8‰' },
+      { label: { en: 'Scotland', de: 'Schottland' }, value: '0.5‰' },
+    ],
+  },
+  {
+    country: 'US',
+    flag: '🇺🇸',
+    name: { en: 'United States', de: 'USA' },
+    limits: [
+      { label: { en: 'Under 21 years (Zero Tolerance)', de: 'Unter 21 Jahre (Null-Toleranz)' }, value: '0.0‰ - 0.2‰' },
+      { label: { en: 'General limit (all states)', de: 'Allgemeines Limit (alle Staaten)' }, value: '0.8‰' },
+      { label: { en: 'Commercial drivers', de: 'Berufskraftfahrer' }, value: '0.4‰' },
+    ],
+  },
+  {
+    country: 'ES',
+    flag: '🇪🇸',
+    name: { en: 'Spain', de: 'Spanien' },
+    limits: [
+      { label: { en: 'Novice drivers (< 2 years license)', de: 'Fahranfänger (< 2 Jahre Führerschein)' }, value: '0.3‰' },
+      { label: { en: 'General limit', de: 'Allgemeines Limit' }, value: '0.5‰' },
+      { label: { en: 'Professional drivers', de: 'Berufskraftfahrer' }, value: '0.3‰' },
+    ],
+  },
+  {
+    country: 'FR',
+    flag: '🇫🇷',
+    name: { en: 'France', de: 'Frankreich' },
+    limits: [
+      { label: { en: 'Novice drivers (< 3 years license)', de: 'Fahranfänger (< 3 Jahre Führerschein)' }, value: '0.2‰' },
+      { label: { en: 'General limit', de: 'Allgemeines Limit' }, value: '0.5‰' },
+      { label: { en: 'Bus and truck drivers', de: 'Bus- und LKW-Fahrer' }, value: '0.2‰' },
+    ],
+  },
+  {
+    country: 'PL',
+    flag: '🇵🇱',
+    name: { en: 'Poland', de: 'Polen' },
+    limits: [
+      { label: { en: 'General limit', de: 'Allgemeines Limit' }, value: '0.2‰' },
+      { label: { en: 'Criminal offense threshold', de: 'Straftatbestand ab' }, value: '0.5‰' },
+    ],
+  },
+];
 
 const DRINK_PRESETS = {
   en: [
@@ -41,6 +114,7 @@ export default function BacCalculatorClient({ lng }: BacCalculatorClientProps) {
   const [drinks, setDrinks] = useState<Drink[]>([]);
   const [drinkingHours, setDrinkingHours] = useState(1);
   const [showDisclaimer, setShowDisclaimer] = useState(true);
+  const [selectedCountry, setSelectedCountry] = useState<CountryCode>('DE');
 
   const presets = DRINK_PRESETS[lng] || DRINK_PRESETS.en;
 
@@ -343,16 +417,54 @@ export default function BacCalculatorClient({ lng }: BacCalculatorClientProps) {
                 )}
               </div>
 
-              {/* Legal Info */}
+              {/* Legal Info with Country Selector */}
               <div className="bg-zinc-100 dark:bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-600 dark:text-zinc-400">
-                <p className="font-medium mb-1">
-                  {lng === 'de' ? 'Fahrerlaubnis in Deutschland:' : 'Driving limits:'}
-                </p>
-                <ul className="space-y-1 text-xs">
-                  <li>• {lng === 'de' ? '0.0‰ für Fahranfänger (< 21 Jahre)' : '0.0‰ for novice drivers'}</li>
-                  <li>• {lng === 'de' ? '0.5‰ allgemeines Limit' : '0.5‰ general limit'}</li>
-                  <li>• {lng === 'de' ? '1.1‰ absolute Fahruntüchtigkeit' : '1.1‰ absolute driving incapacity'}</li>
-                </ul>
+                <div className="flex items-center gap-2 mb-3">
+                  <Globe className="h-4 w-4" />
+                  <span className="font-medium">
+                    {lng === 'de' ? 'Grenzwerte nach Land:' : 'Limits by country:'}
+                  </span>
+                </div>
+
+                {/* Country Tabs */}
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {DRIVING_LIMITS.map((country) => (
+                    <button
+                      key={country.country}
+                      onClick={() => setSelectedCountry(country.country)}
+                      className={`px-2 py-1 text-xs rounded-lg transition-all flex items-center gap-1 ${
+                        selectedCountry === country.country
+                          ? 'bg-purple-500 text-white'
+                          : 'bg-white dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600'
+                      }`}
+                    >
+                      <span>{country.flag}</span>
+                      <span className="hidden sm:inline">{country.name[lng]}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Selected Country Limits */}
+                {(() => {
+                  const countryData = DRIVING_LIMITS.find((c) => c.country === selectedCountry);
+                  if (!countryData) return null;
+                  return (
+                    <div>
+                      <p className="font-medium mb-2 flex items-center gap-2">
+                        <span>{countryData.flag}</span>
+                        {countryData.name[lng]}
+                      </p>
+                      <ul className="space-y-1 text-xs">
+                        {countryData.limits.map((limit, index) => (
+                          <li key={index} className="flex justify-between">
+                            <span>• {limit.label[lng]}</span>
+                            <span className="font-medium text-purple-600 dark:text-purple-400">{limit.value}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           </div>

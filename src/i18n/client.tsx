@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback, useSyncExternalStore } from 'react';
+import { useEffect, useCallback, useSyncExternalStore } from 'react';
 import i18next from 'i18next';
 import {
   initReactI18next,
@@ -14,9 +14,8 @@ const runsOnServerSide = typeof window === 'undefined';
 
 // Track initialization
 let initialized = false;
-let initializedLanguage: Language | null = null;
 
-// Initialize i18next
+// Initialize i18next once
 function initI18next(lng: Language) {
   if (!initialized && !i18next.isInitialized) {
     i18next
@@ -33,14 +32,6 @@ function initI18next(lng: Language) {
         preload: runsOnServerSide ? languages : [],
       });
     initialized = true;
-    initializedLanguage = lng;
-  } else if (initialized && initializedLanguage !== lng && i18next.isInitialized) {
-    // Language changed - update synchronously for SSR consistency
-    // This ensures the first render uses the correct language
-    if (i18next.language !== lng) {
-      i18next.changeLanguage(lng);
-      initializedLanguage = lng;
-    }
   }
 }
 
@@ -58,7 +49,7 @@ export function useTranslation(
   ns?: string | string[],
   options?: UseTranslationOptions<undefined>
 ) {
-  // Initialize or update language on first use
+  // Initialize on first use (only once)
   initI18next(lng);
 
   const ret = useTranslationOrg(ns, options);
@@ -67,16 +58,10 @@ export function useTranslation(
   // Track if we're on the client (after hydration)
   const isClient = useIsClient();
 
-  // Track the current language for re-renders
-  const [, setCurrentLng] = useState(lng);
-
-  // Handle language changes after hydration
+  // Handle language changes after hydration - only in useEffect, never during render
   useEffect(() => {
     if (isClient && i18n.resolvedLanguage !== lng) {
-      i18n.changeLanguage(lng).then(() => {
-        setCurrentLng(lng);
-        initializedLanguage = lng;
-      });
+      i18n.changeLanguage(lng);
     }
   }, [isClient, lng, i18n]);
 
