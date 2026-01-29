@@ -14,8 +14,9 @@ const runsOnServerSide = typeof window === 'undefined';
 
 // Track initialization
 let initialized = false;
+let initializedLanguage: Language | null = null;
 
-// Initialize i18next once
+// Initialize i18next
 function initI18next(lng: Language) {
   if (!initialized && !i18next.isInitialized) {
     i18next
@@ -32,6 +33,14 @@ function initI18next(lng: Language) {
         preload: runsOnServerSide ? languages : [],
       });
     initialized = true;
+    initializedLanguage = lng;
+  } else if (initialized && initializedLanguage !== lng && i18next.isInitialized) {
+    // Language changed - update synchronously for SSR consistency
+    // This ensures the first render uses the correct language
+    if (i18next.language !== lng) {
+      i18next.changeLanguage(lng);
+      initializedLanguage = lng;
+    }
   }
 }
 
@@ -49,7 +58,7 @@ export function useTranslation(
   ns?: string | string[],
   options?: UseTranslationOptions<undefined>
 ) {
-  // Initialize on first use
+  // Initialize or update language on first use
   initI18next(lng);
 
   const ret = useTranslationOrg(ns, options);
@@ -59,25 +68,17 @@ export function useTranslation(
   const isClient = useIsClient();
 
   // Track the current language for re-renders
-  const [currentLng, setCurrentLng] = useState(lng);
+  const [, setCurrentLng] = useState(lng);
 
-  // Change language only after hydration is complete
+  // Handle language changes after hydration
   useEffect(() => {
     if (isClient && i18n.resolvedLanguage !== lng) {
       i18n.changeLanguage(lng).then(() => {
         setCurrentLng(lng);
+        initializedLanguage = lng;
       });
     }
   }, [isClient, lng, i18n]);
-
-  // Also update when lng prop changes (for navigation between languages)
-  useEffect(() => {
-    if (currentLng !== lng && i18n.resolvedLanguage !== lng) {
-      i18n.changeLanguage(lng).then(() => {
-        setCurrentLng(lng);
-      });
-    }
-  }, [lng, currentLng, i18n]);
 
   return ret;
 }

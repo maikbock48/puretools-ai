@@ -363,6 +363,28 @@ export default function BacCalculatorClient({ lng }: BacCalculatorClientProps) {
               {t('common.privacyNote')}
             </p>
           </div>
+
+          {/* Legal Disclaimer */}
+          <div className="mt-4 p-4 bg-zinc-100 dark:bg-zinc-800/50 rounded-xl border border-zinc-200 dark:border-zinc-700">
+            <div className="flex gap-2 items-start">
+              <AlertTriangle className="h-4 w-4 text-zinc-500 dark:text-zinc-400 flex-shrink-0 mt-0.5" />
+              <div className="text-xs text-zinc-500 dark:text-zinc-400 space-y-1">
+                <p className="font-medium">
+                  {lng === 'de' ? 'Alle Angaben ohne Gewähr' : 'All information without guarantee'}
+                </p>
+                <p>
+                  {lng === 'de'
+                    ? 'Die berechneten Werte sind lediglich Schätzungen und können von der tatsächlichen Blutalkoholkonzentration abweichen. Dieser Rechner ersetzt keine professionelle Messung und dient ausschließlich zu Informationszwecken.'
+                    : 'The calculated values are estimates only and may differ from actual blood alcohol concentration. This calculator does not replace professional measurement and is for informational purposes only.'}
+                </p>
+                <p>
+                  {lng === 'de'
+                    ? 'Beachten Sie, dass sich die gesetzlichen Grenzwerte und Regelungen jederzeit ändern können. Informieren Sie sich stets über die aktuell geltende Gesetzeslage in Ihrem Land.'
+                    : 'Please note that legal limits and regulations may change at any time. Always inform yourself about the currently applicable laws in your country.'}
+                </p>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </main>
