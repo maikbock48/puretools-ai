@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import i18next from 'i18next';
 import {
   initReactI18next,
@@ -12,56 +12,64 @@ import { getOptions, languages, Language } from './settings';
 
 const runsOnServerSide = typeof window === 'undefined';
 
-// Get language from URL path on client side
-function getLanguageFromPath(): Language {
-  if (runsOnServerSide) return 'en';
-  const path = window.location.pathname;
-  const langMatch = path.match(/^\/(en|de)(\/|$)/);
-  return (langMatch?.[1] as Language) || 'en';
+// Initialize i18next once
+let initialized = false;
+
+function initI18n(lng: Language) {
+  if (initialized) return;
+
+  i18next
+    .use(initReactI18next)
+    .use(
+      resourcesToBackend(
+        (language: string, namespace: string) =>
+          import(`./locales/${language}/${namespace}.json`)
+      )
+    )
+    .init({
+      ...getOptions(),
+      lng,
+      preload: runsOnServerSide ? languages : [],
+    });
+
+  initialized = true;
 }
 
-i18next
-  .use(initReactI18next)
-  .use(
-    resourcesToBackend(
-      (language: string, namespace: string) =>
-        import(`./locales/${language}/${namespace}.json`)
-    )
-  )
-  .init({
-    ...getOptions(),
-    lng: runsOnServerSide ? 'en' : getLanguageFromPath(),
-    preload: runsOnServerSide ? languages : [],
-  });
+// Initialize with default on server
+if (runsOnServerSide) {
+  initI18n('en');
+}
 
 export function useTranslation(
   lng: Language,
   ns?: string | string[],
   options?: UseTranslationOptions<undefined>
 ) {
+  // Ensure i18next is initialized with the correct language
+  if (!initialized) {
+    initI18n(lng);
+  }
+
   const ret = useTranslationOrg(ns, options);
   const { i18n } = ret;
-  const [isReady, setIsReady] = useState(i18n.resolvedLanguage === lng);
 
-  const changeLanguage = useCallback(() => {
-    if (lng && i18n.resolvedLanguage !== lng) {
-      i18n.changeLanguage(lng).then(() => setIsReady(true));
-    } else {
-      setIsReady(true);
+  // Track if language change is needed
+  const [, forceUpdate] = useState(0);
+
+  // Synchronously change language if needed (before first render completes)
+  if (i18n.resolvedLanguage !== lng) {
+    // Change language synchronously if possible
+    i18n.changeLanguage(lng);
+  }
+
+  // Also handle async language changes
+  useEffect(() => {
+    if (i18n.resolvedLanguage !== lng) {
+      i18n.changeLanguage(lng).then(() => {
+        forceUpdate(n => n + 1);
+      });
     }
   }, [lng, i18n]);
-
-  useEffect(() => {
-    changeLanguage();
-  }, [changeLanguage]);
-
-  // Return translation function that returns empty string until ready to prevent hydration mismatch
-  if (!isReady && !runsOnServerSide) {
-    return {
-      ...ret,
-      t: ((key: string) => ret.t(key)) as typeof ret.t,
-    };
-  }
 
   return ret;
 }

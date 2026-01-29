@@ -117,33 +117,57 @@ export default function VideoTrimmerClient({ lng }: VideoTrimmerClientProps) {
     }
   }, [videoFile]);
 
-  // Update time while playing
+  // Handle video metadata loading
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !videoUrl) return;
+
+    const handleLoadedMetadata = () => {
+      const videoDuration = video.duration;
+      if (videoDuration && !isNaN(videoDuration) && isFinite(videoDuration)) {
+        setDuration(videoDuration);
+        setEndTime(videoDuration);
+      }
+    };
+
+    // Check if metadata is already loaded
+    if (video.readyState >= 1 && video.duration) {
+      handleLoadedMetadata();
+    }
+
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+    return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    };
+  }, [videoUrl]);
+
+  // Handle time updates during playback
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const handleTimeUpdate = () => {
       setCurrentTime(video.currentTime);
-      // Stop at end time during preview
-      if (video.currentTime >= endTime && endTime > 0) {
-        video.pause();
-        setIsPlaying(false);
-      }
-    };
-
-    const handleLoadedMetadata = () => {
-      setDuration(video.duration);
-      setEndTime(video.duration);
     };
 
     video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
 
     return () => {
       video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
     };
-  }, [endTime]);
+  }, []);
+
+  // Stop playback at end time
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !isPlaying) return;
+
+    if (currentTime >= endTime && endTime > 0) {
+      video.pause();
+      setIsPlaying(false);
+    }
+  }, [currentTime, endTime, isPlaying]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -359,8 +383,17 @@ export default function VideoTrimmerClient({ lng }: VideoTrimmerClientProps) {
                 <video
                   ref={videoRef}
                   src={videoUrl || undefined}
+                  preload="metadata"
+                  playsInline
                   className="w-full max-h-[400px]"
                   onClick={togglePlayPause}
+                  onLoadedMetadata={(e) => {
+                    const video = e.currentTarget;
+                    if (video.duration && !isNaN(video.duration) && isFinite(video.duration)) {
+                      setDuration(video.duration);
+                      setEndTime(video.duration);
+                    }
+                  }}
                 />
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-4">
                   <div className="flex items-center gap-4">
