@@ -226,3 +226,25 @@ model Referral {
   @@index([referredId])
   @@index([status])
 }
+
+// Shareable Business Cards
+model BusinessCard {
+  id          String   @id // Short URL-friendly ID (nanoid)
+  firstName   String
+  lastName    String
+  title       String?
+  company     String?
+  phone       String?
+  email       String?
+  website     String?
+  address     String?
+  bgColor     String   @default("#1e3a5f")
+  textColor   String   @default("#ffffff")
+  accentColor String   @default("#60a5fa")
+  photo       String?  // Base64 encoded photo (compressed)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime? // Optional expiration for cleanup
+
+  @@index([createdAt])
+}
